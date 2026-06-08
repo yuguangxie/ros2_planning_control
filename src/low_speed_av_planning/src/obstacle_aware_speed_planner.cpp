@@ -1,5 +1,9 @@
 #include "low_speed_av_planning/obstacle_aware_speed_planner.hpp"
 
+#include <stdexcept>
+
+#include "low_speed_av_planning/constant_speed_planner.hpp"
+
 namespace low_speed_av_planning {
 
 void ObstacleAwareSpeedPlanner::apply(Trajectory & trajectory, const SpeedPlannerOptions & options) const

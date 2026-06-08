@@ -18,7 +18,7 @@ public:
 
   // Load a Low Speed Roadnet AD Package v1.1 directory from disk.
   // This method intentionally uses project_manifest.json as the entry point.
-  RoadnetPackage load(const std::filesystem::path & package_root, const Options & options = {}) const;
+  RoadnetPackage load(const std::filesystem::path & package_root, const Options & options) const;
 
 private:
   std::filesystem::path resolve_file(

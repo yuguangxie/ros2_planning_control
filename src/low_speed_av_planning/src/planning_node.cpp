@@ -53,7 +53,8 @@ PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
   declare_parameter<std::string>("global_planner.algorithm", "astar");
   declare_parameter<double>("global_planner.heuristic_weight", 1.0);
   declare_parameter<bool>("global_planner.allow_reverse", true);
-  declare_parameter<std::vector<std::string>>("global_planner.blocked_edges", {});
+  declare_parameter<std::vector<std::string>>(
+    "global_planner.blocked_edges", std::vector<std::string>{});
   declare_parameter<std::string>("motion_planner.algorithm", "reference_line");
   declare_parameter<double>("motion_planner.horizon_distance_m", 15.0);
   declare_parameter<bool>("motion_planner.deduplicate_edge_boundary_points", true);
