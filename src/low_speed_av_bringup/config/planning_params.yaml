@@ -1,0 +1,45 @@
+# low_speed_av_bringup 使用的规划参数
+#
+# 与 low_speed_av_planning/config/planning_params.yaml 保持同名字段，便于 demo launch 统一加载。
+
+low_speed_av_planning:
+  ros__parameters:
+    roadnet:
+      # bringup demo 可在 launch 中覆盖为安装后的 sample_ad_package 路径。
+      package_path: ""
+      reject_failed_validation: true
+      allow_validation_warning: true
+      verify_checksums: true
+      supported_schema_versions: ["1.1.0"]
+
+    topics:
+      localization_pose_topic: "/localization/pose"
+      localization_pose_type: "pose_stamped"
+      global_route_topic: "/planning/global_route"
+      trajectory_topic: "/planning/trajectory"
+      planning_status_topic: "/planning/status"
+      roadnet_status_topic: "/planning/roadnet_status"
+
+    global_planner:
+      algorithm: "astar"
+      heuristic_weight: 1.0
+      allow_reverse: true
+      blocked_edges: []
+      max_edge_curvature_abs: 0.6
+
+    motion_planner:
+      algorithm: "reference_line"
+      horizon_distance_m: 15.0
+      horizon_time_s: 8.0
+      nearest_search_radius_m: 5.0
+      deduplicate_edge_boundary_points: true
+      regenerate_route_s: true
+
+    speed_planner:
+      algorithm: "curvature"
+      default_speed_mps: 0.5
+      max_speed_mps: 1.0
+      min_speed_mps: 0.0
+      max_lateral_accel_mps2: 0.5
+      obstacle_distance_m: -1.0
+      obstacle_stop_distance_m: 2.0

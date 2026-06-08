@@ -1,0 +1,134 @@
+{
+  "schema": "low_speed_roadnet",
+  "schema_version": "1.1.0",
+  "map_id": "map-demo",
+  "coordinate_frame": "map",
+  "nodes": [
+    {
+      "id": "N0001",
+      "source_node_id": "N-001",
+      "type": "normal",
+      "pose": {
+        "x": 0.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "properties": {}
+    },
+    {
+      "id": "N0002",
+      "source_node_id": "N-002",
+      "type": "normal",
+      "pose": {
+        "x": 2.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "properties": {}
+    },
+    {
+      "id": "N0003",
+      "source_node_id": "N-003",
+      "type": "goal",
+      "pose": {
+        "x": 4.0,
+        "y": 1.0,
+        "yaw": 0.4636
+      },
+      "properties": {}
+    }
+  ],
+  "paths": [
+    {
+      "id": "L001",
+      "start_node_id": "N0001",
+      "end_node_id": "N0002",
+      "geometry_type": "line",
+      "control_points": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 0
+        }
+      ],
+      "samples": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 0
+        }
+      ],
+      "direction": "forward",
+      "speed_profile": {
+        "target_mps": 0.5,
+        "max_mps": 0.8
+      },
+      "constraints": {
+        "max_curvature_abs": 0.35
+      },
+      "cost_weight": 1.0,
+      "behavior_tags": [
+        "follow"
+      ]
+    },
+    {
+      "id": "L002",
+      "start_node_id": "N0002",
+      "end_node_id": "N0003",
+      "geometry_type": "polyline",
+      "control_points": [
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 0.4
+        },
+        {
+          "x": 4,
+          "y": 1
+        }
+      ],
+      "samples": [
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 0.4
+        },
+        {
+          "x": 4,
+          "y": 1
+        }
+      ],
+      "direction": "forward",
+      "speed_profile": {
+        "target_mps": 0.45,
+        "max_mps": 0.8
+      },
+      "constraints": {
+        "max_curvature_abs": 0.35
+      },
+      "cost_weight": 1.0,
+      "behavior_tags": [
+        "follow"
+      ]
+    }
+  ],
+  "areas": [],
+  "route_points": [],
+  "metadata": {}
+}

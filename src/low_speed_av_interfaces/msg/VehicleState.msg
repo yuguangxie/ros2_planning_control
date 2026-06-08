@@ -1,0 +1,11 @@
+# 车辆状态输入。控制模块可在缺省状态下以保守零速运行。
+std_msgs/Header header
+float64 speed_mps
+float64 acceleration_mps2
+float64 steering_angle_rad
+float64 front_steering_angle_rad
+float64 rear_steering_angle_rad
+int8 gear
+bool autonomous_enabled
+bool brake_pressed
+string fault_code

@@ -1,0 +1,7 @@
+global_index,waypoint_id,edge_id,path_id,node_from,node_to,s_m,x,y,yaw,kappa,v_mps,speed_limit_mps,behavior,direction
+0,WP_E_L001_F_000000,E_L001_F,L001,N0001,N0002,0.0,0.0,0.0,0.0,0.0,0.5,0.8,follow,forward
+1,WP_E_L001_F_000001,E_L001_F,L001,N0001,N0002,1.0,1.0,0.0,0.0,0.0,0.5,0.8,follow,forward
+2,WP_E_L001_F_000002,E_L001_F,L001,N0001,N0002,2.0,2.0,0.0,0.0,0.0,0.5,0.8,follow,forward
+3,WP_E_L002_F_000000,E_L002_F,L002,N0002,N0003,0.0,2.0,0.0,0.0,0.08,0.45,0.8,follow,forward
+4,WP_E_L002_F_000001,E_L002_F,L002,N0002,N0003,1.118,3.0,0.4,0.3805,0.08,0.45,0.8,follow,forward
+5,WP_E_L002_F_000002,E_L002_F,L002,N0002,N0003,2.236,4.0,1.0,0.4636,0.04,0.4,0.8,slow_down,forward

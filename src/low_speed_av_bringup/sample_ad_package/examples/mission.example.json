@@ -1,0 +1,14 @@
+{
+  "schema": "low_speed_mission_example",
+  "schema_version": "1.1.0",
+  "project_id": "project-demo",
+  "start_node_id": "N0001",
+  "goal_node_id": "N0003",
+  "required_consumers": [
+    "global_planner",
+    "motion_planner",
+    "controller",
+    "task_manager",
+    "safety_validation"
+  ]
+}

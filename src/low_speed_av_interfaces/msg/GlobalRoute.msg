@@ -1,0 +1,10 @@
+# 全局规划路线，表示拓扑节点序列和边序列。
+std_msgs/Header header
+string route_id
+string source_package_id
+string planner_algorithm
+string[] node_ids
+string[] edge_ids
+float64 length_m
+float64 estimated_time_s
+string status

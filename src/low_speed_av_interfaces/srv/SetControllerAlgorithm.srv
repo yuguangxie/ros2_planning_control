@@ -1,0 +1,6 @@
+# 运行时切换控制器和车辆模型。
+string controller_algorithm
+string vehicle_model
+---
+bool success
+string message

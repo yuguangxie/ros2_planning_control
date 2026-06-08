@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>low_speed_av_bringup</name>
+  <version>0.1.0</version>
+  <description>低速自动驾驶规划控制启动、配置和样例数据。</description>
+  <maintainer email="demo@example.com">low_speed_av</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>low_speed_av_planning</exec_depend>
+  <exec_depend>low_speed_av_control</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

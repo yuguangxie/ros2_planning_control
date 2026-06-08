@@ -1,0 +1,16 @@
+schema: low_speed_map_metadata
+schema_version: 1.1.0
+map_id: map-demo
+map_version: 1.0.0
+frame_id: map
+resolution_m_per_px: 0.02
+origin:
+  x: 0.0
+  y: 0.0
+  yaw: 0.0
+width_px: 100
+height_px: 100
+image: demo.pgm
+occupied_thresh: 0.65
+free_thresh: 0.196
+negate: 0

@@ -1,0 +1,11 @@
+# 请求全局路线规划。可以直接给 start/goal node，也可以后续扩展为 task/parking 点。
+string start_node_id
+string goal_node_id
+string start_task_point_id
+string goal_task_point_id
+string goal_parking_point_id
+---
+# 返回规划结果和 GlobalRoute；详细轨迹通过 /planning/trajectory 发布。
+bool success
+string message
+GlobalRoute route

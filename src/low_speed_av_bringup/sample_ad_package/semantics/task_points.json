@@ -1,0 +1,24 @@
+{
+  "schema": "low_speed_task_points",
+  "schema_version": "1.1.0",
+  "task_points": [
+    {
+      "id": "T001",
+      "type": "task",
+      "pose": {
+        "x": 4.0,
+        "y": 1.0,
+        "yaw": 0.4636
+      },
+      "linked_node_id": "N0003",
+      "linked_edge_id": "E_L002_F",
+      "linked_path_id": "L002",
+      "linked_s_m": 2.236,
+      "nearest_waypoint_index": 5,
+      "projection_error_m": 0.0,
+      "action": "visit",
+      "wait_time_s": 2.0,
+      "properties": {}
+    }
+  ]
+}

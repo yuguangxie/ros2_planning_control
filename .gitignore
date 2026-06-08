@@ -1,0 +1,67 @@
+# ROS2 / colcon build artifacts
+build/
+install/
+log/
+.colcon/
+
+# CMake / native build artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+*.cmake.user
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+*.exe
+*.pdb
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+ENV/
+
+# uv / conda local state
+.python-version
+.uv-cache/
+uv.lock
+
+# Logs, runtime output, and large ROS recordings
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.bag
+*.db3
+*.mcap
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.local
+secrets/
+
+# Editor / IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+

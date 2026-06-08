@@ -1,0 +1,33 @@
+{
+  "schema": "low_speed_semantics_areas",
+  "schema_version": "1.1.0",
+  "coordinate_frame": "map",
+  "areas": [
+    {
+      "id": "A001",
+      "type": "drivable_area",
+      "polygon": [
+        {
+          "x": -1,
+          "y": -1
+        },
+        {
+          "x": 5,
+          "y": -1
+        },
+        {
+          "x": 5,
+          "y": 2
+        },
+        {
+          "x": -1,
+          "y": 2
+        }
+      ],
+      "speed_limit_mps": 0.8,
+      "allow_planning_through": true,
+      "allow_parking": false,
+      "priority": 0
+    }
+  ]
+}

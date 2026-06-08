@@ -1,0 +1,31 @@
+{
+  "schema": "low_speed_parking_points",
+  "schema_version": "1.1.0",
+  "parking_points": [
+    {
+      "id": "P001",
+      "pose": {
+        "x": 4.0,
+        "y": 1.0,
+        "yaw": 0.4636
+      },
+      "linked_path_id": "L002",
+      "linked_edge_id": "E_L002_F",
+      "linked_s_m": 2.236,
+      "nearest_waypoint_index": 5,
+      "projection_error_m": 0.0,
+      "parking_direction": "forward",
+      "precision": 0.1,
+      "wait_time_s": 3.0,
+      "slot_size": {
+        "length_m": 2.0,
+        "width_m": 1.0
+      },
+      "approach": {
+        "edge_id": "E_L002_F",
+        "distance_m": 1.0
+      },
+      "properties": {}
+    }
+  ]
+}

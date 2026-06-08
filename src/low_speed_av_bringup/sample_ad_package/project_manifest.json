@@ -1,0 +1,93 @@
+{
+  "schema": "low_speed_roadnet_ad_package",
+  "schema_version": "1.1.0",
+  "package_id": "pkg_demo_ad_package_v1_1",
+  "exported_at": "2026-06-08T00:00:00Z",
+  "export_source": "backend",
+  "project": {
+    "id": "project-demo",
+    "name": "demo",
+    "version": "1.0.0"
+  },
+  "map": {
+    "map_id": "map-demo",
+    "map_version": "1.0.0",
+    "frame_id": "map",
+    "resolution_m_per_px": 0.02,
+    "origin": {
+      "x": 0.0,
+      "y": 0.0,
+      "yaw": 0.0
+    },
+    "width_px": 100,
+    "height_px": 100
+  },
+  "vehicle_profile": {
+    "profile_id": "ackermann_demo_v1",
+    "wheel_base_m": 1.2,
+    "rear_axle_reference": true,
+    "supported_steering_models": [
+      "front_ackermann",
+      "dual_ackermann"
+    ]
+  },
+  "coordinate_system": {
+    "global_frame": "map",
+    "control_reference_frame": "rear_axle",
+    "angle_unit": "rad",
+    "distance_unit": "m"
+  },
+  "units": {
+    "distance": "m",
+    "angle": "rad",
+    "speed": "mps",
+    "curvature": "1/m",
+    "time": "s"
+  },
+  "files": {
+    "map_metadata": "map/map_metadata.yaml",
+    "roadnet": "roadnet/roadnet.json",
+    "topology": "roadnet/topology.json",
+    "route_graph": "roadnet/route_graph.yaml",
+    "waypoints_yaml": "trajectory/waypoints.yaml",
+    "waypoints_csv": "trajectory/waypoints.csv",
+    "waypoint_index": "trajectory/waypoint_index.json",
+    "areas": "semantics/areas.json",
+    "route_points": "semantics/route_points.json",
+    "task_points": "semantics/task_points.json",
+    "parking_points": "semantics/parking_points.json",
+    "charging_points": "semantics/charging_points.json",
+    "validation_report": "validation/validation_report.json",
+    "checksums": "checksums.sha256",
+    "mission_example": "examples/mission.example.json"
+  },
+  "hashes": {
+    "examples/mission.example.json": "503b4dfc0bad3680b06583846b8ec624f88a7f92a37be8c82be93b6328603310",
+    "map/map_metadata.yaml": "87f61d281ec7700873f28b8a5b7ccf9f5744614d523ab788e7fd7c2d59501784",
+    "roadnet/roadnet.json": "d19d1849ea7c6c0ab95f88599a31c9a6f14332447af5bc4110190af69d617cd9",
+    "roadnet/route_graph.yaml": "78640381caf48e466ab28257c89ae50b35809a428e9ff02dce8b10623200c0b8",
+    "roadnet/topology.json": "c2aa108b21ab5238405ce18e511a17577c76230a8278e2bf63a674b11b691d70",
+    "schemas/project_manifest.schema.json": "80b62d2cf9828a66e9d57e69669d6cd3037896801359a4a357e417b73ce018d9",
+    "schemas/roadnet.schema.json": "326f7a0aef6391ffefc2e5c38a186ae7f5012ae7b46ec75d1ec082b7d4ee1ecc",
+    "schemas/semantics.schema.json": "16d881154cb353c4914ddb65045fce217d9dec91fb65875506a1cb96aa4ade80",
+    "schemas/topology.schema.json": "3c0384db88770cf5888fb41db617b794ce5871501d4c202d60b61b7e47fd942e",
+    "schemas/validation_report.schema.json": "95c47dc6a715a965b45671e14c19777131042805ffb42bc4dd9ed216f7b71829",
+    "schemas/waypoint_index.schema.json": "e1393189581874d5c0b898f1e932f22dfddad03068db20df436aa635b749d152",
+    "schemas/waypoints.schema.json": "191bd905a39a7c72c7e56a439c43a78cea3c26e56a8a52af011e4dfa72c69d16",
+    "semantics/areas.json": "4fac4251ff559aade11ae8cdb8d925f18dee1b3f4f3cd08a635c692c982b1116",
+    "semantics/charging_points.json": "fb1b85739fbcb4c6c68331a7a99753ed21a87c0a4f4f537297152c33a13870ea",
+    "semantics/parking_points.json": "9e86e96ace9be03aa41854540c14e25d36a8b196b51af74cfc29758cf1857c4a",
+    "semantics/route_points.json": "022270893d18b6f13f2b99b15e8abcd82431b71394f1c73cd7c5453526422bd2",
+    "semantics/task_points.json": "df47ab884042ec29a4bad10d0ae54045f42b477390013c636f34a6bcf9653d86",
+    "trajectory/waypoint_index.json": "599b7f180d2842cbeb3e74b83f9589584d67447faccaa9787b9cd185f40379ee",
+    "trajectory/waypoints.csv": "8c3fe98f07889103728bdb9209d7031ac31d704366c297e2f792c666ee40cb86",
+    "trajectory/waypoints.yaml": "7fa86b97e3557035e1b825a43c6b25cadac9264284f0eb5fe3732c6a28606732",
+    "validation/validation_report.json": "ebe9e11d41474d50db52cb2eb2a86af9aa860da3268846b233aac0f8f364cf4a"
+  },
+  "validation": {
+    "status": "passed",
+    "score": 1.0,
+    "blocking_errors": 0,
+    "warnings": 0
+  }
+}

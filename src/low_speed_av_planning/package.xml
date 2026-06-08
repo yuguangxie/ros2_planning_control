@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>low_speed_av_planning</name>
+  <version>0.1.0</version>
+  <description>低速自动驾驶 Roadnet v1.1 规划模块。</description>
+  <maintainer email="demo@example.com">low_speed_av</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>low_speed_av_interfaces</depend>
+  <depend>yaml-cpp</depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -1,0 +1,6 @@
+# 重新加载 AD Package。package_path 指向解压后的 package 根目录。
+string package_path
+---
+bool success
+string package_id
+string message

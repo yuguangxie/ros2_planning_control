@@ -1,0 +1,7 @@
+# 运行时切换规划算法。
+string global_planner_algorithm
+string motion_planner_algorithm
+string speed_planner_algorithm
+---
+bool success
+string message

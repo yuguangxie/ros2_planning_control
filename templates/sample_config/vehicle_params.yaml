@@ -1,0 +1,18 @@
+vehicle:
+  profile_id: "ackermann_demo_v1"
+  supported_models: ["front_ackermann", "dual_ackermann"]
+  default_model: "front_ackermann"
+  wheel_base_m: 1.2
+  track_width_m: 0.8
+  vehicle_length_m: 1.8
+  vehicle_width_m: 0.9
+  front_overhang_m: 0.3
+  rear_overhang_m: 0.3
+  max_speed_mps: 1.2
+  max_accel_mps2: 0.5
+  max_decel_mps2: 0.8
+  max_front_steer_rad: 0.6
+  max_rear_steer_rad: 0.6
+  max_front_steer_rate_radps: 0.5
+  max_rear_steer_rate_radps: 0.5
+  rear_steer_ratio: 0.5

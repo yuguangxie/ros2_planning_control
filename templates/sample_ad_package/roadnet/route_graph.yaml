@@ -1,0 +1,23 @@
+schema: low_speed_route_graph
+schema_version: 1.1.0
+coordinate_frame: map
+nodes:
+- id: N0001
+  source_node_id: N-001
+- id: N0002
+  source_node_id: N-002
+- id: N0003
+  source_node_id: N-003
+edges:
+- id: E_L001_F
+  from: N0001
+  to: N0002
+  direction: forward
+  cost: 2.5
+  speed_limit_mps: 0.8
+- id: E_L002_F
+  from: N0002
+  to: N0003
+  direction: forward
+  cost: 3.0
+  speed_limit_mps: 0.8
