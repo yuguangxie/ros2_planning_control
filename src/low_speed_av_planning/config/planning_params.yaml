@@ -41,7 +41,9 @@ low_speed_av_planning:
       # 是否允许规划 reverse 边；仍会受 edge.constraints.allow_reverse 约束。
       allow_reverse: true
       # 运行时临时屏蔽边 ID 列表。
-      blocked_edges: []
+      # 空列表在部分 ROS2/rclcpp 版本中会被解析为未设置类型的参数；
+      # 不配置时由 planning_node.cpp 使用空 vector 默认值。
+      # 如需屏蔽边，请写成：blocked_edges: ["E_L001_F", "E_L002_F"]
       # 最大允许曲率绝对值，后续用于过滤过弯曲边。
       max_edge_curvature_abs: 0.6
 

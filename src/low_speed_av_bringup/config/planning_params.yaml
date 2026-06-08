@@ -24,7 +24,9 @@ low_speed_av_planning:
       algorithm: "astar"
       heuristic_weight: 1.0
       allow_reverse: true
-      blocked_edges: []
+      # 空列表在部分 ROS2/rclcpp 版本中会被解析为未设置类型的参数；
+      # 不配置时由 planning_node.cpp 使用空 vector 默认值。
+      # 如需屏蔽边，请写成：blocked_edges: ["E_L001_F", "E_L002_F"]
       max_edge_curvature_abs: 0.6
 
     motion_planner:
