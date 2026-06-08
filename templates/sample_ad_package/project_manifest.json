@@ -80,7 +80,7 @@
     "semantics/route_points.json": "022270893d18b6f13f2b99b15e8abcd82431b71394f1c73cd7c5453526422bd2",
     "semantics/task_points.json": "df47ab884042ec29a4bad10d0ae54045f42b477390013c636f34a6bcf9653d86",
     "trajectory/waypoint_index.json": "599b7f180d2842cbeb3e74b83f9589584d67447faccaa9787b9cd185f40379ee",
-    "trajectory/waypoints.csv": "8c3fe98f07889103728bdb9209d7031ac31d704366c297e2f792c666ee40cb86",
+    "trajectory/waypoints.csv": "fe23e65d75e7457e47a1d4485630a731f1fd8d435e3f2495be694d08f727b091",
     "trajectory/waypoints.yaml": "7fa86b97e3557035e1b825a43c6b25cadac9264284f0eb5fe3732c6a28606732",
     "validation/validation_report.json": "ebe9e11d41474d50db52cb2eb2a86af9aa860da3268846b233aac0f8f364cf4a"
   },
