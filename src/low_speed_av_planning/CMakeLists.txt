@@ -38,12 +38,14 @@ add_executable(planning_node src/planning_node_main.cpp)
 target_link_libraries(planning_node ${PROJECT_NAME})
 ament_target_dependencies(planning_node rclcpp)
 
-install(TARGETS ${PROJECT_NAME} planning_node
+install(TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
-  RUNTIME DESTINATION lib/${PROJECT_NAME}
+  RUNTIME DESTINATION bin
   INCLUDES DESTINATION include)
+install(TARGETS planning_node
+  RUNTIME DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY include/ DESTINATION include)
 install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 

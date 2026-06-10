@@ -15,13 +15,6 @@ find_package(visualization_msgs REQUIRED)
 find_package(low_speed_av_interfaces REQUIRED)
 find_package(low_speed_av_planning REQUIRED)
 
-set(LOW_SPEED_AV_PLANNING_TARGET "")
-if(TARGET low_speed_av_planning::low_speed_av_planning)
-  set(LOW_SPEED_AV_PLANNING_TARGET low_speed_av_planning::low_speed_av_planning)
-elseif(TARGET low_speed_av_planning)
-  set(LOW_SPEED_AV_PLANNING_TARGET low_speed_av_planning)
-endif()
-
 add_executable(roadnet_visualization_node src/roadnet_visualization_node.cpp)
 target_compile_features(roadnet_visualization_node PUBLIC cxx_std_17)
 ament_target_dependencies(roadnet_visualization_node
@@ -32,9 +25,6 @@ ament_target_dependencies(roadnet_visualization_node
   visualization_msgs
   low_speed_av_interfaces
   low_speed_av_planning)
-if(LOW_SPEED_AV_PLANNING_TARGET)
-  target_link_libraries(roadnet_visualization_node ${LOW_SPEED_AV_PLANNING_TARGET})
-endif()
 
 add_executable(sim_localization_pose_publisher_node src/sim_localization_pose_publisher_node.cpp)
 target_compile_features(sim_localization_pose_publisher_node PUBLIC cxx_std_17)
@@ -44,9 +34,6 @@ ament_target_dependencies(sim_localization_pose_publisher_node
   std_srvs
   low_speed_av_interfaces
   low_speed_av_planning)
-if(LOW_SPEED_AV_PLANNING_TARGET)
-  target_link_libraries(sim_localization_pose_publisher_node ${LOW_SPEED_AV_PLANNING_TARGET})
-endif()
 
 install(TARGETS
   roadnet_visualization_node
