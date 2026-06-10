@@ -32,20 +32,22 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 ament_target_dependencies(${PROJECT_NAME} rclcpp geometry_msgs std_msgs low_speed_av_interfaces)
-target_link_libraries(${PROJECT_NAME} yaml-cpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC yaml-cpp)
 
 add_executable(planning_node src/planning_node_main.cpp)
 target_link_libraries(planning_node ${PROJECT_NAME})
 ament_target_dependencies(planning_node rclcpp)
 
 install(TARGETS ${PROJECT_NAME} planning_node
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
-  RUNTIME DESTINATION lib/${PROJECT_NAME})
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+  INCLUDES DESTINATION include)
 install(DIRECTORY include/ DESTINATION include)
 install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 
 ament_export_include_directories(include)
-ament_export_libraries(${PROJECT_NAME})
-ament_export_dependencies(rclcpp geometry_msgs std_msgs low_speed_av_interfaces)
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(rclcpp geometry_msgs std_msgs low_speed_av_interfaces yaml-cpp)
 ament_package()

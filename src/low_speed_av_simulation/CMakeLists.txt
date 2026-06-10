@@ -15,6 +15,10 @@ find_package(visualization_msgs REQUIRED)
 find_package(low_speed_av_interfaces REQUIRED)
 find_package(low_speed_av_planning REQUIRED)
 
+if(NOT TARGET low_speed_av_planning)
+  message(FATAL_ERROR "low_speed_av_planning target was not exported; rebuild low_speed_av_planning with exported CMake targets")
+endif()
+
 add_executable(roadnet_visualization_node src/roadnet_visualization_node.cpp)
 target_compile_features(roadnet_visualization_node PUBLIC cxx_std_17)
 ament_target_dependencies(roadnet_visualization_node
@@ -23,8 +27,7 @@ ament_target_dependencies(roadnet_visualization_node
   nav_msgs
   std_msgs
   visualization_msgs
-  low_speed_av_interfaces
-  low_speed_av_planning)
+  low_speed_av_interfaces)
 target_link_libraries(roadnet_visualization_node low_speed_av_planning)
 
 add_executable(sim_localization_pose_publisher_node src/sim_localization_pose_publisher_node.cpp)
@@ -33,8 +36,7 @@ ament_target_dependencies(sim_localization_pose_publisher_node
   rclcpp
   geometry_msgs
   std_srvs
-  low_speed_av_interfaces
-  low_speed_av_planning)
+  low_speed_av_interfaces)
 target_link_libraries(sim_localization_pose_publisher_node low_speed_av_planning)
 
 install(TARGETS
