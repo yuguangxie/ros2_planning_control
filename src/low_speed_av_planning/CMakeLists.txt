@@ -32,7 +32,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 ament_target_dependencies(${PROJECT_NAME} rclcpp geometry_msgs std_msgs low_speed_av_interfaces)
-target_link_libraries(${PROJECT_NAME} PUBLIC yaml-cpp)
+target_link_libraries(${PROJECT_NAME} yaml-cpp)
 
 add_executable(planning_node src/planning_node_main.cpp)
 target_link_libraries(planning_node ${PROJECT_NAME})
