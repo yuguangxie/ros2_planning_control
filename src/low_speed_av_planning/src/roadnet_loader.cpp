@@ -1,5 +1,7 @@
 #include "low_speed_av_planning/roadnet_loader.hpp"
 
+#include <algorithm>
+#include <cctype>
 #include <cmath>
 #include <array>
 #include <cstdint>
@@ -108,7 +110,22 @@ double yaml_double(const YAML::Node & n, const char * key, double fallback = 0.0
 
 std::string yaml_string(const YAML::Node & n, const char * key, const std::string & fallback = "")
 {
-  return n[key] ? n[key].as<std::string>() : fallback;
+  const auto value = n[key];
+  if (!value || value.IsNull()) {
+    return fallback;
+  }
+  auto text = value.as<std::string>();
+  const auto not_space = [](unsigned char c) { return !std::isspace(c); };
+  text.erase(text.begin(), std::find_if(text.begin(), text.end(), not_space));
+  text.erase(std::find_if(text.rbegin(), text.rend(), not_space).base(), text.end());
+  auto lower = text;
+  std::transform(lower.begin(), lower.end(), lower.begin(), [](unsigned char c) {
+    return static_cast<char>(std::tolower(c));
+  });
+  if (text.empty() || lower == "null" || lower == "none") {
+    return fallback;
+  }
+  return text;
 }
 
 int yaml_int(const YAML::Node & n, const char * key, int fallback = 0)

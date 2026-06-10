@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <memory>
 #include <optional>
 #include <string>
@@ -30,6 +31,10 @@ private:
   void load_package_from_parameter();
   void publish_status(const std::string & state, const std::string & message);
   void publish_roadnet_status(bool ready, const std::string & message);
+  void republish_last_route();
+  void republish_last_trajectory();
+  void republish_last_roadnet_status();
+  void clear_cached_plan();
   void publish_failure_trajectory(const std::string & reason);
   PlanResult compute_route(const std::string & start_node_id, const std::string & goal_node_id);
   Trajectory compute_trajectory(const PlanResult & route);
@@ -41,7 +46,14 @@ private:
   std::string resolve_goal_node(
     const std::string & node_id,
     const std::string & task_point_id,
-    const std::string & parking_point_id) const;
+    const std::string & parking_point_id,
+    std::string * diagnostic) const;
+  std::string resolve_semantic_point_node(
+    const std::string & point_id,
+    const std::map<std::string, SemanticPoint> & points,
+    const std::string & point_kind,
+    bool prefer_edge_to_node,
+    std::string * diagnostic) const;
   std::optional<std::string> match_current_pose_to_start_node(std::string * diagnostic) const;
   void on_localization_pose(const geometry_msgs::msg::PoseStamped::SharedPtr msg);
   low_speed_av_interfaces::msg::GlobalRoute to_msg(const PlanResult & route) const;
@@ -72,8 +84,17 @@ private:
   rclcpp::Service<low_speed_av_interfaces::srv::ReloadRoadnet>::SharedPtr reload_srv_;
   rclcpp::Service<low_speed_av_interfaces::srv::PlanRoute>::SharedPtr plan_route_srv_;
   rclcpp::Service<low_speed_av_interfaces::srv::SetPlannerAlgorithm>::SharedPtr set_algorithm_srv_;
+  rclcpp::TimerBase::SharedPtr route_republish_timer_;
+  rclcpp::TimerBase::SharedPtr trajectory_republish_timer_;
+  rclcpp::TimerBase::SharedPtr roadnet_status_timer_;
   std::optional<Pose2d> latest_pose_;
   rclcpp::Time latest_pose_receive_time_;
+  low_speed_av_interfaces::msg::GlobalRoute last_route_msg_;
+  low_speed_av_interfaces::msg::Trajectory last_trajectory_msg_;
+  low_speed_av_interfaces::msg::RoadnetStatus last_roadnet_status_msg_;
+  bool has_last_route_msg_{false};
+  bool has_last_trajectory_msg_{false};
+  bool has_last_roadnet_status_msg_{false};
 };
 
 }  // namespace low_speed_av_planning

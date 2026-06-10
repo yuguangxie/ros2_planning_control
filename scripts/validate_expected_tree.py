@@ -53,6 +53,7 @@ REQUIRED = [
     "scripts/validate_sample_ad_package.py",
     "scripts/offline_algorithm_smoke.py",
     "scripts/offline_simulation_smoke.py",
+    "scripts/offline_runtime_followup_smoke.py",
     "scripts/offline_scu_lqr_smoke.py",
     "docs/YUNLE_SCU_COMMAND_OUTPUT.md",
     "docs/LQR_CONTROLLER_DESIGN.md",

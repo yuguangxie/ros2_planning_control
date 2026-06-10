@@ -1,6 +1,7 @@
 #include "low_speed_av_planning/planning_node.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <exception>
 #include <limits>
@@ -67,6 +68,15 @@ double squared_distance(const Pose2d & a, const Waypoint & b)
   return dx * dx + dy * dy;
 }
 
+std::chrono::nanoseconds period_from_rate(double rate_hz)
+{
+  if (rate_hz <= 0.0 || !std::isfinite(rate_hz)) {
+    return std::chrono::nanoseconds(0);
+  }
+  return std::chrono::duration_cast<std::chrono::nanoseconds>(
+    std::chrono::duration<double>(1.0 / rate_hz));
+}
+
 }  // namespace
 
 PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
@@ -100,6 +110,11 @@ PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
   declare_parameter<double>("planning.start_match_max_distance_m", 3.0);
   declare_parameter<double>("planning.start_match_max_heading_error_rad", 1.57);
   declare_parameter<bool>("planning.start_match_prefer_edge_projection", true);
+  declare_parameter<bool>("planning.republish_last_route", true);
+  declare_parameter<bool>("planning.republish_last_trajectory", true);
+  declare_parameter<double>("planning.route_republish_rate_hz", 1.0);
+  declare_parameter<double>("planning.trajectory_republish_rate_hz", 10.0);
+  declare_parameter<double>("planning.roadnet_status_publish_rate_hz", 1.0);
 
   global_planner_algorithm_ = get_parameter("global_planner.algorithm").as_string();
   motion_planner_algorithm_ = get_parameter("motion_planner.algorithm").as_string();
@@ -111,8 +126,9 @@ PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
     get_parameter("topics.trajectory_topic").as_string(), 10);
   planning_status_pub_ = create_publisher<low_speed_av_interfaces::msg::ModuleStatus>(
     get_parameter("topics.planning_status_topic").as_string(), 10);
+  const auto roadnet_status_qos = rclcpp::QoS(1).transient_local().reliable();
   roadnet_status_pub_ = create_publisher<low_speed_av_interfaces::msg::RoadnetStatus>(
-    get_parameter("topics.roadnet_status_topic").as_string(), 10);
+    get_parameter("topics.roadnet_status_topic").as_string(), roadnet_status_qos);
   pose_sub_ = create_subscription<geometry_msgs::msg::PoseStamped>(
     get_parameter("topics.localization_pose_topic").as_string(), 10,
     [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
@@ -141,6 +157,23 @@ PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
       on_set_planner_algorithm(request, response);
     });
 
+  const auto route_period = period_from_rate(get_parameter("planning.route_republish_rate_hz").as_double());
+  if (route_period.count() > 0) {
+    route_republish_timer_ = create_wall_timer(route_period, [this]() { republish_last_route(); });
+  }
+  const auto trajectory_period =
+    period_from_rate(get_parameter("planning.trajectory_republish_rate_hz").as_double());
+  if (trajectory_period.count() > 0) {
+    trajectory_republish_timer_ =
+      create_wall_timer(trajectory_period, [this]() { republish_last_trajectory(); });
+  }
+  const auto roadnet_status_period =
+    period_from_rate(get_parameter("planning.roadnet_status_publish_rate_hz").as_double());
+  if (roadnet_status_period.count() > 0) {
+    roadnet_status_timer_ =
+      create_wall_timer(roadnet_status_period, [this]() { republish_last_roadnet_status(); });
+  }
+
   load_package_from_parameter();
 }
 
@@ -158,11 +191,13 @@ void PlanningNode::load_package_from_parameter()
     options.reject_failed_validation = get_parameter("roadnet.reject_failed_validation").as_bool();
     options.verify_checksums = get_parameter("roadnet.verify_checksums").as_bool();
     package_ = std::make_shared<RoadnetPackage>(loader_.load(package_path, options));
+    clear_cached_plan();
     RCLCPP_INFO(get_logger(), "loaded AD package %s", package_->package_id.c_str());
     publish_roadnet_status(true, "roadnet ready");
     publish_status("active", "roadnet ready");
   } catch (const std::exception & e) {
     package_.reset();
+    clear_cached_plan();
     RCLCPP_ERROR(get_logger(), "planning inactive: %s", e.what());
     publish_roadnet_status(false, e.what());
     publish_status("failure", e.what());
@@ -194,11 +229,53 @@ void PlanningNode::publish_roadnet_status(bool ready, const std::string & messag
   }
   status.ready = ready;
   status.message = message;
+  last_roadnet_status_msg_ = status;
+  has_last_roadnet_status_msg_ = true;
   roadnet_status_pub_->publish(status);
+}
+
+void PlanningNode::republish_last_route()
+{
+  if (!get_parameter("planning.republish_last_route").as_bool() || !has_last_route_msg_) {
+    return;
+  }
+  auto msg = last_route_msg_;
+  msg.header.stamp = now();
+  global_route_pub_->publish(msg);
+}
+
+void PlanningNode::republish_last_trajectory()
+{
+  if (!get_parameter("planning.republish_last_trajectory").as_bool() || !has_last_trajectory_msg_) {
+    return;
+  }
+  auto msg = last_trajectory_msg_;
+  msg.header.stamp = now();
+  for (auto & point : msg.points) {
+    point.header = msg.header;
+  }
+  trajectory_pub_->publish(msg);
+}
+
+void PlanningNode::republish_last_roadnet_status()
+{
+  if (!has_last_roadnet_status_msg_) {
+    return;
+  }
+  auto msg = last_roadnet_status_msg_;
+  msg.header.stamp = now();
+  roadnet_status_pub_->publish(msg);
+}
+
+void PlanningNode::clear_cached_plan()
+{
+  has_last_route_msg_ = false;
+  has_last_trajectory_msg_ = false;
 }
 
 void PlanningNode::publish_failure_trajectory(const std::string & reason)
 {
+  has_last_route_msg_ = false;
   low_speed_av_interfaces::msg::Trajectory msg;
   msg.header.stamp = now();
   msg.trajectory_id = "failure_stop";
@@ -226,6 +303,8 @@ void PlanningNode::publish_failure_trajectory(const std::string & reason)
     point.behavior = "planning_failure_stop";
     msg.points.push_back(point);
   }
+  last_trajectory_msg_ = msg;
+  has_last_trajectory_msg_ = true;
   trajectory_pub_->publish(msg);
 }
 
@@ -332,8 +411,11 @@ std::string PlanningNode::resolve_start_node(
   const std::string & task_point_id,
   std::string * diagnostic) const
 {
-  if (!node_id.empty() || !task_point_id.empty()) {
-    return resolve_goal_node(node_id, task_point_id, "");
+  if (!node_id.empty()) {
+    return node_id;
+  }
+  if (package_ && !task_point_id.empty()) {
+    return resolve_semantic_point_node(task_point_id, package_->task_points, "task point", false, diagnostic);
   }
   if (!get_parameter("planning.use_current_pose_as_start").as_bool()) {
     if (diagnostic) {
@@ -447,38 +529,67 @@ std::optional<std::string> PlanningNode::match_current_pose_to_start_node(std::s
 std::string PlanningNode::resolve_goal_node(
   const std::string & node_id,
   const std::string & task_point_id,
-  const std::string & parking_point_id) const
+  const std::string & parking_point_id,
+  std::string * diagnostic) const
 {
   if (!node_id.empty()) {
     return node_id;
   }
   if (package_ && !task_point_id.empty()) {
-    const auto it = package_->task_points.find(task_point_id);
-    if (it != package_->task_points.end() && !it->second.linked_node_id.empty()) {
-      return it->second.linked_node_id;
-    }
-    if (it != package_->task_points.end() && !it->second.linked_edge_id.empty()) {
-      const auto edge_it = std::find_if(package_->edges.begin(), package_->edges.end(), [&](const auto & edge) {
-        return edge.id == it->second.linked_edge_id;
-      });
-      if (edge_it != package_->edges.end()) {
-        return edge_it->to_node_id;
-      }
-    }
+    return resolve_semantic_point_node(task_point_id, package_->task_points, "task point", true, diagnostic);
   }
   if (package_ && !parking_point_id.empty()) {
-    const auto it = package_->parking_points.find(parking_point_id);
-    if (it != package_->parking_points.end() && !it->second.linked_node_id.empty()) {
-      return it->second.linked_node_id;
+    return resolve_semantic_point_node(
+      parking_point_id, package_->parking_points, "parking point", true, diagnostic);
+  }
+  return "";
+}
+
+std::string PlanningNode::resolve_semantic_point_node(
+  const std::string & point_id,
+  const std::map<std::string, SemanticPoint> & points,
+  const std::string & point_kind,
+  bool prefer_edge_to_node,
+  std::string * diagnostic) const
+{
+  if (!package_) {
+    if (diagnostic) {
+      *diagnostic = "roadnet package not loaded";
     }
-    if (it != package_->parking_points.end() && !it->second.linked_edge_id.empty()) {
-      const auto edge_it = std::find_if(package_->edges.begin(), package_->edges.end(), [&](const auto & edge) {
-        return edge.id == it->second.linked_edge_id;
-      });
-      if (edge_it != package_->edges.end()) {
-        return edge_it->to_node_id;
-      }
+    return "";
+  }
+  const auto point_it = points.find(point_id);
+  if (point_it == points.end()) {
+    if (diagnostic) {
+      *diagnostic = point_kind + " not found: " + point_id;
     }
+    return "";
+  }
+
+  const TopologyGraph graph(*package_);
+  const auto & point = point_it->second;
+  if (!point.linked_node_id.empty()) {
+    if (graph.node(point.linked_node_id)) {
+      return point.linked_node_id;
+    }
+    RCLCPP_WARN(
+      get_logger(), "%s %s references unknown linked_node_id '%s'; trying linked_edge_id fallback",
+      point_kind.c_str(), point_id.c_str(), point.linked_node_id.c_str());
+  }
+
+  if (!point.linked_edge_id.empty()) {
+    if (const auto * edge = graph.edge(point.linked_edge_id)) {
+      return prefer_edge_to_node ? edge->to_node_id : edge->from_node_id;
+    }
+    if (diagnostic) {
+      *diagnostic = point_kind + " " + point_id +
+        " linked_edge_id is not in topology: " + point.linked_edge_id;
+    }
+    return "";
+  }
+
+  if (diagnostic) {
+    *diagnostic = point_kind + " " + point_id + " has no valid linked_node_id or linked_edge_id";
   }
   return "";
 }
@@ -543,6 +654,7 @@ void PlanningNode::on_reload_roadnet(
     options.reject_failed_validation = get_parameter("roadnet.reject_failed_validation").as_bool();
     options.verify_checksums = get_parameter("roadnet.verify_checksums").as_bool();
     package_ = std::make_shared<RoadnetPackage>(loader_.load(request->package_path, options));
+    clear_cached_plan();
     response->success = true;
     response->package_id = package_->package_id;
     response->message = "roadnet ready";
@@ -550,6 +662,7 @@ void PlanningNode::on_reload_roadnet(
     publish_status("active", response->message);
   } catch (const std::exception & e) {
     package_.reset();
+    clear_cached_plan();
     response->success = false;
     response->message = e.what();
     publish_roadnet_status(false, response->message);
@@ -562,14 +675,20 @@ void PlanningNode::on_plan_route(
   std::shared_ptr<low_speed_av_interfaces::srv::PlanRoute::Response> response)
 {
   std::string start_diagnostic;
+  std::string goal_diagnostic;
   const auto start = resolve_start_node(
     request->start_node_id, request->start_task_point_id, &start_diagnostic);
   const auto goal = resolve_goal_node(
-    request->goal_node_id, request->goal_task_point_id, request->goal_parking_point_id);
+    request->goal_node_id, request->goal_task_point_id, request->goal_parking_point_id, &goal_diagnostic);
   if (start.empty() || goal.empty()) {
     response->success = false;
-    response->message = start.empty() && !start_diagnostic.empty() ?
-      start_diagnostic : "start or goal node cannot be resolved";
+    if (start.empty() && !start_diagnostic.empty()) {
+      response->message = start_diagnostic;
+    } else if (goal.empty() && !goal_diagnostic.empty()) {
+      response->message = goal_diagnostic;
+    } else {
+      response->message = "start or goal node cannot be resolved";
+    }
     publish_status("failure", response->message);
     publish_failure_trajectory(response->message);
     return;
@@ -580,6 +699,7 @@ void PlanningNode::on_plan_route(
     response->route = to_msg(route);
     global_route_pub_->publish(response->route);
     if (!route.success) {
+      has_last_route_msg_ = false;
       response->success = false;
       response->message = route.message;
       publish_status("failure", route.message);
@@ -594,7 +714,11 @@ void PlanningNode::on_plan_route(
       publish_failure_trajectory(response->message);
       return;
     }
-    trajectory_pub_->publish(to_msg(trajectory, "ok"));
+    last_route_msg_ = response->route;
+    has_last_route_msg_ = true;
+    last_trajectory_msg_ = to_msg(trajectory, "ok");
+    has_last_trajectory_msg_ = true;
+    trajectory_pub_->publish(last_trajectory_msg_);
     response->success = true;
     response->message = "ok";
     const auto status_message = start_diagnostic.empty() ?
