@@ -1,76 +1,49 @@
-# low_speed_av_planning 默认参数
-#
-# 说明：
-# - 本文件只配置规划模块，不配置控制器和车辆底盘。
-# - 所有话题名都应从这里读取，避免在代码里写死。
-# - 当前环境可能没有 ROS2；本文件用于生成 ROS2 包和后续真实 ROS2 环境运行。
-
+# Default parameters for low_speed_av_planning.
 low_speed_av_planning:
   ros__parameters:
     roadnet:
-      # AD Package 根目录。为空时，规划节点启动后等待 ReloadRoadnet 服务或外部参数覆盖。
       package_path: ""
-      # validation.status == failed 或 blocking_errors > 0 时拒绝加载。
       reject_failed_validation: true
-      # validation warning 允许加载，但应通过 RoadnetStatus/日志提示。
       allow_validation_warning: true
-      # 开启后应校验 checksums.sha256 和 manifest.hashes。
       verify_checksums: true
-      # 支持 v1.1.0 和兼容的 v1.1.x patch 版本。
       supported_schema_versions: ["1.1.0"]
 
     topics:
-      # 定位输入默认话题；如定位模块不同，可在 launch 或 YAML 中覆盖。
       localization_pose_topic: "/localization/pose"
-      # 当前最低要求支持 PoseStamped；后续可扩展 PoseWithCovarianceStamped。
       localization_pose_type: "pose_stamped"
-      # 全局路线输出。
       global_route_topic: "/planning/global_route"
-      # 局部/全局参考轨迹输出，供控制模块订阅。
       trajectory_topic: "/planning/trajectory"
-      # 规划模块状态输出。
       planning_status_topic: "/planning/status"
-      # roadnet 加载与 validation 状态输出。
       roadnet_status_topic: "/planning/roadnet_status"
 
     global_planner:
-      # 可选：dijkstra | astar。
       algorithm: "astar"
-      # A* 启发式权重；1.0 表示标准欧氏距离启发。
       heuristic_weight: 1.0
-      # 是否允许规划 reverse 边；仍会受 edge.constraints.allow_reverse 约束。
       allow_reverse: true
-      # 运行时临时屏蔽边 ID 列表。
-      # 空列表在部分 ROS2/rclcpp 版本中会被解析为未设置类型的参数；
-      # 不配置时由 planning_node.cpp 使用空 vector 默认值。
-      # 如需屏蔽边，请写成：blocked_edges: ["E_L001_F", "E_L002_F"]
-      # 最大允许曲率绝对值，后续用于过滤过弯曲边。
+      # Leave unset for an empty list on older rclcpp versions.
+      # Example: blocked_edges: ["E_L001_F", "E_L002_F"]
       max_edge_curvature_abs: 0.6
 
     motion_planner:
-      # 可选：reference_line | stop_and_wait | frenet_lite | hybrid_astar_parking。
       algorithm: "reference_line"
-      # 按距离裁剪发布轨迹，避免一次发布过长轨迹。
       horizon_distance_m: 15.0
-      # 按时间裁剪轨迹的预留参数。
       horizon_time_s: 8.0
-      # 当前位姿到参考线最近点搜索半径。
       nearest_search_radius_m: 5.0
-      # 拼接多条边时去除边界重复 waypoint。
       deduplicate_edge_boundary_points: true
-      # 拼接后重新生成 route-level s_m。
       regenerate_route_s: true
 
     speed_planner:
-      # 可选：constant | curvature | obstacle_aware。
       algorithm: "curvature"
-      # 默认 demo 速度保持低速，避免默认高速输出。
       default_speed_mps: 0.5
       max_speed_mps: 1.0
       min_speed_mps: 0.0
-      # 曲率限速使用的最大横向加速度。
       max_lateral_accel_mps2: 0.5
-      # 当前最近障碍物距离；-1 表示没有障碍物输入。
       obstacle_distance_m: -1.0
-      # obstacle_aware stub 中，障碍物距离小于该阈值时停车。
       obstacle_stop_distance_m: 2.0
+
+    planning:
+      localization_timeout_s: 1.0
+      use_current_pose_as_start: true
+      start_match_max_distance_m: 3.0
+      start_match_max_heading_error_rad: 1.57
+      start_match_prefer_edge_projection: true

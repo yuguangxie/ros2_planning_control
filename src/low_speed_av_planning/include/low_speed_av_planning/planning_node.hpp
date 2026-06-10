@@ -1,8 +1,10 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <low_speed_av_interfaces/msg/global_route.hpp>
@@ -32,10 +34,16 @@ private:
   PlanResult compute_route(const std::string & start_node_id, const std::string & goal_node_id);
   Trajectory compute_trajectory(const PlanResult & route);
   void apply_semantic_speed_limits(Trajectory & trajectory) const;
+  std::string resolve_start_node(
+    const std::string & node_id,
+    const std::string & task_point_id,
+    std::string * diagnostic) const;
   std::string resolve_goal_node(
     const std::string & node_id,
     const std::string & task_point_id,
     const std::string & parking_point_id) const;
+  std::optional<std::string> match_current_pose_to_start_node(std::string * diagnostic) const;
+  void on_localization_pose(const geometry_msgs::msg::PoseStamped::SharedPtr msg);
   low_speed_av_interfaces::msg::GlobalRoute to_msg(const PlanResult & route) const;
   low_speed_av_interfaces::msg::Trajectory to_msg(const Trajectory & trajectory, const std::string & status) const;
   GlobalPlannerOptions read_global_options() const;
@@ -60,9 +68,12 @@ private:
   rclcpp::Publisher<low_speed_av_interfaces::msg::Trajectory>::SharedPtr trajectory_pub_;
   rclcpp::Publisher<low_speed_av_interfaces::msg::ModuleStatus>::SharedPtr planning_status_pub_;
   rclcpp::Publisher<low_speed_av_interfaces::msg::RoadnetStatus>::SharedPtr roadnet_status_pub_;
+  rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_;
   rclcpp::Service<low_speed_av_interfaces::srv::ReloadRoadnet>::SharedPtr reload_srv_;
   rclcpp::Service<low_speed_av_interfaces::srv::PlanRoute>::SharedPtr plan_route_srv_;
   rclcpp::Service<low_speed_av_interfaces::srv::SetPlannerAlgorithm>::SharedPtr set_algorithm_srv_;
+  std::optional<Pose2d> latest_pose_;
+  rclcpp::Time latest_pose_receive_time_;
 };
 
 }  // namespace low_speed_av_planning

@@ -1,0 +1,47 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Enabled: true
+      Name: Grid
+      Plane: XY
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Roadnet Markers
+      Topic:
+        Value: /simulation/roadnet_markers
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Route Markers
+      Topic:
+        Value: /simulation/route_markers
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: Planned Trajectory Path
+      Topic:
+        Value: /simulation/trajectory_path
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Vehicle Markers
+      Topic:
+        Value: /simulation/vehicle_markers
+  Enabled: true
+  Global Options:
+    Fixed Frame: map
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 35
+      Focal Point:
+        X: -6
+        Y: 4
+        Z: 0
+      Name: Current View

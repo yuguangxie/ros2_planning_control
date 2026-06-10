@@ -1,0 +1,16 @@
+schema: low_speed_map_metadata
+schema_version: 1.1.0
+map_id: 2ab4eec1-4d39-4032-bf31-ced40bcdf06e
+map_version: 1.0.0
+frame_id: map
+resolution_m_per_px: 0.02
+origin:
+  x: -28.771
+  y: -4.388
+  yaw: 0.0
+width_px: 2540
+height_px: 910
+image: null
+occupied_thresh: 0.65
+free_thresh: 0.196
+negate: 0

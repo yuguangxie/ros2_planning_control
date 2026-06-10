@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://low-speed-roadnet-editor.local/schemas/roadnet.schema.json",
+  "title": "Low Speed Roadnet Geometry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "map_id", "coordinate_frame", "nodes", "paths", "areas", "route_points", "metadata"],
+  "properties": {
+    "schema": { "const": "low_speed_roadnet" },
+    "schema_version": { "const": "1.1.0" },
+    "map_id": { "type": "string" },
+    "coordinate_frame": { "const": "map" },
+    "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } },
+    "paths": { "type": "array", "items": { "$ref": "#/$defs/path" } },
+    "areas": { "type": "array", "items": { "$ref": "#/$defs/area" } },
+    "route_points": { "type": "array", "items": { "$ref": "#/$defs/route_point" } },
+    "metadata": { "type": "object" }
+  },
+  "$defs": {
+    "xy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "pose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "yaw"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "yaw": { "type": "number" }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_node_id", "type", "pose", "properties"],
+      "properties": {
+        "id": { "type": "string" },
+        "source_node_id": { "type": "string" },
+        "type": { "enum": ["waypoint", "parking", "waiting", "charging", "intersection", "normal"] },
+        "pose": { "$ref": "#/$defs/pose" },
+        "properties": { "type": "object" }
+      }
+    },
+    "path": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "start_node_id", "end_node_id", "geometry_type", "control_points", "samples", "direction", "speed_profile", "constraints", "cost_weight", "behavior_tags"],
+      "properties": {
+        "id": { "type": "string" },
+        "start_node_id": { "type": "string" },
+        "end_node_id": { "type": "string" },
+        "geometry_type": { "enum": ["line", "polyline", "quadratic_bezier", "cubic_bezier"] },
+        "control_points": { "type": "array", "items": { "$ref": "#/$defs/xy" } },
+        "samples": { "type": "array", "items": { "$ref": "#/$defs/xy" } },
+        "direction": { "enum": ["forward", "reverse", "bidirectional"] },
+        "speed_profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["target_mps", "min_mps", "max_mps"],
+          "properties": {
+            "target_mps": { "type": "number", "minimum": 0 },
+            "min_mps": { "type": "number", "minimum": 0 },
+            "max_mps": { "type": "number", "minimum": 0 }
+          }
+        },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_curvature_abs", "min_width_m", "allow_stop", "allow_reverse"],
+          "properties": {
+            "max_curvature_abs": { "type": "number", "minimum": 0 },
+            "min_width_m": { "type": "number", "minimum": 0 },
+            "allow_stop": { "type": "boolean" },
+            "allow_reverse": { "type": "boolean" }
+          }
+        },
+        "cost_weight": { "type": "number", "minimum": 0 },
+        "behavior_tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "polygon", "allow_planning_through", "allow_parking", "priority"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "enum": ["drivable_area", "no_go_area", "speed_zone", "parking_allowed", "slow_zone", "keepout"] },
+        "polygon": { "type": "array", "items": { "$ref": "#/$defs/xy" } },
+        "speed_limit_mps": { "type": ["number", "null"], "minimum": 0 },
+        "allow_planning_through": { "type": "boolean" },
+        "allow_parking": { "type": "boolean" },
+        "priority": { "type": "integer" }
+      }
+    },
+    "route_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "pose", "action", "wait_time_s", "properties"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "pose": { "$ref": "#/$defs/pose" },
+        "linked_node_id": { "type": ["string", "null"] },
+        "linked_edge_id": { "type": ["string", "null"] },
+        "linked_path_id": { "type": ["string", "null"] },
+        "action": { "type": "string" },
+        "wait_time_s": { "type": "number", "minimum": 0 },
+        "properties": { "type": "object" }
+      }
+    }
+  }
+}

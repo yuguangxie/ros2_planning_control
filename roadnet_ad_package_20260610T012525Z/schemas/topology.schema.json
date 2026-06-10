@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://low-speed-roadnet-editor.local/schemas/topology.schema.json",
+  "title": "Low Speed Topology",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "map_id", "graph_id", "coordinate_frame", "nodes", "edges"],
+  "properties": {
+    "schema": { "const": "low_speed_topology" },
+    "schema_version": { "const": "1.1.0" },
+    "map_id": { "type": "string" },
+    "graph_id": { "type": "string" },
+    "coordinate_frame": { "const": "map" },
+    "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } },
+    "edges": { "type": "array", "items": { "$ref": "#/$defs/edge" } }
+  },
+  "$defs": {
+    "pose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "yaw"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "yaw": { "type": "number" }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_node_id", "type", "pose", "properties"],
+      "properties": {
+        "id": { "type": "string" },
+        "source_node_id": { "type": "string" },
+        "type": { "enum": ["waypoint", "parking", "waiting", "charging", "intersection", "normal"] },
+        "pose": { "$ref": "#/$defs/pose" },
+        "properties": { "type": "object" }
+      }
+    },
+    "reference_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["s_m", "x", "y", "yaw", "kappa", "v_mps", "behavior"],
+      "properties": {
+        "s_m": { "type": "number" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "yaw": { "type": "number" },
+        "kappa": { "type": "number" },
+        "v_mps": { "type": "number", "minimum": 0 },
+        "behavior": { "enum": ["follow", "slow_down", "stop", "parking_approach", "charging_approach"] }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_path_id", "from", "to", "direction", "length_m", "cost", "speed_limit_mps", "constraints", "waypoint_range", "reference_points", "validation"],
+      "properties": {
+        "id": { "type": "string" },
+        "source_path_id": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "direction": { "enum": ["forward", "reverse", "bidirectional"] },
+        "length_m": { "type": "number", "minimum": 0 },
+        "cost": { "type": "number", "minimum": 0 },
+        "speed_limit_mps": { "type": "number", "minimum": 0 },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_speed_mps", "min_speed_mps", "max_curvature_abs", "allow_stop", "allow_reverse"],
+          "properties": {
+            "max_speed_mps": { "type": "number", "minimum": 0 },
+            "min_speed_mps": { "type": "number", "minimum": 0 },
+            "max_curvature_abs": { "type": "number", "minimum": 0 },
+            "allow_stop": { "type": "boolean" },
+            "allow_reverse": { "type": "boolean" }
+          }
+        },
+        "waypoint_range": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start_index", "end_index"],
+          "properties": {
+            "start_index": { "type": "integer", "minimum": 0 },
+            "end_index": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "reference_points": { "type": "array", "items": { "$ref": "#/$defs/reference_point" } },
+        "validation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["curvature_ok", "drivable_area_ok", "no_go_area_ok", "footprint_ok"],
+          "properties": {
+            "curvature_ok": { "type": "boolean" },
+            "drivable_area_ok": { "type": "boolean" },
+            "no_go_area_ok": { "type": "boolean" },
+            "footprint_ok": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

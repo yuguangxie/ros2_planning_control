@@ -1,0 +1,6 @@
+{
+  "charging_points": [],
+  "coordinate_frame": "map",
+  "schema": "low_speed_charging_points",
+  "schema_version": "1.1.0"
+}

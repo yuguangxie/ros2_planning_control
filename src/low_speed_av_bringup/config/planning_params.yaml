@@ -1,11 +1,7 @@
-# low_speed_av_bringup 使用的规划参数
-#
-# 与 low_speed_av_planning/config/planning_params.yaml 保持同名字段，便于 demo launch 统一加载。
-
+# Planning parameters used by the bringup demo launch.
 low_speed_av_planning:
   ros__parameters:
     roadnet:
-      # bringup demo 可在 launch 中覆盖为安装后的 sample_ad_package 路径。
       package_path: ""
       reject_failed_validation: true
       allow_validation_warning: true
@@ -24,9 +20,8 @@ low_speed_av_planning:
       algorithm: "astar"
       heuristic_weight: 1.0
       allow_reverse: true
-      # 空列表在部分 ROS2/rclcpp 版本中会被解析为未设置类型的参数；
-      # 不配置时由 planning_node.cpp 使用空 vector 默认值。
-      # 如需屏蔽边，请写成：blocked_edges: ["E_L001_F", "E_L002_F"]
+      # Leave unset for an empty list on older rclcpp versions.
+      # Example: blocked_edges: ["E_L001_F", "E_L002_F"]
       max_edge_curvature_abs: 0.6
 
     motion_planner:
@@ -45,3 +40,10 @@ low_speed_av_planning:
       max_lateral_accel_mps2: 0.5
       obstacle_distance_m: -1.0
       obstacle_stop_distance_m: 2.0
+
+    planning:
+      localization_timeout_s: 1.0
+      use_current_pose_as_start: true
+      start_match_max_distance_m: 3.0
+      start_match_max_heading_error_rad: 1.57
+      start_match_prefer_edge_projection: true

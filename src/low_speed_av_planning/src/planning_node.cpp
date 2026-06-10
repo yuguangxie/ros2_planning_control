@@ -1,9 +1,13 @@
 #include "low_speed_av_planning/planning_node.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <exception>
+#include <limits>
 #include <memory>
+#include <optional>
 #include <set>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -37,6 +41,32 @@ bool is_speed_zone(const SemanticArea & area)
   return area.type == "speed_zone" || area.speed_limit_mps > 0.0;
 }
 
+double normalize_angle(double angle)
+{
+  constexpr double pi = 3.14159265358979323846;
+  while (angle > pi) {
+    angle -= 2.0 * pi;
+  }
+  while (angle < -pi) {
+    angle += 2.0 * pi;
+  }
+  return angle;
+}
+
+double yaw_from_quaternion(const geometry_msgs::msg::Quaternion & q)
+{
+  const double siny_cosp = 2.0 * (q.w * q.z + q.x * q.y);
+  const double cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z);
+  return std::atan2(siny_cosp, cosy_cosp);
+}
+
+double squared_distance(const Pose2d & a, const Waypoint & b)
+{
+  const double dx = a.x_m - b.x_m;
+  const double dy = a.y_m - b.y_m;
+  return dx * dx + dy * dy;
+}
+
 }  // namespace
 
 PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
@@ -65,6 +95,11 @@ PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
   declare_parameter<double>("speed_planner.max_lateral_accel_mps2", 0.5);
   declare_parameter<double>("speed_planner.obstacle_distance_m", -1.0);
   declare_parameter<double>("speed_planner.obstacle_stop_distance_m", 2.0);
+  declare_parameter<double>("planning.localization_timeout_s", 1.0);
+  declare_parameter<bool>("planning.use_current_pose_as_start", true);
+  declare_parameter<double>("planning.start_match_max_distance_m", 3.0);
+  declare_parameter<double>("planning.start_match_max_heading_error_rad", 1.57);
+  declare_parameter<bool>("planning.start_match_prefer_edge_projection", true);
 
   global_planner_algorithm_ = get_parameter("global_planner.algorithm").as_string();
   motion_planner_algorithm_ = get_parameter("motion_planner.algorithm").as_string();
@@ -78,6 +113,11 @@ PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
     get_parameter("topics.planning_status_topic").as_string(), 10);
   roadnet_status_pub_ = create_publisher<low_speed_av_interfaces::msg::RoadnetStatus>(
     get_parameter("topics.roadnet_status_topic").as_string(), 10);
+  pose_sub_ = create_subscription<geometry_msgs::msg::PoseStamped>(
+    get_parameter("topics.localization_pose_topic").as_string(), 10,
+    [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
+      on_localization_pose(msg);
+    });
 
   reload_srv_ = create_service<low_speed_av_interfaces::srv::ReloadRoadnet>(
     "~/reload_roadnet",
@@ -250,6 +290,23 @@ Trajectory PlanningNode::compute_trajectory(const PlanResult & route)
   return trajectory;
 }
 
+void PlanningNode::on_localization_pose(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
+{
+  if (!msg) {
+    return;
+  }
+  Pose2d pose;
+  pose.x_m = msg->pose.position.x;
+  pose.y_m = msg->pose.position.y;
+  pose.yaw_rad = yaw_from_quaternion(msg->pose.orientation);
+  if (!std::isfinite(pose.x_m) || !std::isfinite(pose.y_m) || !std::isfinite(pose.yaw_rad)) {
+    RCLCPP_WARN(get_logger(), "ignored non-finite localization pose");
+    return;
+  }
+  latest_pose_ = pose;
+  latest_pose_receive_time_ = now();
+}
+
 void PlanningNode::apply_semantic_speed_limits(Trajectory & trajectory) const
 {
   if (!package_) {
@@ -268,6 +325,123 @@ void PlanningNode::apply_semantic_speed_limits(Trajectory & trajectory) const
       }
     }
   }
+}
+
+std::string PlanningNode::resolve_start_node(
+  const std::string & node_id,
+  const std::string & task_point_id,
+  std::string * diagnostic) const
+{
+  if (!node_id.empty() || !task_point_id.empty()) {
+    return resolve_goal_node(node_id, task_point_id, "");
+  }
+  if (!get_parameter("planning.use_current_pose_as_start").as_bool()) {
+    if (diagnostic) {
+      *diagnostic = "start node is empty and planning.use_current_pose_as_start is false";
+    }
+    return "";
+  }
+  const auto matched = match_current_pose_to_start_node(diagnostic);
+  return matched.value_or("");
+}
+
+std::optional<std::string> PlanningNode::match_current_pose_to_start_node(std::string * diagnostic) const
+{
+  if (!package_) {
+    if (diagnostic) {
+      *diagnostic = "roadnet package not loaded";
+    }
+    return std::nullopt;
+  }
+  if (!latest_pose_) {
+    if (diagnostic) {
+      *diagnostic = "current localization pose is not available";
+    }
+    return std::nullopt;
+  }
+
+  const auto age = (now() - latest_pose_receive_time_).seconds();
+  const auto timeout = get_parameter("planning.localization_timeout_s").as_double();
+  if (age > timeout) {
+    if (diagnostic) {
+      std::ostringstream oss;
+      oss << "current localization pose is stale: age=" << age << "s timeout=" << timeout << "s";
+      *diagnostic = oss.str();
+    }
+    return std::nullopt;
+  }
+
+  const auto max_distance = get_parameter("planning.start_match_max_distance_m").as_double();
+  const auto max_heading = get_parameter("planning.start_match_max_heading_error_rad").as_double();
+  const bool prefer_edge_projection =
+    get_parameter("planning.start_match_prefer_edge_projection").as_bool();
+
+  const Waypoint * best = nullptr;
+  double best_distance_sq = std::numeric_limits<double>::infinity();
+  double best_heading_error = std::numeric_limits<double>::infinity();
+  for (const auto & wp : package_->waypoints) {
+    const double heading_error = std::fabs(normalize_angle(latest_pose_->yaw_rad - wp.yaw_rad));
+    if (heading_error > max_heading) {
+      continue;
+    }
+    const double dist_sq = squared_distance(*latest_pose_, wp);
+    if (dist_sq < best_distance_sq) {
+      best = &wp;
+      best_distance_sq = dist_sq;
+      best_heading_error = heading_error;
+    }
+  }
+
+  if (!best) {
+    if (diagnostic) {
+      *diagnostic = "no waypoint matched localization heading threshold";
+    }
+    return std::nullopt;
+  }
+
+  const double distance = std::sqrt(best_distance_sq);
+  if (distance > max_distance) {
+    if (diagnostic) {
+      std::ostringstream oss;
+      oss << "nearest roadnet waypoint is too far: distance=" << distance <<
+        "m max=" << max_distance << "m waypoint=" << best->waypoint_id;
+      *diagnostic = oss.str();
+    }
+    return std::nullopt;
+  }
+
+  const auto edge_it = std::find_if(package_->edges.begin(), package_->edges.end(), [&](const auto & edge) {
+    return edge.id == best->edge_id;
+  });
+  if (edge_it == package_->edges.end()) {
+    if (diagnostic) {
+      *diagnostic = "matched waypoint references unknown edge: " + best->edge_id;
+    }
+    return std::nullopt;
+  }
+
+  std::string start_node = edge_it->from_node_id;
+  if (prefer_edge_projection) {
+    const auto range_it = package_->waypoint_index_by_edge.find(best->edge_id);
+    if (range_it != package_->waypoint_index_by_edge.end() && range_it->second.count > 1U) {
+      const double progress = static_cast<double>(best->index - range_it->second.start_index) /
+        static_cast<double>(range_it->second.count - 1U);
+      if (progress >= 0.5) {
+        start_node = edge_it->to_node_id;
+      }
+    }
+  }
+
+  if (diagnostic) {
+    std::ostringstream oss;
+    oss << "matched current pose to waypoint=" << best->waypoint_id <<
+      " edge=" << best->edge_id <<
+      " start_node=" << start_node <<
+      " distance_m=" << distance <<
+      " heading_error_rad=" << best_heading_error;
+    *diagnostic = oss.str();
+  }
+  return start_node;
 }
 
 std::string PlanningNode::resolve_goal_node(
@@ -387,13 +561,15 @@ void PlanningNode::on_plan_route(
   const std::shared_ptr<low_speed_av_interfaces::srv::PlanRoute::Request> request,
   std::shared_ptr<low_speed_av_interfaces::srv::PlanRoute::Response> response)
 {
-  const auto start = resolve_goal_node(
-    request->start_node_id, request->start_task_point_id, "");
+  std::string start_diagnostic;
+  const auto start = resolve_start_node(
+    request->start_node_id, request->start_task_point_id, &start_diagnostic);
   const auto goal = resolve_goal_node(
     request->goal_node_id, request->goal_task_point_id, request->goal_parking_point_id);
   if (start.empty() || goal.empty()) {
     response->success = false;
-    response->message = "start or goal node cannot be resolved";
+    response->message = start.empty() && !start_diagnostic.empty() ?
+      start_diagnostic : "start or goal node cannot be resolved";
     publish_status("failure", response->message);
     publish_failure_trajectory(response->message);
     return;
@@ -421,7 +597,10 @@ void PlanningNode::on_plan_route(
     trajectory_pub_->publish(to_msg(trajectory, "ok"));
     response->success = true;
     response->message = "ok";
-    publish_status("active", "planned route with " + std::to_string(trajectory.size()) + " trajectory points");
+    const auto status_message = start_diagnostic.empty() ?
+      "planned route with " + std::to_string(trajectory.size()) + " trajectory points" :
+      "planned route with " + std::to_string(trajectory.size()) + " trajectory points; " + start_diagnostic;
+    publish_status("active", status_message);
   } catch (const std::exception & e) {
     response->success = false;
     response->message = e.what();

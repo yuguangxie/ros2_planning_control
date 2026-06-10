@@ -1,0 +1,34 @@
+roadnet_visualization_node:
+  ros__parameters:
+    roadnet:
+      package_path: ""
+      reject_failed_validation: true
+      verify_checksums: true
+    frame_id: "map"
+    publish_rate_hz: 1.0
+    topics:
+      global_route_topic: "/planning/global_route"
+      trajectory_topic: "/planning/trajectory"
+      localization_pose_topic: "/localization/pose"
+      roadnet_markers: "/simulation/roadnet_markers"
+      route_markers: "/simulation/route_markers"
+      trajectory_path: "/simulation/trajectory_path"
+      vehicle_markers: "/simulation/vehicle_markers"
+
+sim_localization_pose_publisher:
+  ros__parameters:
+    roadnet:
+      package_path: ""
+      reject_failed_validation: true
+      verify_checksums: true
+    publish_rate_hz: 20.0
+    frame_id: "map"
+    mode: "fixed_pose"
+    initial_x: 0.554
+    initial_y: 1.473
+    initial_yaw: -0.9178
+    speed_mps: 0.5
+    loop: true
+    start_paused: false
+    trajectory_topic: "/planning/trajectory"
+    pose_topic: "/localization/pose"

@@ -1,0 +1,14 @@
+{
+  "goal_node_id": "N0016",
+  "project_id": "fc93b922-8948-4e0f-ba4b-e6cc66b08c4a",
+  "required_consumers": [
+    "global_planner",
+    "motion_planner",
+    "controller",
+    "task_manager",
+    "safety_validation"
+  ],
+  "schema": "low_speed_mission_example",
+  "schema_version": "1.1.0",
+  "start_node_id": "N0001"
+}

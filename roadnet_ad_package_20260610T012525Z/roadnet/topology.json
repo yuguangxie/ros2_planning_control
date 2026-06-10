@@ -1,0 +1,5337 @@
+{
+  "coordinate_frame": "map",
+  "edges": [
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 1.982,
+      "direction": "forward",
+      "from": "N0001",
+      "id": "E_C-001_F",
+      "length_m": 1.982,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.047082,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": 0.554,
+          "y": 1.473,
+          "yaw": -0.9178
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.047082,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": 0.676,
+          "y": 1.314,
+          "yaw": -0.9366
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.002899,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": 0.794,
+          "y": 1.153,
+          "yaw": -0.9378
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.046192,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": 0.913,
+          "y": 0.991,
+          "yaw": -0.9193
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.100749,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": 1.034,
+          "y": 0.832,
+          "yaw": -0.879
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.160284,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": 1.162,
+          "y": 0.678,
+          "yaw": -0.8149
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.221334,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": 1.299,
+          "y": 0.533,
+          "yaw": -0.7265
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.27583,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": 1.448,
+          "y": 0.4,
+          "yaw": -0.6164
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.31193,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": 1.611,
+          "y": 0.284,
+          "yaw": -0.492
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.314606,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": 1.787,
+          "y": 0.19,
+          "yaw": -0.372
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.314606,
+          "s_m": 1.982,
+          "v_mps": 1.0,
+          "x": 1.957,
+          "y": 0.124,
+          "yaw": -0.372
+        }
+      ],
+      "source_path_id": "C-001",
+      "speed_limit_mps": 1.0,
+      "to": "N0002",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 10,
+        "start_index": 0
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 3.48,
+      "direction": "forward",
+      "from": "N0002",
+      "id": "E_L-001_F",
+      "length_m": 3.48,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": 1.957,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": 2.157,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": 2.357,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": 2.557,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": 2.757,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": 2.957,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": 3.157,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": 3.357,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": 3.557,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": 3.757,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": 3.957,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": 4.157,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": 4.357,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": 4.557,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.8,
+          "v_mps": 1.0,
+          "x": 4.757,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.0,
+          "v_mps": 1.0,
+          "x": 4.957,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.2,
+          "v_mps": 1.0,
+          "x": 5.157,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.4,
+          "v_mps": 1.0,
+          "x": 5.357,
+          "y": 0.124,
+          "yaw": 0.0
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.48,
+          "v_mps": 1.0,
+          "x": 5.436,
+          "y": 0.124,
+          "yaw": 0.0
+        }
+      ],
+      "source_path_id": "L-001",
+      "speed_limit_mps": 1.0,
+      "to": "N0003",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 29,
+        "start_index": 11
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 2.787,
+      "direction": "forward",
+      "from": "N0003",
+      "id": "E_C-002_F",
+      "length_m": 2.787,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.166201,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": 5.436,
+          "y": 0.124,
+          "yaw": 0.7445
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.166201,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": 5.584,
+          "y": 0.259,
+          "yaw": 0.8109
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.201582,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": 5.721,
+          "y": 0.404,
+          "yaw": 0.8915
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.243285,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": 5.847,
+          "y": 0.56,
+          "yaw": 0.9887
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.287817,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": 5.957,
+          "y": 0.727,
+          "yaw": 1.1035
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.327117,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": 6.047,
+          "y": 0.905,
+          "yaw": 1.234
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.349223,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": 6.113,
+          "y": 1.094,
+          "yaw": 1.3733
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.344614,
+          "s_m": 1.399,
+          "v_mps": 1.0,
+          "x": 6.152,
+          "y": 1.29,
+          "yaw": 1.5107
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.313859,
+          "s_m": 1.599,
+          "v_mps": 1.0,
+          "x": 6.164,
+          "y": 1.489,
+          "yaw": 1.6359
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.267125,
+          "s_m": 1.799,
+          "v_mps": 1.0,
+          "x": 6.151,
+          "y": 1.689,
+          "yaw": 1.7426
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.21652,
+          "s_m": 1.999,
+          "v_mps": 1.0,
+          "x": 6.117,
+          "y": 1.886,
+          "yaw": 1.8291
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.169809,
+          "s_m": 2.199,
+          "v_mps": 1.0,
+          "x": 6.066,
+          "y": 2.079,
+          "yaw": 1.8969
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.130066,
+          "s_m": 2.399,
+          "v_mps": 1.0,
+          "x": 6.002,
+          "y": 2.269,
+          "yaw": 1.9489
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.097056,
+          "s_m": 2.599,
+          "v_mps": 1.0,
+          "x": 5.928,
+          "y": 2.454,
+          "yaw": 1.9866
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.097056,
+          "s_m": 2.787,
+          "v_mps": 1.0,
+          "x": 5.852,
+          "y": 2.627,
+          "yaw": 1.9866
+        }
+      ],
+      "source_path_id": "C-002",
+      "speed_limit_mps": 1.0,
+      "to": "N0004",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 44,
+        "start_index": 30
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 4.021,
+      "direction": "forward",
+      "from": "N0004",
+      "id": "E_L-002_F",
+      "length_m": 4.021,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": 5.852,
+          "y": 2.627,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": 5.653,
+          "y": 2.649,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": 5.454,
+          "y": 2.671,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": 5.256,
+          "y": 2.693,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": 5.057,
+          "y": 2.715,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": 4.858,
+          "y": 2.737,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": 4.659,
+          "y": 2.759,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": 4.461,
+          "y": 2.781,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": 4.262,
+          "y": 2.804,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": 4.063,
+          "y": 2.826,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": 3.864,
+          "y": 2.848,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": 3.665,
+          "y": 2.87,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": 3.467,
+          "y": 2.892,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": 3.268,
+          "y": 2.914,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.8,
+          "v_mps": 1.0,
+          "x": 3.069,
+          "y": 2.936,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.0,
+          "v_mps": 1.0,
+          "x": 2.87,
+          "y": 2.958,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.2,
+          "v_mps": 1.0,
+          "x": 2.672,
+          "y": 2.98,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.4,
+          "v_mps": 1.0,
+          "x": 2.473,
+          "y": 3.002,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.6,
+          "v_mps": 1.0,
+          "x": 2.274,
+          "y": 3.025,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.8,
+          "v_mps": 1.0,
+          "x": 2.075,
+          "y": 3.047,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 4.0,
+          "v_mps": 1.0,
+          "x": 1.876,
+          "y": 3.069,
+          "yaw": 3.0309
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 4.021,
+          "v_mps": 1.0,
+          "x": 1.856,
+          "y": 3.071,
+          "yaw": 3.0309
+        }
+      ],
+      "source_path_id": "L-002",
+      "speed_limit_mps": 1.0,
+      "to": "N0005",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 66,
+        "start_index": 45
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 3.068,
+      "direction": "forward",
+      "from": "N0005",
+      "id": "E_C-003_F",
+      "length_m": 3.068,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.111771,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": 1.856,
+          "y": 3.071,
+          "yaw": 2.9169
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.111771,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": 1.661,
+          "y": 3.116,
+          "yaw": 2.8722
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.15809,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": 1.468,
+          "y": 3.169,
+          "yaw": 2.809
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.222474,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": 1.279,
+          "y": 3.234,
+          "yaw": 2.7201
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.289726,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": 1.097,
+          "y": 3.316,
+          "yaw": 2.6045
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.302357,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": 0.925,
+          "y": 3.418,
+          "yaw": 2.4838
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.207151,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": 0.767,
+          "y": 3.54,
+          "yaw": 2.4011
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.058449,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": 0.619,
+          "y": 3.675,
+          "yaw": 2.3777
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.051139,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": 0.475,
+          "y": 3.814,
+          "yaw": 2.3981
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.099706,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": 0.328,
+          "y": 3.949,
+          "yaw": 2.438
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.109654,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": 0.175,
+          "y": 4.078,
+          "yaw": 2.4819
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.10279,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": 0.017,
+          "y": 4.201,
+          "yaw": 2.523
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.090899,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -0.146,
+          "y": 4.317,
+          "yaw": 2.5593
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.078734,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": -0.313,
+          "y": 4.427,
+          "yaw": 2.5908
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.067869,
+          "s_m": 2.799,
+          "v_mps": 1.0,
+          "x": -0.483,
+          "y": 4.532,
+          "yaw": 2.6179
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.053947,
+          "s_m": 2.999,
+          "v_mps": 1.0,
+          "x": -0.656,
+          "y": 4.632,
+          "yaw": 2.6324
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.053947,
+          "s_m": 3.068,
+          "v_mps": 1.0,
+          "x": -0.716,
+          "y": 4.665,
+          "yaw": 2.6324
+        }
+      ],
+      "source_path_id": "C-003",
+      "speed_limit_mps": 1.0,
+      "to": "N0016",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 83,
+        "start_index": 67
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 3.908,
+      "direction": "forward",
+      "from": "N0016",
+      "id": "E_C-005_F",
+      "length_m": 3.908,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.145328,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -0.716,
+          "y": 4.665,
+          "yaw": 2.8015
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.145328,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -0.904,
+          "y": 4.731,
+          "yaw": 2.8596
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.051083,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -1.096,
+          "y": 4.787,
+          "yaw": 2.88
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.038332,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -1.289,
+          "y": 4.839,
+          "yaw": 2.8953
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.033105,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -1.483,
+          "y": 4.888,
+          "yaw": 2.9086
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.030445,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -1.678,
+          "y": 4.934,
+          "yaw": 2.9207
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.028975,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -1.873,
+          "y": 4.978,
+          "yaw": 2.9323
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.028206,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -2.069,
+          "y": 5.019,
+          "yaw": 2.9436
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.027863,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -2.265,
+          "y": 5.058,
+          "yaw": 2.9548
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.027819,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -2.461,
+          "y": 5.096,
+          "yaw": 2.9659
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.028035,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -2.658,
+          "y": 5.131,
+          "yaw": 2.9771
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.028405,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -2.856,
+          "y": 5.163,
+          "yaw": 2.9885
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.028983,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -3.053,
+          "y": 5.194,
+          "yaw": 3.0001
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.029664,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": -3.251,
+          "y": 5.222,
+          "yaw": 3.0119
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.030506,
+          "s_m": 2.8,
+          "v_mps": 1.0,
+          "x": -3.45,
+          "y": 5.248,
+          "yaw": 3.0241
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.031513,
+          "s_m": 3.0,
+          "v_mps": 1.0,
+          "x": -3.648,
+          "y": 5.271,
+          "yaw": 3.0367
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.032604,
+          "s_m": 3.2,
+          "v_mps": 1.0,
+          "x": -3.847,
+          "y": 5.292,
+          "yaw": 3.0498
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.033908,
+          "s_m": 3.4,
+          "v_mps": 1.0,
+          "x": -4.046,
+          "y": 5.311,
+          "yaw": 3.0633
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.035293,
+          "s_m": 3.6,
+          "v_mps": 1.0,
+          "x": -4.246,
+          "y": 5.326,
+          "yaw": 3.0774
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.035747,
+          "s_m": 3.8,
+          "v_mps": 1.0,
+          "x": -4.445,
+          "y": 5.339,
+          "yaw": 3.0885
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.035747,
+          "s_m": 3.908,
+          "v_mps": 1.0,
+          "x": -4.553,
+          "y": 5.345,
+          "yaw": 3.0885
+        }
+      ],
+      "source_path_id": "C-005",
+      "speed_limit_mps": 1.0,
+      "to": "N0006",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 104,
+        "start_index": 84
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 2.431,
+      "direction": "forward",
+      "from": "N0006",
+      "id": "E_L-003_F",
+      "length_m": 2.431,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -4.553,
+          "y": 5.345,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -4.753,
+          "y": 5.336,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -4.953,
+          "y": 5.328,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -5.153,
+          "y": 5.32,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -5.353,
+          "y": 5.311,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -5.552,
+          "y": 5.303,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -5.752,
+          "y": 5.295,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -5.952,
+          "y": 5.286,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -6.152,
+          "y": 5.278,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -6.352,
+          "y": 5.269,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -6.552,
+          "y": 5.261,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -6.751,
+          "y": 5.253,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -6.951,
+          "y": 5.244,
+          "yaw": -3.0997
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.431,
+          "v_mps": 1.0,
+          "x": -6.982,
+          "y": 5.243,
+          "yaw": -3.0997
+        }
+      ],
+      "source_path_id": "L-003",
+      "speed_limit_mps": 1.0,
+      "to": "N0012",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 118,
+        "start_index": 105
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 3.801,
+      "direction": "forward",
+      "from": "N0012",
+      "id": "E_L-006_F",
+      "length_m": 3.801,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -6.982,
+          "y": 5.243,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -7.182,
+          "y": 5.254,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -7.381,
+          "y": 5.265,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -7.581,
+          "y": 5.276,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -7.781,
+          "y": 5.287,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -7.98,
+          "y": 5.298,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -8.18,
+          "y": 5.309,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -8.38,
+          "y": 5.32,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -8.579,
+          "y": 5.331,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -8.779,
+          "y": 5.342,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -8.979,
+          "y": 5.353,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -9.179,
+          "y": 5.364,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -9.378,
+          "y": 5.375,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": -9.578,
+          "y": 5.387,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.8,
+          "v_mps": 1.0,
+          "x": -9.778,
+          "y": 5.398,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.0,
+          "v_mps": 1.0,
+          "x": -9.977,
+          "y": 5.409,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.2,
+          "v_mps": 1.0,
+          "x": -10.177,
+          "y": 5.42,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.4,
+          "v_mps": 1.0,
+          "x": -10.377,
+          "y": 5.431,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.6,
+          "v_mps": 1.0,
+          "x": -10.576,
+          "y": 5.442,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.8,
+          "v_mps": 1.0,
+          "x": -10.776,
+          "y": 5.453,
+          "yaw": 3.0863
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.801,
+          "v_mps": 1.0,
+          "x": -10.777,
+          "y": 5.453,
+          "yaw": 3.0863
+        }
+      ],
+      "source_path_id": "L-006",
+      "speed_limit_mps": 1.0,
+      "to": "N0007",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 139,
+        "start_index": 119
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 4.372,
+      "direction": "forward",
+      "from": "N0007",
+      "id": "E_C-004_F",
+      "length_m": 4.372,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.098186,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -10.777,
+          "y": 5.453,
+          "yaw": 2.7434
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.098186,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -10.962,
+          "y": 5.53,
+          "yaw": 2.7042
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.116328,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -11.143,
+          "y": 5.615,
+          "yaw": 2.6576
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.139046,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -11.32,
+          "y": 5.708,
+          "yaw": 2.6021
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.167683,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -11.491,
+          "y": 5.811,
+          "yaw": 2.535
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.203144,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -11.656,
+          "y": 5.925,
+          "yaw": 2.4539
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.244775,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -11.81,
+          "y": 6.052,
+          "yaw": 2.3561
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.289421,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -11.952,
+          "y": 6.193,
+          "yaw": 2.2406
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.327375,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -12.076,
+          "y": 6.35,
+          "yaw": 2.11
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.344314,
+          "s_m": 1.799,
+          "v_mps": 1.0,
+          "x": -12.178,
+          "y": 6.521,
+          "yaw": 1.9727
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.328221,
+          "s_m": 1.999,
+          "v_mps": 1.0,
+          "x": -12.256,
+          "y": 6.705,
+          "yaw": 1.8418
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.277401,
+          "s_m": 2.199,
+          "v_mps": 1.0,
+          "x": -12.31,
+          "y": 6.898,
+          "yaw": 1.7311
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.202316,
+          "s_m": 2.399,
+          "v_mps": 1.0,
+          "x": -12.342,
+          "y": 7.095,
+          "yaw": 1.6502
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.113391,
+          "s_m": 2.599,
+          "v_mps": 1.0,
+          "x": -12.358,
+          "y": 7.295,
+          "yaw": 1.6049
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.01434,
+          "s_m": 2.799,
+          "v_mps": 1.0,
+          "x": -12.365,
+          "y": 7.494,
+          "yaw": 1.5992
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.098583,
+          "s_m": 2.999,
+          "v_mps": 1.0,
+          "x": -12.37,
+          "y": 7.694,
+          "yaw": 1.6386
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.231346,
+          "s_m": 3.199,
+          "v_mps": 1.0,
+          "x": -12.384,
+          "y": 7.894,
+          "yaw": 1.731
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.377839,
+          "s_m": 3.399,
+          "v_mps": 1.0,
+          "x": -12.416,
+          "y": 8.091,
+          "yaw": 1.8815
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.496585,
+          "s_m": 3.598,
+          "v_mps": 1.0,
+          "x": -12.477,
+          "y": 8.281,
+          "yaw": 2.0788
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.524907,
+          "s_m": 3.798,
+          "v_mps": 1.0,
+          "x": -12.574,
+          "y": 8.456,
+          "yaw": 2.2871
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.457047,
+          "s_m": 3.998,
+          "v_mps": 1.0,
+          "x": -12.705,
+          "y": 8.606,
+          "yaw": 2.4689
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.350632,
+          "s_m": 4.197,
+          "v_mps": 1.0,
+          "x": -12.861,
+          "y": 8.731,
+          "yaw": 2.5999
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.350632,
+          "s_m": 4.372,
+          "v_mps": 1.0,
+          "x": -13.011,
+          "y": 8.821,
+          "yaw": 2.5999
+        }
+      ],
+      "source_path_id": "C-004",
+      "speed_limit_mps": 1.0,
+      "to": "N0008",
+      "validation": {
+        "curvature_ok": false,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 162,
+        "start_index": 140
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 4.416,
+      "direction": "forward",
+      "from": "N0009",
+      "id": "E_C-006_F",
+      "length_m": 4.416,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.074395,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -14.282,
+          "y": 9.597,
+          "yaw": 2.7013
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.074395,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -14.463,
+          "y": 9.683,
+          "yaw": 2.731
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.07876,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -14.646,
+          "y": 9.762,
+          "yaw": 2.7625
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.083788,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -14.832,
+          "y": 9.836,
+          "yaw": 2.796
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.090019,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -15.02,
+          "y": 9.904,
+          "yaw": 2.832
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.09745,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -15.211,
+          "y": 9.965,
+          "yaw": 2.871
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.106797,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -15.403,
+          "y": 10.019,
+          "yaw": 2.9137
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.118289,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -15.598,
+          "y": 10.064,
+          "yaw": 2.961
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.132926,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -15.795,
+          "y": 10.1,
+          "yaw": 3.0142
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.151655,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -15.993,
+          "y": 10.125,
+          "yaw": 3.0748
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.176093,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -16.193,
+          "y": 10.138,
+          "yaw": -3.138
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.208142,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -16.393,
+          "y": 10.138,
+          "yaw": -3.0549
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.25069,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -16.592,
+          "y": 10.12,
+          "yaw": -2.9548
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.306382,
+          "s_m": 2.599,
+          "v_mps": 1.0,
+          "x": -16.788,
+          "y": 10.083,
+          "yaw": -2.8326
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.37576,
+          "s_m": 2.799,
+          "v_mps": 1.0,
+          "x": -16.978,
+          "y": 10.023,
+          "yaw": -2.6829
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.452725,
+          "s_m": 2.999,
+          "v_mps": 1.0,
+          "x": -17.158,
+          "y": 9.934,
+          "yaw": -2.5029
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.516709,
+          "s_m": 3.198,
+          "v_mps": 1.0,
+          "x": -17.318,
+          "y": 9.815,
+          "yaw": -2.2978
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.538268,
+          "s_m": 3.398,
+          "v_mps": 1.0,
+          "x": -17.45,
+          "y": 9.666,
+          "yaw": -2.0843
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.504344,
+          "s_m": 3.597,
+          "v_mps": 1.0,
+          "x": -17.548,
+          "y": 9.492,
+          "yaw": -1.8841
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.432716,
+          "s_m": 3.797,
+          "v_mps": 1.0,
+          "x": -17.61,
+          "y": 9.303,
+          "yaw": -1.7119
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.352709,
+          "s_m": 3.997,
+          "v_mps": 1.0,
+          "x": -17.638,
+          "y": 9.105,
+          "yaw": -1.5714
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.282763,
+          "s_m": 4.197,
+          "v_mps": 1.0,
+          "x": -17.638,
+          "y": 8.905,
+          "yaw": -1.4585
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.161999,
+          "s_m": 4.396,
+          "v_mps": 1.0,
+          "x": -17.616,
+          "y": 8.706,
+          "yaw": -1.4229
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.161999,
+          "s_m": 4.416,
+          "v_mps": 1.0,
+          "x": -17.613,
+          "y": 8.687,
+          "yaw": -1.4229
+        }
+      ],
+      "source_path_id": "C-006",
+      "speed_limit_mps": 1.0,
+      "to": "N0010",
+      "validation": {
+        "curvature_ok": false,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 186,
+        "start_index": 163
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 4.784,
+      "direction": "forward",
+      "from": "N0010",
+      "id": "E_L-004_F",
+      "length_m": 4.784,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -17.613,
+          "y": 8.687,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -17.552,
+          "y": 8.496,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -17.491,
+          "y": 8.305,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -17.431,
+          "y": 8.115,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -17.37,
+          "y": 7.924,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -17.31,
+          "y": 7.734,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -17.249,
+          "y": 7.543,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -17.189,
+          "y": 7.352,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -17.128,
+          "y": 7.162,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -17.067,
+          "y": 6.971,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -17.007,
+          "y": 6.781,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -16.946,
+          "y": 6.59,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -16.886,
+          "y": 6.399,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": -16.825,
+          "y": 6.209,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.8,
+          "v_mps": 1.0,
+          "x": -16.765,
+          "y": 6.018,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.0,
+          "v_mps": 1.0,
+          "x": -16.704,
+          "y": 5.827,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.2,
+          "v_mps": 1.0,
+          "x": -16.644,
+          "y": 5.637,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.4,
+          "v_mps": 1.0,
+          "x": -16.583,
+          "y": 5.446,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.6,
+          "v_mps": 1.0,
+          "x": -16.522,
+          "y": 5.256,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.8,
+          "v_mps": 1.0,
+          "x": -16.462,
+          "y": 5.065,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.0,
+          "v_mps": 1.0,
+          "x": -16.401,
+          "y": 4.874,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.2,
+          "v_mps": 1.0,
+          "x": -16.341,
+          "y": 4.684,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 4.4,
+          "v_mps": 1.0,
+          "x": -16.28,
+          "y": 4.493,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.6,
+          "v_mps": 1.0,
+          "x": -16.22,
+          "y": 4.303,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.784,
+          "v_mps": 1.0,
+          "x": -16.164,
+          "y": 4.127,
+          "yaw": -1.2631
+        }
+      ],
+      "source_path_id": "L-004",
+      "speed_limit_mps": 1.0,
+      "to": "N0014",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 211,
+        "start_index": 187
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 4.929,
+      "direction": "forward",
+      "from": "N0014",
+      "id": "E_L-009_F",
+      "length_m": 4.929,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -16.164,
+          "y": 4.127,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -16.103,
+          "y": 3.937,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -16.043,
+          "y": 3.746,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -15.982,
+          "y": 3.556,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -15.922,
+          "y": 3.365,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -15.861,
+          "y": 3.174,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -15.8,
+          "y": 2.984,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -15.74,
+          "y": 2.793,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -15.679,
+          "y": 2.603,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -15.619,
+          "y": 2.412,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -15.558,
+          "y": 2.221,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -15.498,
+          "y": 2.031,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -15.437,
+          "y": 1.84,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": -15.376,
+          "y": 1.65,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.8,
+          "v_mps": 1.0,
+          "x": -15.316,
+          "y": 1.459,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.0,
+          "v_mps": 1.0,
+          "x": -15.255,
+          "y": 1.268,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.2,
+          "v_mps": 1.0,
+          "x": -15.195,
+          "y": 1.078,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.4,
+          "v_mps": 1.0,
+          "x": -15.134,
+          "y": 0.887,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.6,
+          "v_mps": 1.0,
+          "x": -15.074,
+          "y": 0.697,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.8,
+          "v_mps": 1.0,
+          "x": -15.013,
+          "y": 0.506,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 4.0,
+          "v_mps": 1.0,
+          "x": -14.952,
+          "y": 0.315,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.2,
+          "v_mps": 1.0,
+          "x": -14.892,
+          "y": 0.125,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.4,
+          "v_mps": 1.0,
+          "x": -14.831,
+          "y": -0.066,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 4.6,
+          "v_mps": 1.0,
+          "x": -14.771,
+          "y": -0.257,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.8,
+          "v_mps": 1.0,
+          "x": -14.71,
+          "y": -0.447,
+          "yaw": -1.2631
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.929,
+          "v_mps": 1.0,
+          "x": -14.671,
+          "y": -0.57,
+          "yaw": -1.2631
+        }
+      ],
+      "source_path_id": "L-009",
+      "speed_limit_mps": 1.0,
+      "to": "N0011",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 237,
+        "start_index": 212
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 7.664,
+      "direction": "forward",
+      "from": "N0011",
+      "id": "E_L-005_F",
+      "length_m": 7.664,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -14.671,
+          "y": -0.57,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -14.473,
+          "y": -0.543,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -14.275,
+          "y": -0.517,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -14.076,
+          "y": -0.49,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -13.878,
+          "y": -0.464,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -13.68,
+          "y": -0.437,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -13.482,
+          "y": -0.41,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -13.284,
+          "y": -0.384,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -13.085,
+          "y": -0.357,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -12.887,
+          "y": -0.331,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -12.689,
+          "y": -0.304,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -12.491,
+          "y": -0.277,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -12.292,
+          "y": -0.251,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": -12.094,
+          "y": -0.224,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.8,
+          "v_mps": 1.0,
+          "x": -11.896,
+          "y": -0.198,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.0,
+          "v_mps": 1.0,
+          "x": -11.698,
+          "y": -0.171,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.2,
+          "v_mps": 1.0,
+          "x": -11.5,
+          "y": -0.144,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.4,
+          "v_mps": 1.0,
+          "x": -11.301,
+          "y": -0.118,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.6,
+          "v_mps": 1.0,
+          "x": -11.103,
+          "y": -0.091,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.8,
+          "v_mps": 1.0,
+          "x": -10.905,
+          "y": -0.065,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 4.0,
+          "v_mps": 1.0,
+          "x": -10.707,
+          "y": -0.038,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.2,
+          "v_mps": 1.0,
+          "x": -10.508,
+          "y": -0.012,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 4.4,
+          "v_mps": 1.0,
+          "x": -10.31,
+          "y": 0.015,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.6,
+          "v_mps": 1.0,
+          "x": -10.112,
+          "y": 0.042,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.8,
+          "v_mps": 1.0,
+          "x": -9.914,
+          "y": 0.068,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 5.0,
+          "v_mps": 1.0,
+          "x": -9.716,
+          "y": 0.095,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 5.2,
+          "v_mps": 1.0,
+          "x": -9.517,
+          "y": 0.121,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 5.4,
+          "v_mps": 1.0,
+          "x": -9.319,
+          "y": 0.148,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 5.6,
+          "v_mps": 1.0,
+          "x": -9.121,
+          "y": 0.175,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 5.8,
+          "v_mps": 1.0,
+          "x": -8.923,
+          "y": 0.201,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 6.0,
+          "v_mps": 1.0,
+          "x": -8.724,
+          "y": 0.228,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 6.2,
+          "v_mps": 1.0,
+          "x": -8.526,
+          "y": 0.254,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 6.4,
+          "v_mps": 1.0,
+          "x": -8.328,
+          "y": 0.281,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 6.6,
+          "v_mps": 1.0,
+          "x": -8.13,
+          "y": 0.308,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 6.8,
+          "v_mps": 1.0,
+          "x": -7.931,
+          "y": 0.334,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 7.0,
+          "v_mps": 1.0,
+          "x": -7.733,
+          "y": 0.361,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 7.2,
+          "v_mps": 1.0,
+          "x": -7.535,
+          "y": 0.387,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 7.4,
+          "v_mps": 1.0,
+          "x": -7.337,
+          "y": 0.414,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 7.6,
+          "v_mps": 1.0,
+          "x": -7.139,
+          "y": 0.441,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 7.664,
+          "v_mps": 1.0,
+          "x": -7.075,
+          "y": 0.449,
+          "yaw": 0.1333
+        }
+      ],
+      "source_path_id": "L-005",
+      "speed_limit_mps": 1.0,
+      "to": "N0013",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 277,
+        "start_index": 238
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 7.698,
+      "direction": "forward",
+      "from": "N0013",
+      "id": "E_L-007_F",
+      "length_m": 7.698,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -7.075,
+          "y": 0.449,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -6.877,
+          "y": 0.476,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -6.678,
+          "y": 0.502,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -6.48,
+          "y": 0.529,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -6.282,
+          "y": 0.555,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -6.084,
+          "y": 0.582,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -5.886,
+          "y": 0.609,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -5.687,
+          "y": 0.635,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -5.489,
+          "y": 0.662,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -5.291,
+          "y": 0.688,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -5.093,
+          "y": 0.715,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -4.894,
+          "y": 0.742,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -4.696,
+          "y": 0.768,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": -4.498,
+          "y": 0.795,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.8,
+          "v_mps": 1.0,
+          "x": -4.3,
+          "y": 0.821,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 3.0,
+          "v_mps": 1.0,
+          "x": -4.102,
+          "y": 0.848,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.2,
+          "v_mps": 1.0,
+          "x": -3.903,
+          "y": 0.875,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.4,
+          "v_mps": 1.0,
+          "x": -3.705,
+          "y": 0.901,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.6,
+          "v_mps": 1.0,
+          "x": -3.507,
+          "y": 0.928,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.8,
+          "v_mps": 1.0,
+          "x": -3.309,
+          "y": 0.954,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 4.0,
+          "v_mps": 1.0,
+          "x": -3.11,
+          "y": 0.981,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.2,
+          "v_mps": 1.0,
+          "x": -2.912,
+          "y": 1.007,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.4,
+          "v_mps": 1.0,
+          "x": -2.714,
+          "y": 1.034,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.6,
+          "v_mps": 1.0,
+          "x": -2.516,
+          "y": 1.061,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 4.8,
+          "v_mps": 1.0,
+          "x": -2.318,
+          "y": 1.087,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 5.0,
+          "v_mps": 1.0,
+          "x": -2.119,
+          "y": 1.114,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 5.2,
+          "v_mps": 1.0,
+          "x": -1.921,
+          "y": 1.14,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 5.4,
+          "v_mps": 1.0,
+          "x": -1.723,
+          "y": 1.167,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 5.6,
+          "v_mps": 1.0,
+          "x": -1.525,
+          "y": 1.194,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 5.8,
+          "v_mps": 1.0,
+          "x": -1.326,
+          "y": 1.22,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 6.0,
+          "v_mps": 1.0,
+          "x": -1.128,
+          "y": 1.247,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 6.2,
+          "v_mps": 1.0,
+          "x": -0.93,
+          "y": 1.273,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 6.4,
+          "v_mps": 1.0,
+          "x": -0.732,
+          "y": 1.3,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 6.6,
+          "v_mps": 1.0,
+          "x": -0.533,
+          "y": 1.327,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 6.8,
+          "v_mps": 1.0,
+          "x": -0.335,
+          "y": 1.353,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 7.0,
+          "v_mps": 1.0,
+          "x": -0.137,
+          "y": 1.38,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 7.2,
+          "v_mps": 1.0,
+          "x": 0.061,
+          "y": 1.406,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 7.4,
+          "v_mps": 1.0,
+          "x": 0.259,
+          "y": 1.433,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 7.6,
+          "v_mps": 1.0,
+          "x": 0.458,
+          "y": 1.46,
+          "yaw": 0.1333
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 7.698,
+          "v_mps": 1.0,
+          "x": 0.554,
+          "y": 1.473,
+          "yaw": 0.1333
+        }
+      ],
+      "source_path_id": "L-007",
+      "speed_limit_mps": 1.0,
+      "to": "N0001",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 317,
+        "start_index": 278
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 2.094,
+      "direction": "forward",
+      "from": "N0012",
+      "id": "E_L-008_F",
+      "length_m": 2.094,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -6.982,
+          "y": 5.243,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -6.986,
+          "y": 5.043,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -6.99,
+          "y": 4.843,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -6.994,
+          "y": 4.643,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -6.997,
+          "y": 4.443,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -7.001,
+          "y": 4.243,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -7.005,
+          "y": 4.043,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -7.009,
+          "y": 3.843,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -7.013,
+          "y": 3.643,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -7.017,
+          "y": 3.443,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -7.021,
+          "y": 3.243,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.094,
+          "v_mps": 1.0,
+          "x": -7.023,
+          "y": 3.15,
+          "yaw": -1.5902
+        }
+      ],
+      "source_path_id": "L-008",
+      "speed_limit_mps": 1.0,
+      "to": "N0015",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 329,
+        "start_index": 318
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 2.513,
+      "direction": "reverse",
+      "from": "N0015",
+      "id": "E_L-008_R",
+      "length_m": 2.094,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -7.023,
+          "y": 3.15,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.094,
+          "v_mps": 1.0,
+          "x": -7.021,
+          "y": 3.243,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.294,
+          "v_mps": 1.0,
+          "x": -7.017,
+          "y": 3.443,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.494,
+          "v_mps": 1.0,
+          "x": -7.013,
+          "y": 3.643,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.694,
+          "v_mps": 1.0,
+          "x": -7.009,
+          "y": 3.843,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.894,
+          "v_mps": 1.0,
+          "x": -7.005,
+          "y": 4.043,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.094,
+          "v_mps": 1.0,
+          "x": -7.001,
+          "y": 4.243,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.294,
+          "v_mps": 1.0,
+          "x": -6.997,
+          "y": 4.443,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.494,
+          "v_mps": 1.0,
+          "x": -6.994,
+          "y": 4.643,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.694,
+          "v_mps": 1.0,
+          "x": -6.99,
+          "y": 4.843,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.894,
+          "v_mps": 1.0,
+          "x": -6.986,
+          "y": 5.043,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.094,
+          "v_mps": 1.0,
+          "x": -6.982,
+          "y": 5.243,
+          "yaw": 1.5514
+        }
+      ],
+      "source_path_id": "L-008",
+      "speed_limit_mps": 1.0,
+      "to": "N0012",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 341,
+        "start_index": 330
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 2.701,
+      "direction": "forward",
+      "from": "N0015",
+      "id": "E_L-010_F",
+      "length_m": 2.701,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -7.023,
+          "y": 3.15,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -7.026,
+          "y": 2.95,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -7.03,
+          "y": 2.75,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -7.034,
+          "y": 2.55,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -7.038,
+          "y": 2.35,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -7.042,
+          "y": 2.15,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -7.046,
+          "y": 1.95,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -7.05,
+          "y": 1.75,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -7.054,
+          "y": 1.55,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -7.057,
+          "y": 1.35,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -7.061,
+          "y": 1.15,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -7.065,
+          "y": 0.95,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -7.069,
+          "y": 0.75,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": -7.073,
+          "y": 0.55,
+          "yaw": -1.5902
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.701,
+          "v_mps": 1.0,
+          "x": -7.075,
+          "y": 0.449,
+          "yaw": -1.5902
+        }
+      ],
+      "source_path_id": "L-010",
+      "speed_limit_mps": 1.0,
+      "to": "N0013",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 356,
+        "start_index": 342
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 3.241,
+      "direction": "reverse",
+      "from": "N0013",
+      "id": "E_L-010_R",
+      "length_m": 2.701,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -7.075,
+          "y": 0.449,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.101,
+          "v_mps": 1.0,
+          "x": -7.073,
+          "y": 0.55,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.301,
+          "v_mps": 1.0,
+          "x": -7.069,
+          "y": 0.75,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.501,
+          "v_mps": 1.0,
+          "x": -7.065,
+          "y": 0.95,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.701,
+          "v_mps": 1.0,
+          "x": -7.061,
+          "y": 1.15,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.901,
+          "v_mps": 1.0,
+          "x": -7.057,
+          "y": 1.35,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.101,
+          "v_mps": 1.0,
+          "x": -7.054,
+          "y": 1.55,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.301,
+          "v_mps": 1.0,
+          "x": -7.05,
+          "y": 1.75,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.501,
+          "v_mps": 1.0,
+          "x": -7.046,
+          "y": 1.95,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.701,
+          "v_mps": 1.0,
+          "x": -7.042,
+          "y": 2.15,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.901,
+          "v_mps": 1.0,
+          "x": -7.038,
+          "y": 2.35,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.101,
+          "v_mps": 1.0,
+          "x": -7.034,
+          "y": 2.55,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.301,
+          "v_mps": 1.0,
+          "x": -7.03,
+          "y": 2.75,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.501,
+          "v_mps": 1.0,
+          "x": -7.026,
+          "y": 2.95,
+          "yaw": 1.5514
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.701,
+          "v_mps": 1.0,
+          "x": -7.023,
+          "y": 3.15,
+          "yaw": 1.5514
+        }
+      ],
+      "source_path_id": "L-010",
+      "speed_limit_mps": 1.0,
+      "to": "N0015",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 371,
+        "start_index": 357
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 9.373,
+      "direction": "forward",
+      "from": "N0014",
+      "id": "E_C-007_F",
+      "length_m": 9.373,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.156764,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -16.164,
+          "y": 4.127,
+          "yaw": 0.3341
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.156764,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -15.975,
+          "y": 4.193,
+          "yaw": 0.2714
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.150815,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -15.782,
+          "y": 4.247,
+          "yaw": 0.2111
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.143154,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -15.587,
+          "y": 4.289,
+          "yaw": 0.1539
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.134261,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -15.389,
+          "y": 4.319,
+          "yaw": 0.1002
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.124605,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -15.19,
+          "y": 4.339,
+          "yaw": 0.0504
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.114603,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -14.99,
+          "y": 4.349,
+          "yaw": 0.0046
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.104591,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -14.79,
+          "y": 4.35,
+          "yaw": -0.0373
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.094911,
+          "s_m": 1.6,
+          "v_mps": 1.0,
+          "x": -14.591,
+          "y": 4.343,
+          "yaw": -0.0752
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.085737,
+          "s_m": 1.8,
+          "v_mps": 1.0,
+          "x": -14.391,
+          "y": 4.328,
+          "yaw": -0.1095
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.076695,
+          "s_m": 2.0,
+          "v_mps": 1.0,
+          "x": -14.192,
+          "y": 4.306,
+          "yaw": -0.1402
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.068756,
+          "s_m": 2.2,
+          "v_mps": 1.0,
+          "x": -13.994,
+          "y": 4.278,
+          "yaw": -0.1677
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.060866,
+          "s_m": 2.4,
+          "v_mps": 1.0,
+          "x": -13.797,
+          "y": 4.245,
+          "yaw": -0.192
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.05405,
+          "s_m": 2.6,
+          "v_mps": 1.0,
+          "x": -13.601,
+          "y": 4.206,
+          "yaw": -0.2136
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.047264,
+          "s_m": 2.8,
+          "v_mps": 1.0,
+          "x": -13.405,
+          "y": 4.164,
+          "yaw": -0.2325
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.04115,
+          "s_m": 3.0,
+          "v_mps": 1.0,
+          "x": -13.211,
+          "y": 4.118,
+          "yaw": -0.249
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.035436,
+          "s_m": 3.2,
+          "v_mps": 1.0,
+          "x": -13.017,
+          "y": 4.069,
+          "yaw": -0.2632
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.030057,
+          "s_m": 3.4,
+          "v_mps": 1.0,
+          "x": -12.824,
+          "y": 4.017,
+          "yaw": -0.2752
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.024967,
+          "s_m": 3.6,
+          "v_mps": 1.0,
+          "x": -12.631,
+          "y": 3.962,
+          "yaw": -0.2852
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.02012,
+          "s_m": 3.8,
+          "v_mps": 1.0,
+          "x": -12.439,
+          "y": 3.906,
+          "yaw": -0.2932
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.01547,
+          "s_m": 4.0,
+          "v_mps": 1.0,
+          "x": -12.248,
+          "y": 3.848,
+          "yaw": -0.2994
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.010971,
+          "s_m": 4.2,
+          "v_mps": 1.0,
+          "x": -12.057,
+          "y": 3.789,
+          "yaw": -0.3038
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.006579,
+          "s_m": 4.4,
+          "v_mps": 1.0,
+          "x": -11.866,
+          "y": 3.729,
+          "yaw": -0.3064
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.002248,
+          "s_m": 4.6,
+          "v_mps": 1.0,
+          "x": -11.675,
+          "y": 3.669,
+          "yaw": -0.3073
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.002064,
+          "s_m": 4.8,
+          "v_mps": 1.0,
+          "x": -11.485,
+          "y": 3.608,
+          "yaw": -0.3065
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.006402,
+          "s_m": 5.0,
+          "v_mps": 1.0,
+          "x": -11.294,
+          "y": 3.548,
+          "yaw": -0.304
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.01081,
+          "s_m": 5.2,
+          "v_mps": 1.0,
+          "x": -11.103,
+          "y": 3.488,
+          "yaw": -0.2996
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.015333,
+          "s_m": 5.4,
+          "v_mps": 1.0,
+          "x": -10.912,
+          "y": 3.429,
+          "yaw": -0.2935
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.020017,
+          "s_m": 5.6,
+          "v_mps": 1.0,
+          "x": -10.721,
+          "y": 3.371,
+          "yaw": -0.2855
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.024908,
+          "s_m": 5.8,
+          "v_mps": 1.0,
+          "x": -10.529,
+          "y": 3.315,
+          "yaw": -0.2755
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.030053,
+          "s_m": 6.0,
+          "v_mps": 1.0,
+          "x": -10.336,
+          "y": 3.261,
+          "yaw": -0.2635
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0355,
+          "s_m": 6.2,
+          "v_mps": 1.0,
+          "x": -10.143,
+          "y": 3.209,
+          "yaw": -0.2493
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.041317,
+          "s_m": 6.4,
+          "v_mps": 1.0,
+          "x": -9.949,
+          "y": 3.159,
+          "yaw": -0.2328
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.047726,
+          "s_m": 6.6,
+          "v_mps": 1.0,
+          "x": -9.755,
+          "y": 3.113,
+          "yaw": -0.2137
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.054244,
+          "s_m": 6.8,
+          "v_mps": 1.0,
+          "x": -9.559,
+          "y": 3.071,
+          "yaw": -0.192
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.061641,
+          "s_m": 7.0,
+          "v_mps": 1.0,
+          "x": -9.363,
+          "y": 3.032,
+          "yaw": -0.1673
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.069414,
+          "s_m": 7.2,
+          "v_mps": 1.0,
+          "x": -9.166,
+          "y": 2.999,
+          "yaw": -0.1396
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.077954,
+          "s_m": 7.4,
+          "v_mps": 1.0,
+          "x": -8.968,
+          "y": 2.971,
+          "yaw": -0.1084
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.086893,
+          "s_m": 7.6,
+          "v_mps": 1.0,
+          "x": -8.769,
+          "y": 2.95,
+          "yaw": -0.0737
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.09653,
+          "s_m": 7.8,
+          "v_mps": 1.0,
+          "x": -8.57,
+          "y": 2.935,
+          "yaw": -0.0351
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.106644,
+          "s_m": 8.0,
+          "v_mps": 1.0,
+          "x": -8.37,
+          "y": 2.928,
+          "yaw": 0.0076
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.117014,
+          "s_m": 8.2,
+          "v_mps": 1.0,
+          "x": -8.17,
+          "y": 2.929,
+          "yaw": 0.0544
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.12737,
+          "s_m": 8.4,
+          "v_mps": 1.0,
+          "x": -7.97,
+          "y": 2.94,
+          "yaw": 0.1053
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.137384,
+          "s_m": 8.6,
+          "v_mps": 1.0,
+          "x": -7.771,
+          "y": 2.961,
+          "yaw": 0.1602
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.146559,
+          "s_m": 8.8,
+          "v_mps": 1.0,
+          "x": -7.574,
+          "y": 2.993,
+          "yaw": 0.2188
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.154333,
+          "s_m": 9.0,
+          "v_mps": 1.0,
+          "x": -7.379,
+          "y": 3.037,
+          "yaw": 0.2805
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.155146,
+          "s_m": 9.2,
+          "v_mps": 1.0,
+          "x": -7.186,
+          "y": 3.092,
+          "yaw": 0.3385
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.155146,
+          "s_m": 9.373,
+          "v_mps": 1.0,
+          "x": -7.023,
+          "y": 3.15,
+          "yaw": 0.3385
+        }
+      ],
+      "source_path_id": "C-007",
+      "speed_limit_mps": 1.0,
+      "to": "N0015",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 419,
+        "start_index": 372
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 11.248,
+      "direction": "reverse",
+      "from": "N0015",
+      "id": "E_C-007_R",
+      "length_m": 9.373,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.155146,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -7.023,
+          "y": 3.15,
+          "yaw": -2.8031
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.155146,
+          "s_m": 0.174,
+          "v_mps": 1.0,
+          "x": -7.186,
+          "y": 3.092,
+          "yaw": -2.8611
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.154333,
+          "s_m": 0.374,
+          "v_mps": 1.0,
+          "x": -7.379,
+          "y": 3.037,
+          "yaw": -2.9228
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.146559,
+          "s_m": 0.574,
+          "v_mps": 1.0,
+          "x": -7.574,
+          "y": 2.993,
+          "yaw": -2.9814
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.137384,
+          "s_m": 0.774,
+          "v_mps": 1.0,
+          "x": -7.771,
+          "y": 2.961,
+          "yaw": -3.0363
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.12737,
+          "s_m": 0.974,
+          "v_mps": 1.0,
+          "x": -7.97,
+          "y": 2.94,
+          "yaw": -3.0872
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.117014,
+          "s_m": 1.174,
+          "v_mps": 1.0,
+          "x": -8.17,
+          "y": 2.929,
+          "yaw": -3.134
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.106644,
+          "s_m": 1.374,
+          "v_mps": 1.0,
+          "x": -8.37,
+          "y": 2.928,
+          "yaw": 3.1065
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.09653,
+          "s_m": 1.574,
+          "v_mps": 1.0,
+          "x": -8.57,
+          "y": 2.935,
+          "yaw": 3.0679
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.086893,
+          "s_m": 1.774,
+          "v_mps": 1.0,
+          "x": -8.769,
+          "y": 2.95,
+          "yaw": 3.0332
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.077954,
+          "s_m": 1.974,
+          "v_mps": 1.0,
+          "x": -8.968,
+          "y": 2.971,
+          "yaw": 3.002
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.069414,
+          "s_m": 2.174,
+          "v_mps": 1.0,
+          "x": -9.166,
+          "y": 2.999,
+          "yaw": 2.9742
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.061641,
+          "s_m": 2.373,
+          "v_mps": 1.0,
+          "x": -9.363,
+          "y": 3.032,
+          "yaw": 2.9496
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.054244,
+          "s_m": 2.573,
+          "v_mps": 1.0,
+          "x": -9.559,
+          "y": 3.071,
+          "yaw": 2.9279
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.047726,
+          "s_m": 2.773,
+          "v_mps": 1.0,
+          "x": -9.755,
+          "y": 3.113,
+          "yaw": 2.9088
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.041317,
+          "s_m": 2.973,
+          "v_mps": 1.0,
+          "x": -9.949,
+          "y": 3.159,
+          "yaw": 2.8923
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0355,
+          "s_m": 3.173,
+          "v_mps": 1.0,
+          "x": -10.143,
+          "y": 3.209,
+          "yaw": 2.8781
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.030053,
+          "s_m": 3.373,
+          "v_mps": 1.0,
+          "x": -10.336,
+          "y": 3.261,
+          "yaw": 2.8661
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.024908,
+          "s_m": 3.573,
+          "v_mps": 1.0,
+          "x": -10.529,
+          "y": 3.315,
+          "yaw": 2.8561
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.020017,
+          "s_m": 3.773,
+          "v_mps": 1.0,
+          "x": -10.721,
+          "y": 3.371,
+          "yaw": 2.8481
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.015333,
+          "s_m": 3.973,
+          "v_mps": 1.0,
+          "x": -10.912,
+          "y": 3.429,
+          "yaw": 2.842
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.01081,
+          "s_m": 4.173,
+          "v_mps": 1.0,
+          "x": -11.103,
+          "y": 3.488,
+          "yaw": 2.8376
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.006402,
+          "s_m": 4.373,
+          "v_mps": 1.0,
+          "x": -11.294,
+          "y": 3.548,
+          "yaw": 2.8351
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.002064,
+          "s_m": 4.573,
+          "v_mps": 1.0,
+          "x": -11.485,
+          "y": 3.608,
+          "yaw": 2.8342
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.002248,
+          "s_m": 4.773,
+          "v_mps": 1.0,
+          "x": -11.675,
+          "y": 3.669,
+          "yaw": 2.8351
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.006579,
+          "s_m": 4.973,
+          "v_mps": 1.0,
+          "x": -11.866,
+          "y": 3.729,
+          "yaw": 2.8378
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.010971,
+          "s_m": 5.173,
+          "v_mps": 1.0,
+          "x": -12.057,
+          "y": 3.789,
+          "yaw": 2.8422
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.01547,
+          "s_m": 5.373,
+          "v_mps": 1.0,
+          "x": -12.248,
+          "y": 3.848,
+          "yaw": 2.8484
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.02012,
+          "s_m": 5.573,
+          "v_mps": 1.0,
+          "x": -12.439,
+          "y": 3.906,
+          "yaw": 2.8564
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.024967,
+          "s_m": 5.773,
+          "v_mps": 1.0,
+          "x": -12.631,
+          "y": 3.962,
+          "yaw": 2.8664
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.030057,
+          "s_m": 5.973,
+          "v_mps": 1.0,
+          "x": -12.824,
+          "y": 4.017,
+          "yaw": 2.8784
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.035436,
+          "s_m": 6.173,
+          "v_mps": 1.0,
+          "x": -13.017,
+          "y": 4.069,
+          "yaw": 2.8926
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.04115,
+          "s_m": 6.373,
+          "v_mps": 1.0,
+          "x": -13.211,
+          "y": 4.118,
+          "yaw": 2.909
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.047264,
+          "s_m": 6.573,
+          "v_mps": 1.0,
+          "x": -13.405,
+          "y": 4.164,
+          "yaw": 2.9279
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.05405,
+          "s_m": 6.773,
+          "v_mps": 1.0,
+          "x": -13.601,
+          "y": 4.206,
+          "yaw": 2.9496
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.060866,
+          "s_m": 6.973,
+          "v_mps": 1.0,
+          "x": -13.797,
+          "y": 4.245,
+          "yaw": 2.9739
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.068756,
+          "s_m": 7.173,
+          "v_mps": 1.0,
+          "x": -13.994,
+          "y": 4.278,
+          "yaw": 3.0014
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.076695,
+          "s_m": 7.373,
+          "v_mps": 1.0,
+          "x": -14.192,
+          "y": 4.306,
+          "yaw": 3.0321
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.085737,
+          "s_m": 7.573,
+          "v_mps": 1.0,
+          "x": -14.391,
+          "y": 4.328,
+          "yaw": 3.0664
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.094911,
+          "s_m": 7.773,
+          "v_mps": 1.0,
+          "x": -14.591,
+          "y": 4.343,
+          "yaw": 3.1043
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.104591,
+          "s_m": 7.973,
+          "v_mps": 1.0,
+          "x": -14.79,
+          "y": 4.35,
+          "yaw": -3.137
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.114603,
+          "s_m": 8.173,
+          "v_mps": 1.0,
+          "x": -14.99,
+          "y": 4.349,
+          "yaw": -3.0912
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.124605,
+          "s_m": 8.373,
+          "v_mps": 1.0,
+          "x": -15.19,
+          "y": 4.339,
+          "yaw": -3.0414
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.134261,
+          "s_m": 8.573,
+          "v_mps": 1.0,
+          "x": -15.389,
+          "y": 4.319,
+          "yaw": -2.9877
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.143154,
+          "s_m": 8.773,
+          "v_mps": 1.0,
+          "x": -15.587,
+          "y": 4.289,
+          "yaw": -2.9305
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.150815,
+          "s_m": 8.973,
+          "v_mps": 1.0,
+          "x": -15.782,
+          "y": 4.247,
+          "yaw": -2.8702
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.156764,
+          "s_m": 9.173,
+          "v_mps": 1.0,
+          "x": -15.975,
+          "y": 4.193,
+          "yaw": -2.8075
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.156764,
+          "s_m": 9.373,
+          "v_mps": 1.0,
+          "x": -16.164,
+          "y": 4.127,
+          "yaw": -2.8075
+        }
+      ],
+      "source_path_id": "C-007",
+      "speed_limit_mps": 1.0,
+      "to": "N0014",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 467,
+        "start_index": 420
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 1.49,
+      "direction": "forward",
+      "from": "N0009",
+      "id": "E_L-011_F",
+      "length_m": 1.49,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": -14.282,
+          "y": 9.597,
+          "yaw": -0.5485
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.2,
+          "v_mps": 1.0,
+          "x": -14.111,
+          "y": 9.493,
+          "yaw": -0.5485
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.4,
+          "v_mps": 1.0,
+          "x": -13.941,
+          "y": 9.389,
+          "yaw": -0.5485
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.6,
+          "v_mps": 1.0,
+          "x": -13.77,
+          "y": 9.285,
+          "yaw": -0.5485
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.8,
+          "v_mps": 1.0,
+          "x": -13.599,
+          "y": 9.18,
+          "yaw": -0.5485
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.0,
+          "v_mps": 1.0,
+          "x": -13.429,
+          "y": 9.076,
+          "yaw": -0.5485
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.2,
+          "v_mps": 1.0,
+          "x": -13.258,
+          "y": 8.972,
+          "yaw": -0.5485
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.4,
+          "v_mps": 1.0,
+          "x": -13.087,
+          "y": 8.867,
+          "yaw": -0.5485
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.49,
+          "v_mps": 1.0,
+          "x": -13.011,
+          "y": 8.821,
+          "yaw": -0.5485
+        }
+      ],
+      "source_path_id": "L-011",
+      "speed_limit_mps": 1.0,
+      "to": "N0008",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 476,
+        "start_index": 468
+      }
+    },
+    {
+      "constraints": {
+        "allow_reverse": false,
+        "allow_stop": true,
+        "max_curvature_abs": 0.35,
+        "max_speed_mps": 1.0,
+        "min_speed_mps": 0.3
+      },
+      "cost": 4.123,
+      "direction": "reverse",
+      "from": "N0001",
+      "id": "E_L-012_R",
+      "length_m": 3.436,
+      "reference_points": [
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.0,
+          "v_mps": 1.0,
+          "x": 0.554,
+          "y": 1.473,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.036,
+          "v_mps": 1.0,
+          "x": 0.541,
+          "y": 1.506,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 0.236,
+          "v_mps": 1.0,
+          "x": 0.467,
+          "y": 1.691,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.436,
+          "v_mps": 1.0,
+          "x": 0.393,
+          "y": 1.877,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.636,
+          "v_mps": 1.0,
+          "x": 0.319,
+          "y": 2.063,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 0.836,
+          "v_mps": 1.0,
+          "x": 0.245,
+          "y": 2.249,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.036,
+          "v_mps": 1.0,
+          "x": 0.172,
+          "y": 2.435,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.236,
+          "v_mps": 1.0,
+          "x": 0.098,
+          "y": 2.621,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.436,
+          "v_mps": 1.0,
+          "x": 0.024,
+          "y": 2.806,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 1.636,
+          "v_mps": 1.0,
+          "x": -0.05,
+          "y": 2.992,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 1.836,
+          "v_mps": 1.0,
+          "x": -0.124,
+          "y": 3.178,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.036,
+          "v_mps": 1.0,
+          "x": -0.198,
+          "y": 3.364,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.236,
+          "v_mps": 1.0,
+          "x": -0.272,
+          "y": 3.55,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.436,
+          "v_mps": 1.0,
+          "x": -0.346,
+          "y": 3.736,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 2.636,
+          "v_mps": 1.0,
+          "x": -0.42,
+          "y": 3.921,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": -0.0,
+          "s_m": 2.836,
+          "v_mps": 1.0,
+          "x": -0.494,
+          "y": 4.107,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.036,
+          "v_mps": 1.0,
+          "x": -0.568,
+          "y": 4.293,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.236,
+          "v_mps": 1.0,
+          "x": -0.642,
+          "y": 4.479,
+          "yaw": 1.9495
+        },
+        {
+          "behavior": "follow",
+          "kappa": 0.0,
+          "s_m": 3.436,
+          "v_mps": 1.0,
+          "x": -0.716,
+          "y": 4.665,
+          "yaw": 1.9495
+        }
+      ],
+      "source_path_id": "L-012",
+      "speed_limit_mps": 1.0,
+      "to": "N0016",
+      "validation": {
+        "curvature_ok": true,
+        "drivable_area_ok": true,
+        "footprint_ok": true,
+        "no_go_area_ok": true
+      },
+      "waypoint_range": {
+        "end_index": 495,
+        "start_index": 477
+      }
+    }
+  ],
+  "graph_id": "graph_2ab4eec1-4d39-4032-bf31-ced40bcdf06e",
+  "map_id": "2ab4eec1-4d39-4032-bf31-ced40bcdf06e",
+  "nodes": [
+    {
+      "id": "N0001",
+      "pose": {
+        "x": 0.554,
+        "y": 1.473,
+        "yaw": -0.9109
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "C-001-START",
+      "type": "normal"
+    },
+    {
+      "id": "N0002",
+      "pose": {
+        "x": 1.957,
+        "y": 0.124,
+        "yaw": 2.7982
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "C-001-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0003",
+      "pose": {
+        "x": 5.436,
+        "y": 0.124,
+        "yaw": 3.1416
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "L-001-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0004",
+      "pose": {
+        "x": 5.852,
+        "y": 2.627,
+        "yaw": -1.147
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "C-002-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0005",
+      "pose": {
+        "x": 1.856,
+        "y": 3.071,
+        "yaw": -0.1107
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "L-002-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0006",
+      "pose": {
+        "x": -4.553,
+        "y": 5.345,
+        "yaw": -0.0524
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "C-003-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0007",
+      "pose": {
+        "x": -10.777,
+        "y": 5.453,
+        "yaw": -0.0553
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "L-003-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0008",
+      "pose": {
+        "x": -13.011,
+        "y": 8.821,
+        "yaw": -0.5148
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "C-004-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0009",
+      "pose": {
+        "x": -14.282,
+        "y": 9.597,
+        "yaw": 2.6938
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "C-005-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0010",
+      "pose": {
+        "x": -17.613,
+        "y": 8.687,
+        "yaw": 1.7187
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "C-006-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0011",
+      "pose": {
+        "x": -14.671,
+        "y": -0.57,
+        "yaw": 1.8785
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "L-004-END",
+      "type": "normal"
+    },
+    {
+      "id": "N0012",
+      "pose": {
+        "x": -6.982,
+        "y": 5.243,
+        "yaw": 0.0419
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "N-001",
+      "type": "intersection"
+    },
+    {
+      "id": "N0013",
+      "pose": {
+        "x": -7.075,
+        "y": 0.449,
+        "yaw": -3.0082
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "N-002",
+      "type": "intersection"
+    },
+    {
+      "id": "N0014",
+      "pose": {
+        "x": -16.164,
+        "y": 4.127,
+        "yaw": 1.8785
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "N-003",
+      "type": "intersection"
+    },
+    {
+      "id": "N0015",
+      "pose": {
+        "x": -7.023,
+        "y": 3.15,
+        "yaw": 1.5514
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "N-004",
+      "type": "intersection"
+    },
+    {
+      "id": "N0016",
+      "pose": {
+        "x": -0.716,
+        "y": 4.665,
+        "yaw": -0.5092
+      },
+      "properties": {
+        "stop_required": false,
+        "wait_allowed": true
+      },
+      "source_node_id": "N-005",
+      "type": "intersection"
+    }
+  ],
+  "schema": "low_speed_topology",
+  "schema_version": "1.1.0"
+}

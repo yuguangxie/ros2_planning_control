@@ -1,0 +1,139 @@
+{
+  "areas": [
+    {
+      "allow_parking": false,
+      "allow_planning_through": true,
+      "id": "R-001",
+      "polygon": [
+        {
+          "x": -18.4,
+          "y": 10.6
+        },
+        {
+          "x": -17.05,
+          "y": 0.252
+        },
+        {
+          "x": -12.596,
+          "y": -2.448
+        },
+        {
+          "x": -1.482,
+          "y": -0.873
+        },
+        {
+          "x": 6.212,
+          "y": -0.558
+        },
+        {
+          "x": 8.237,
+          "y": 2.321
+        },
+        {
+          "x": -3.282,
+          "y": 6.866
+        },
+        {
+          "x": -14.485,
+          "y": 10.555
+        }
+      ],
+      "priority": 1,
+      "speed_limit_mps": 2.0,
+      "type": "drivable_area"
+    },
+    {
+      "allow_parking": false,
+      "allow_planning_through": true,
+      "id": "R-002",
+      "polygon": [
+        {
+          "x": -22.359,
+          "y": 10.555
+        },
+        {
+          "x": -22.404,
+          "y": -4.113
+        },
+        {
+          "x": -15.835,
+          "y": -4.388
+        },
+        {
+          "x": -14.485,
+          "y": -2.943
+        },
+        {
+          "x": -18.625,
+          "y": 0.162
+        },
+        {
+          "x": -21.415,
+          "y": 7.946
+        },
+        {
+          "x": -20.695,
+          "y": 10.78
+        }
+      ],
+      "priority": 1,
+      "speed_limit_mps": 2.0,
+      "type": "no_go_area"
+    },
+    {
+      "allow_parking": false,
+      "allow_planning_through": true,
+      "id": "R-003",
+      "polygon": [
+        {
+          "x": -14.89,
+          "y": 13.165
+        },
+        {
+          "x": -15.07,
+          "y": 11.545
+        },
+        {
+          "x": 7.472,
+          "y": 4.256
+        },
+        {
+          "x": 8.912,
+          "y": 7.496
+        }
+      ],
+      "priority": 1,
+      "speed_limit_mps": 2.0,
+      "type": "no_go_area"
+    },
+    {
+      "allow_parking": false,
+      "allow_planning_through": true,
+      "id": "R-004",
+      "polygon": [
+        {
+          "x": -20.245,
+          "y": 13.075
+        },
+        {
+          "x": -20.695,
+          "y": 11.455
+        },
+        {
+          "x": -16.78,
+          "y": 11.41
+        },
+        {
+          "x": -16.51,
+          "y": 12.805
+        }
+      ],
+      "priority": 1,
+      "speed_limit_mps": 2.0,
+      "type": "speed_zone"
+    }
+  ],
+  "coordinate_frame": "map",
+  "schema": "low_speed_areas",
+  "schema_version": "1.1.0"
+}
