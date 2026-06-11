@@ -31,6 +31,7 @@ target_compile_features(sim_localization_pose_publisher_node PUBLIC cxx_std_17)
 ament_target_dependencies(sim_localization_pose_publisher_node
   rclcpp
   geometry_msgs
+  nav_msgs
   std_srvs
   low_speed_av_interfaces
   low_speed_av_planning)

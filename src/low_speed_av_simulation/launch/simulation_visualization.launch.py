@@ -18,6 +18,10 @@ def generate_launch_description():
     initial_task_point_id = LaunchConfiguration("initial_task_point_id")
     initial_edge_id = LaunchConfiguration("initial_edge_id")
     initial_edge_progress = LaunchConfiguration("initial_edge_progress")
+    initial_source = LaunchConfiguration("initial_source")
+    initial_x = LaunchConfiguration("initial_x")
+    initial_y = LaunchConfiguration("initial_y")
+    initial_yaw = LaunchConfiguration("initial_yaw")
     launch_planning_control = LaunchConfiguration("launch_planning_control")
     rviz = LaunchConfiguration("rviz")
 
@@ -44,10 +48,14 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument("roadnet_package_path", default_value=default_roadnet_package),
         DeclareLaunchArgument("use_sim_pose", default_value="true"),
-        DeclareLaunchArgument("pose_mode", default_value="fixed_pose"),
+        DeclareLaunchArgument("pose_mode", default_value="path_follow"),
         DeclareLaunchArgument("publish_rate_hz", default_value="20.0"),
         DeclareLaunchArgument("frame_id", default_value="map"),
         DeclareLaunchArgument("start_paused", default_value="false"),
+        DeclareLaunchArgument("initial_source", default_value="explicit"),
+        DeclareLaunchArgument("initial_x", default_value="0.554"),
+        DeclareLaunchArgument("initial_y", default_value="1.473"),
+        DeclareLaunchArgument("initial_yaw", default_value="-0.9178"),
         DeclareLaunchArgument("initial_waypoint_id", default_value=""),
         DeclareLaunchArgument("initial_task_point_id", default_value=""),
         DeclareLaunchArgument("initial_edge_id", default_value=""),
@@ -88,6 +96,10 @@ def generate_launch_description():
                     "publish_rate_hz": publish_rate_hz,
                     "frame_id": frame_id,
                     "start_paused": start_paused,
+                    "initial_source": initial_source,
+                    "initial_x": initial_x,
+                    "initial_y": initial_y,
+                    "initial_yaw": initial_yaw,
                     "initial_waypoint_id": initial_waypoint_id,
                     "initial_task_point_id": initial_task_point_id,
                     "initial_edge_id": initial_edge_id,

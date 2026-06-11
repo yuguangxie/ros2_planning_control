@@ -75,6 +75,7 @@ std_srvs/srv/Trigger
 模式：
 
 - `fixed_pose`：固定发布配置的 x/y/yaw。
+- `path_follow`：默认模式。未收到规划路径前发布初始 pose，收到 `/planning/full_reference_path` 后沿完整路径移动；若 full reference 不可用则 fallback 到 `/planning/trajectory`。
 - `trajectory_replay`：订阅 `/planning/trajectory` 后沿规划轨迹回放；没有规划轨迹时会尝试回退到路网 waypoint。
 - `roadnet_waypoint_replay`：直接沿 AD Package 中的 waypoint 回放。
 
@@ -94,7 +95,7 @@ source install/setup.bash
 ros2 launch low_speed_av_simulation simulation_visualization.launch.py \
   roadnet_package_path:=/absolute/path/to/roadnet_ad_package_20260610T012525Z \
   use_sim_pose:=true \
-  pose_mode:=fixed_pose \
+  pose_mode:=path_follow \
   rviz:=true
 ```
 
@@ -104,7 +105,7 @@ ros2 launch low_speed_av_simulation simulation_visualization.launch.py \
 ros2 launch low_speed_av_simulation simulation_visualization.launch.py \
   roadnet_package_path:=/absolute/path/to/roadnet_ad_package_20260610T012525Z \
   use_sim_pose:=true \
-  pose_mode:=fixed_pose \
+  pose_mode:=path_follow \
   launch_planning_control:=true \
   rviz:=true
 ```
@@ -124,7 +125,7 @@ ros2 launch low_speed_av_simulation simulation_visualization.launch.py \
 |---|---|---|
 | `roadnet_package_path` | bringup sample package | AD Package 目录 |
 | `use_sim_pose` | `true` | 是否启动模拟定位节点 |
-| `pose_mode` | `fixed_pose` | `fixed_pose` / `trajectory_replay` / `roadnet_waypoint_replay` |
+| `pose_mode` | `path_follow` | `path_follow` / `fixed_pose` / `trajectory_replay` / `roadnet_waypoint_replay` |
 | `publish_rate_hz` | `20.0` | 模拟定位发布频率 |
 | `frame_id` | `map` | RViz 和 PoseStamped frame |
 | `start_paused` | `false` | 模拟定位是否启动后暂停 |

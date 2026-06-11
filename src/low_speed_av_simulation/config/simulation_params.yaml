@@ -22,9 +22,45 @@ sim_localization_pose_publisher:
       package_path: ""
       reject_failed_validation: true
       verify_checksums: true
+    simulation:
+      localization:
+        enabled: true
+        pose_topic: "/localization/pose"
+        publish_rate_hz: 20.0
+        frame_id: "map"
+        mode: "path_follow"
+        initial_pose:
+          source: "explicit"
+          x: 0.554
+          y: 1.473
+          yaw: -0.9178
+          waypoint_id: ""
+          task_point_id: ""
+          edge_id: ""
+          edge_progress: 0.0
+        follow:
+          follow_source: "full_reference_path"
+          fallback_to_local_trajectory: true
+          reanchor_on_new_path: true
+          restart_on_new_path: false
+          use_trajectory_speed: true
+          default_speed_mps: 1.0
+          max_speed_mps: 1.0
+          acceleration_limit_mps2: 0.5
+          stop_at_goal: true
+          goal_tolerance_m: 0.3
+          yaw_tolerance_rad: 0.35
+          hold_on_failure_stop: true
+          hold_when_no_path: true
+          ignore_republished_same_path: true
+          full_reference_path_topic: "/planning/full_reference_path"
+          trajectory_topic: "/planning/trajectory"
+
+    # Legacy flat keys are kept for existing launch argument overrides.
     publish_rate_hz: 20.0
     frame_id: "map"
-    mode: "fixed_pose"
+    mode: "path_follow"
+    initial_source: ""
     initial_x: 0.554
     initial_y: 1.473
     initial_yaw: -0.9178
@@ -36,4 +72,6 @@ sim_localization_pose_publisher:
     loop: true
     start_paused: false
     trajectory_topic: "/planning/trajectory"
+    full_reference_path_topic: "/planning/full_reference_path"
     pose_topic: "/localization/pose"
+    reset_clears_path: true
