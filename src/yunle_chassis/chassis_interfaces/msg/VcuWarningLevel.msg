@@ -1,0 +1,10 @@
+builtin_interfaces/Time stamp
+uint8 bms_soc_warning
+uint8 mcu_disconnect_warning
+uint8 mcu_motor_warning
+uint8 mcu_speed_warning
+uint8 steering_disconnect_warning
+uint8 steering_lock_warning
+uint8 steering_uncontrollable_warning
+uint8 steering_error_warning
+uint8 brake_error_warning

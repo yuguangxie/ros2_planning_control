@@ -1,0 +1,16 @@
+{
+  "package": "D:\\workspace\\0-yunle\\7_codex\\ros2_planning_control_generation\\roadnet_ad_package_20260610T012525Z_1",
+  "frame_id": "map",
+  "nodes": 20,
+  "inferred_nodes": 0,
+  "edges": 26,
+  "semantic_points": {
+    "task": 15,
+    "parking": 2,
+    "charging": 1,
+    "route": 18
+  },
+  "edge_directions": {
+    "forward": 26
+  }
+}

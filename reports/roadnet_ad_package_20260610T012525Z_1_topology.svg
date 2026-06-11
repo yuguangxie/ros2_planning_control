@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100">
+<defs>
+<marker id="arrow-forward" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#374151" /></marker>
+<marker id="arrow-reverse" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#b45309" /></marker>
+</defs>
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="24" y="32" font-size="18" font-family="Arial" fill="#111827">Roadnet topology: roadnet_ad_package_20260610T012525Z_1 / frame=map</text>
+<text x="24" y="56" font-size="12" font-family="Arial" fill="#475569">nodes=20 edges=26 semantic_points=36</text>
+<g id="edges" fill="none">
+<path d="M 173.48 626.81 L 182.00 631.00 L 190.62 635.05 L 199.29 639.05 L 207.95 643.00 L 216.62 646.90 L 225.33 650.71 L 234.10 654.52 L 242.86 658.24 L 251.62 661.95 L 260.38 665.62 L 269.19 669.29 L 278.00 672.90 L 286.86 676.48 L 295.67 680.05 L 304.52 683.57 L 313.38 687.05 L 322.24 690.52 L 331.14 694.00 L 340.00 697.38 L 348.90 700.81 L 357.81 704.14 L 366.76 707.48 L 375.67 710.81 L 384.62 714.10 L 393.57 717.33 L 402.52 720.57 L 411.48 723.76 L 420.48 726.95 L 429.48 730.10 L 438.48 733.19 L 447.48 736.24 L 449.90 737.05" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-001_F: N0001 -> N0002, direction=forward, length=6.253m</title></path>
+<text x="313.38" y="687.05" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-001_F</text>
+<path d="M 449.90 737.05 L 458.90 740.05 L 468.00 742.95 L 477.10 745.81 L 486.19 748.52 L 495.33 751.19 L 504.52 753.71 L 513.71 756.19 L 522.95 758.57 L 532.19 760.86 L 541.48 763.10 L 550.71 765.24 L 560.00 767.38 L 569.33 769.43 L 578.62 771.43 L 587.95 773.43 L 597.24 775.38 L 606.57 777.33 L 615.90 779.24 L 625.24 781.14 L 634.57 783.05 L 643.90 784.95 L 653.24 786.86 L 662.57 788.76 L 671.90 790.67 L 681.24 792.57 L 690.57 794.52 L 699.86 796.43 L 709.19 798.38 L 712.29 799.05" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-017_F: N0002 -> N0003, direction=forward, length=5.667m</title></path>
+<text x="587.95" y="773.43" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-017_F</text>
+<path d="M 712.29 799.05 L 721.62 800.95 L 730.95 802.90 L 740.29 804.76 L 749.62 806.62 L 759.00 808.43 L 768.33 810.24 L 777.71 812.00 L 787.05 813.71 L 796.43 815.43 L 805.81 817.10 L 815.19 818.76 L 824.57 820.38 L 833.95 821.95 L 843.38 823.52 L 852.76 825.05 L 862.14 826.57 L 871.57 828.05 L 881.00 829.48 L 890.38 830.90 L 899.81 832.29 L 909.24 833.62 L 918.67 834.95 L 928.14 836.29 L 937.57 837.52 L 947.00 838.76 L 956.43 840.00 L 965.90 841.14 L 975.33 842.29 L 984.81 843.43 L 994.29 844.48 L 1003.76 845.57 L 1013.19 846.57 L 1022.67 847.57 L 1032.14 848.52 L 1041.62 849.43 L 1051.10 850.33 L 1060.62 851.19 L 1070.10 852.00 L 1079.57 852.81 L 1089.10 853.57 L 1098.57 854.29 L 1108.05 854.95 L 1117.57 855.62 L 1127.10 856.24 L 1136.57 856.81 L 1146.10 857.33 L 1155.62 857.81 L 1165.10 858.29 L 1174.62 858.71 L 1184.14 859.10 L 1193.67 859.43 L 1203.19 859.71 L 1212.71 859.95 L 1222.24 860.14 L 1231.76 860.33 L 1241.29 860.43 L 1250.81 860.48 L 1260.33 860.52 L 1269.86 860.48 L 1279.38 860.38 L 1288.90 860.24 L 1298.43 860.05 L 1307.95 859.81 L 1317.43 859.52 L 1326.95 859.14 L 1336.48 858.71 L 1346.00 858.24 L 1355.52 857.71 L 1365.00 857.10 L 1374.52 856.38 L 1384.00 855.62 L 1384.90 855.57" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-012_F: N0003 -> N0004, direction=forward, length=14.219m</title></path>
+<text x="1051.10" y="850.33" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-012_F</text>
+<path d="M 1384.90 855.57 L 1394.43 855.10 L 1403.90 854.33 L 1413.38 853.24 L 1422.81 851.86 L 1432.14 850.05 L 1441.43 847.90 L 1450.57 845.29 L 1459.62 842.24 L 1468.43 838.67 L 1477.05 834.57 L 1485.33 829.90 L 1493.24 824.62 L 1500.67 818.67 L 1507.52 812.05 L 1513.67 804.81 L 1518.95 796.86 L 1523.19 788.33 L 1526.24 779.33 L 1527.90 769.95 L 1528.00 760.48 L 1527.81 758.00" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-002_F: N0004 -> N0005, direction=forward, length=4.050m</title></path>
+<text x="1485.33" y="829.90" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-002_F</text>
+<path d="M 1527.81 758.00 L 1527.43 748.48 L 1526.90 739.00 L 1526.24 729.48 L 1525.52 720.00 L 1524.67 710.52 L 1523.67 701.05 L 1522.52 691.57 L 1521.19 682.14 L 1519.67 672.76 L 1517.90 663.38 L 1515.86 654.10 L 1513.48 644.86 L 1510.71 635.76 L 1507.33 626.86 L 1503.24 618.29 L 1498.05 610.29 L 1491.38 603.57 L 1485.43 600.05" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-006_F: N0005 -> N0006, direction=forward, length=3.544m</title></path>
+<text x="1519.67" y="672.76" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-006_F</text>
+<path d="M 1485.43 600.05 L 1478.38 593.67 L 1471.00 587.62 L 1463.43 581.86 L 1455.81 576.19 L 1448.05 570.62 L 1440.29 565.10 L 1432.43 559.71 L 1424.57 554.33 L 1416.67 549.05 L 1408.67 543.86 L 1400.62 538.76 L 1399.86 538.29" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-003_F: N0006 -> N0007, direction=forward, length=2.219m</title></path>
+<text x="1440.29" y="565.10" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-003_F</text>
+<path d="M 1399.86 538.29 L 1392.67 532.05 L 1385.48 525.81 L 1378.29 519.52 L 1371.10 513.29 L 1363.90 507.05 L 1356.67 500.86 L 1349.33 494.76 L 1341.95 488.81 L 1334.43 482.95 L 1326.76 477.33 L 1318.90 471.86 L 1310.95 466.67 L 1302.86 461.62 L 1294.67 456.76 L 1286.38 452.05 L 1278.05 447.48 L 1272.90 444.76" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-022_F: N0007 -> N0008, direction=forward, length=3.323m</title></path>
+<text x="1334.43" y="482.95" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-022_F</text>
+<path d="M 1272.90 444.76 L 1264.48 440.33 L 1256.00 435.95 L 1247.52 431.62 L 1239.00 427.38 L 1230.43 423.19 L 1221.86 419.05 L 1213.24 414.95 L 1204.62 410.90 L 1196.00 406.90 L 1187.33 403.00 L 1178.62 399.10 L 1169.90 395.29 L 1161.14 391.52 L 1152.38 387.81 L 1143.57 384.14 L 1134.76 380.52 L 1125.95 377.00 L 1117.05 373.52 L 1116.14 373.14" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-019_F: N0008 -> N0009, direction=forward, length=3.620m</title></path>
+<text x="1187.33" y="403.00" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-019_F</text>
+<path d="M 1116.14 373.14 L 1107.29 369.76 L 1098.38 366.33 L 1089.48 363.00 L 1080.52 359.67 L 1071.62 356.38 L 1062.62 353.14 L 1053.67 349.95 L 1044.71 346.76 L 1035.71 343.67 L 1026.67 340.57 L 1017.67 337.52 L 1008.62 334.48 L 999.57 331.52 L 990.52 328.57 L 981.48 325.67 L 972.38 322.76 L 963.29 319.95 L 954.19 317.14 L 945.10 314.38 L 935.95 311.67 L 926.81 308.95 L 917.67 306.29 L 910.38 304.14" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-021_F: N0009 -> N0010, direction=forward, length=4.559m</title></path>
+<text x="1008.62" y="334.48" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-021_F</text>
+<path d="M 910.38 304.14 L 901.24 301.52 L 892.10 298.90 L 882.90 296.38 L 873.71 293.86 L 864.52 291.43 L 855.29 289.05 L 846.05 286.76 L 836.76 284.52 L 827.48 282.43 L 818.19 280.38 L 808.86 278.43 L 806.52 277.95" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-010_F: N0010 -> N0011, direction=forward, length=2.250m</title></path>
+<text x="855.29" y="289.05" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-010_F</text>
+<path d="M 806.52 277.95 L 797.48 274.95 L 788.38 272.10 L 779.29 269.38 L 770.10 266.86 L 760.86 264.43 L 751.62 262.19 L 742.33 260.05 L 733.05 258.05 L 723.71 256.14 L 714.33 254.38 L 704.95 252.71 L 695.57 251.19 L 686.14 249.76 L 676.71 248.38 L 667.29 247.14 L 657.81 246.00 L 648.33 244.95 L 638.86 244.00 L 629.38 243.14 L 619.90 242.38 L 610.38 241.67 L 600.90 241.10 L 591.38 240.62 L 581.86 240.19 L 572.33 239.86 L 562.81 239.67 L 553.29 239.52 L 543.76 239.48 L 534.24 239.52 L 524.76 239.71 L 515.24 239.95 L 505.71 240.33 L 496.19 240.86 L 486.67 241.43 L 477.19 242.19 L 467.71 243.05 L 458.24 244.10 L 448.81 245.24 L 440.57 246.43" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-004_F: N0011 -> N0012, direction=forward, length=7.774m</title></path>
+<text x="619.90" y="242.38" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-004_F</text>
+<path d="M 440.57 246.43 L 431.14 247.76 L 421.71 249.19 L 412.33 250.67 L 402.90 252.24 L 393.52 253.86 L 384.19 255.57 L 374.81 257.38 L 365.48 259.29 L 356.19 261.29 L 346.90 263.43 L 337.67 265.71 L 328.43 268.10 L 319.29 270.67 L 310.14 273.43 L 301.10 276.43 L 292.14 279.57 L 283.24 283.05 L 274.48 286.76 L 265.86 290.81 L 257.43 295.19 L 249.19 300.00 L 241.29 305.29 L 241.00 305.48" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-014_F: N0012 -> N0013, direction=forward, length=4.407m</title></path>
+<text x="328.43" y="268.10" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-014_F</text>
+<path d="M 241.00 305.48 L 232.43 309.57 L 224.52 314.81 L 216.67 320.24 L 208.95 325.81 L 201.19 331.33 L 193.48 336.95 L 185.76 342.52 L 178.05 348.10 L 170.33 353.67 L 162.57 359.19 L 154.81 364.71 L 154.33 365.05" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-005_F: N0013 -> N0014, direction=forward, length=2.211m</title></path>
+<text x="193.48" y="336.95" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-005_F</text>
+<path d="M 154.33 365.05 L 146.71 370.71 L 139.43 376.86 L 132.43 383.33 L 125.71 390.10 L 119.29 397.10 L 113.14 404.38 L 107.24 411.86 L 101.67 419.57 L 96.43 427.52 L 91.57 435.71 L 87.10 444.14 L 83.10 452.76 L 79.57 461.62 L 76.67 470.67 L 74.38 479.90 L 72.81 489.29 L 72.00 498.81 L 72.00 508.29 L 72.90 517.76 L 74.71 527.14 L 77.38 536.29 L 80.95 545.10 L 85.24 553.62 L 90.24 561.71 L 95.86 569.38 L 102.05 576.62 L 108.62 583.48 L 115.67 589.95 L 122.95 596.00 L 130.57 601.71 L 138.43 607.14 L 146.48 612.24 L 154.71 617.00 L 163.10 621.57 L 171.57 625.86 L 173.48 626.81" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-008_F: N0014 -> N0001, direction=forward, length=7.043m</title></path>
+<text x="72.00" y="508.29" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-008_F</text>
+<path d="M 377.29 492.67 L 386.67 494.33 L 396.05 496.05 L 405.43 497.76 L 414.76 499.48 L 424.14 501.19 L 433.52 502.90 L 433.81 502.95" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_L-001_F: N0015 -> N0016, direction=forward, length=1.206m</title></path>
+<text x="414.76" y="499.48" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_L-001_F</text>
+<path d="M 433.81 502.95 L 443.19 504.67 L 452.57 506.38 L 461.95 508.10 L 471.29 509.81 L 480.67 511.48 L 490.05 513.19 L 499.43 514.90 L 508.76 516.62 L 518.14 518.33 L 527.52 520.05 L 536.90 521.76 L 546.24 523.48 L 555.62 525.19 L 565.00 526.86 L 574.38 528.57 L 583.71 530.29 L 593.10 532.00 L 602.48 533.71 L 611.86 535.43 L 621.19 537.14 L 630.57 538.86 L 639.95 540.57 L 649.33 542.24 L 658.67 543.95 L 668.05 545.67 L 677.43 547.38 L 686.81 549.10 L 696.14 550.81 L 705.52 552.52 L 714.90 554.24 L 724.29 555.90 L 733.62 557.62 L 743.00 559.33 L 752.38 561.05 L 761.76 562.76 L 771.10 564.48 L 780.48 566.19 L 789.86 567.90 L 799.24 569.62 L 808.57 571.29 L 817.95 573.00 L 827.33 574.71 L 827.71 574.81" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_L-003_F: N0016 -> N0017, direction=forward, length=8.408m</title></path>
+<text x="639.95" y="540.57" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_L-003_F</text>
+<path d="M 827.71 574.81 L 836.90 577.33 L 846.05 579.86 L 855.24 582.38 L 864.43 584.95 L 873.62 587.48 L 882.76 590.00 L 891.95 592.52 L 901.14 595.10 L 910.33 597.62 L 919.52 600.14 L 928.67 602.67 L 937.86 605.19 L 947.05 607.76 L 956.24 610.29 L 965.43 612.81 L 974.57 615.33 L 983.76 617.90 L 992.95 620.43 L 995.38 621.10" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_L-002_F: N0017 -> N0018, direction=forward, length=3.654m</title></path>
+<text x="919.52" y="600.14" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_L-002_F</text>
+<path d="M 995.38 621.10 L 1004.57 623.71 L 1013.71 626.33 L 1022.86 629.00 L 1032.00 631.62 L 1041.19 634.24 L 1050.33 636.86 L 1059.48 639.48 L 1068.62 642.10 L 1077.81 644.71 L 1086.95 647.38 L 1096.10 650.00 L 1105.24 652.62 L 1114.43 655.24 L 1120.33 656.95" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_L-004_F: N0018 -> N0019, direction=forward, length=2.729m</title></path>
+<text x="1059.48" y="639.48" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_L-004_F</text>
+<path d="M 1120.33 656.95 L 1129.43 659.76 L 1138.43 662.90 L 1147.33 666.29 L 1156.14 669.90 L 1164.86 673.71 L 1173.48 677.71 L 1182.05 681.90 L 1190.57 686.19 L 1199.00 690.62 L 1207.38 695.14 L 1215.71 699.71 L 1224.05 704.38 L 1232.33 709.05 L 1240.62 713.71 L 1248.95 718.38 L 1257.29 723.00 L 1265.62 727.52 L 1274.05 732.05 L 1282.48 736.43 L 1291.00 740.71 L 1299.57 744.81 L 1308.24 748.76 L 1317.00 752.57 L 1325.81 756.14 L 1334.71 759.48 L 1343.76 762.52 L 1352.86 765.33 L 1362.05 767.86 L 1371.29 770.05 L 1380.62 771.95 L 1390.05 773.48 L 1399.48 774.67 L 1408.95 775.52 L 1418.48 776.00 L 1428.00 776.14 L 1437.52 775.95 L 1447.00 775.43 L 1456.52 774.52 L 1465.95 773.33 L 1475.33 771.81 L 1484.71 770.05 L 1494.00 767.95 L 1503.24 765.57 L 1512.38 763.00 L 1521.48 760.14 L 1527.81 758.00" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-007_F: N0019 -> N0005, direction=forward, length=9.140m</title></path>
+<text x="1317.00" y="752.57" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-007_F</text>
+<path d="M 154.33 365.05 L 153.05 374.48 L 153.14 383.95 L 154.86 393.33 L 158.29 402.19 L 163.10 410.38 L 169.10 417.76 L 175.95 424.38 L 183.43 430.29 L 191.33 435.57 L 199.57 440.38 L 208.05 444.76 L 216.67 448.81 L 225.43 452.52 L 234.29 456.05 L 243.19 459.33 L 252.19 462.43 L 261.29 465.38 L 267.14 467.19" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-009_F: N0014 -> N0020, direction=forward, length=3.528m</title></path>
+<text x="191.33" y="435.57" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-009_F</text>
+<path d="M 267.14 467.19 L 276.29 469.90 L 285.48 472.38 L 294.71 474.62 L 304.00 476.81 L 313.29 478.86 L 322.62 480.90 L 331.90 482.86 L 341.24 484.86 L 350.57 486.81 L 359.86 488.81 L 369.19 490.81 L 377.29 492.67" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-015_F: N0020 -> N0015, direction=forward, length=2.375m</title></path>
+<text x="322.62" y="480.90" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-015_F</text>
+<path d="M 910.38 304.14 L 900.90 304.90 L 891.52 306.52 L 882.33 309.00 L 873.38 312.29 L 864.76 316.33 L 856.48 321.10 L 848.62 326.43 L 841.14 332.33 L 834.10 338.71 L 827.48 345.57 L 821.29 352.81 L 815.48 360.33 L 810.10 368.19 L 805.14 376.33 L 800.57 384.71 L 796.43 393.29 L 792.71 402.05 L 789.38 410.95 L 786.48 420.00 L 783.95 429.19 L 781.90 438.52 L 780.29 447.90 L 779.14 457.33 L 778.48 466.86 L 778.33 476.38 L 778.71 485.86 L 779.71 495.33 L 781.29 504.76 L 783.48 514.00 L 786.38 523.05 L 790.00 531.86 L 794.38 540.33 L 799.48 548.38 L 805.33 555.86 L 811.90 562.71 L 819.14 568.90 L 827.00 574.33 L 827.71 574.81" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-011_F: N0010 -> N0017, direction=forward, length=7.416m</title></path>
+<text x="786.48" y="420.00" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-011_F</text>
+<path d="M 827.71 574.81 L 818.19 574.00 L 808.71 573.67 L 799.19 573.81 L 789.67 574.43 L 780.19 575.48 L 770.81 577.05 L 761.52 579.05 L 752.33 581.57 L 743.29 584.52 L 734.38 588.00 L 725.71 591.90 L 717.29 596.33 L 709.14 601.24 L 701.29 606.62 L 693.81 612.52 L 686.71 618.86 L 680.10 625.71 L 674.00 633.05 L 668.52 640.81 L 663.71 649.05 L 659.62 657.62 L 656.33 666.57 L 653.95 675.81 L 652.52 685.19 L 652.00 694.71 L 652.48 704.19 L 653.86 713.62 L 656.14 722.86 L 659.24 731.86 L 663.05 740.57 L 667.52 749.00 L 672.62 757.05 L 678.19 764.76 L 684.19 772.14 L 690.57 779.19 L 697.33 785.95 L 704.38 792.33 L 711.67 798.48 L 712.29 799.05" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-013_F: N0017 -> N0003, direction=forward, length=7.616m</title></path>
+<text x="663.71" y="649.05" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-013_F</text>
+<path d="M 440.57 246.43 L 431.43 249.14 L 422.38 251.95 L 413.29 254.95 L 404.29 258.05 L 395.33 261.24 L 386.43 264.62 L 377.62 268.19 L 368.81 271.90 L 360.14 275.81 L 351.57 279.90 L 343.05 284.24 L 334.71 288.81 L 326.48 293.62 L 318.43 298.67 L 310.57 304.05 L 302.95 309.76 L 295.62 315.81 L 288.57 322.24 L 281.90 329.05 L 275.71 336.29 L 270.05 343.90 L 264.95 352.00 L 260.57 360.43 L 257.00 369.24 L 254.24 378.33 L 252.33 387.67 L 251.29 397.14 L 251.14 406.67 L 251.76 416.14 L 253.14 425.57 L 255.19 434.90 L 257.86 444.05 L 261.00 453.00 L 264.67 461.81 L 267.14 467.19" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-016_F: N0012 -> N0020, direction=forward, length=6.924m</title></path>
+<text x="288.57" y="322.24" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-016_F</text>
+<path d="M 433.81 502.95 L 442.14 507.52 L 449.48 513.62 L 455.19 521.19 L 458.76 530.00 L 460.38 539.38 L 460.43 548.90 L 459.33 558.33 L 457.52 567.71 L 455.24 576.95 L 452.57 586.10 L 449.76 595.19 L 446.81 604.24 L 443.86 613.29 L 441.00 622.38 L 438.24 631.48 L 435.71 640.67 L 433.48 649.90 L 431.62 659.24 L 430.24 668.67 L 429.52 678.19 L 429.57 687.71 L 430.52 697.14 L 432.57 706.48 L 435.71 715.43 L 440.05 723.90 L 445.43 731.76 L 449.90 737.05" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-018_F: N0016 -> N0002, direction=forward, length=5.342m</title></path>
+<text x="441.00" y="622.38" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-018_F</text>
+<path d="M 1272.90 444.76 L 1263.38 444.00 L 1253.90 443.29 L 1244.38 442.62 L 1234.90 442.00 L 1225.38 441.43 L 1215.86 440.95 L 1206.38 440.48 L 1196.86 440.10 L 1187.33 439.76 L 1177.81 439.48 L 1168.29 439.29 L 1158.76 439.19 L 1149.24 439.19 L 1139.71 439.29 L 1130.19 439.48 L 1120.67 439.81 L 1111.19 440.29 L 1101.67 440.86 L 1092.19 441.62 L 1082.71 442.57 L 1073.24 443.67 L 1063.81 445.05 L 1054.43 446.67 L 1045.10 448.57 L 1035.86 450.81 L 1026.67 453.38 L 1017.67 456.48 L 1008.86 460.05 L 1000.29 464.24 L 992.14 469.14 L 984.48 474.81 L 977.62 481.38 L 971.67 488.86 L 966.95 497.10 L 963.57 506.00 L 961.57 515.29 L 960.81 524.76 L 961.14 534.29 L 962.43 543.71 L 964.43 553.05 L 967.05 562.19 L 970.19 571.19 L 973.76 580.00 L 977.67 588.67 L 981.90 597.24 L 986.38 605.62 L 991.10 613.90 L 995.38 621.10" stroke="#374151" stroke-width="1.3" opacity="0.68" marker-end="url(#arrow-forward)"><title>E_C-020_F: N0008 -> N0018, direction=forward, length=9.574m</title></path>
+<text x="1045.10" y="448.57" font-size="8" font-family="Arial" fill="#374151" opacity="0.8">E_C-020_F</text>
+</g>
+<g id="nodes">
+<circle cx="173.48" cy="626.81" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0001 x=-18.636 y=4.996 inferred=False</title></circle>
+<text x="179.48" y="620.81" font-size="9" font-family="Arial" fill="#0f172a">N0001</text>
+<circle cx="449.90" cy="737.05" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0002 x=-12.831 y=2.681 inferred=False</title></circle>
+<text x="455.90" y="731.05" font-size="9" font-family="Arial" fill="#0f172a">N0002</text>
+<circle cx="712.29" cy="799.05" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0003 x=-7.321 y=1.379 inferred=False</title></circle>
+<text x="718.29" y="793.05" font-size="9" font-family="Arial" fill="#0f172a">N0003</text>
+<circle cx="1384.90" cy="855.57" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0004 x=6.804 y=0.192 inferred=False</title></circle>
+<text x="1390.90" y="849.57" font-size="9" font-family="Arial" fill="#0f172a">N0004</text>
+<circle cx="1527.81" cy="758.00" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0005 x=9.805 y=2.241 inferred=False</title></circle>
+<text x="1533.81" y="752.00" font-size="9" font-family="Arial" fill="#0f172a">N0005</text>
+<circle cx="1485.43" cy="600.05" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0006 x=8.915 y=5.558 inferred=False</title></circle>
+<text x="1491.43" y="594.05" font-size="9" font-family="Arial" fill="#0f172a">N0006</text>
+<circle cx="1399.86" cy="538.29" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0007 x=7.118 y=6.855 inferred=False</title></circle>
+<text x="1405.86" y="532.29" font-size="9" font-family="Arial" fill="#0f172a">N0007</text>
+<circle cx="1272.90" cy="444.76" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0008 x=4.452 y=8.819 inferred=False</title></circle>
+<text x="1278.90" y="438.76" font-size="9" font-family="Arial" fill="#0f172a">N0008</text>
+<circle cx="1116.14" cy="373.14" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0009 x=1.160 y=10.323 inferred=False</title></circle>
+<text x="1122.14" y="367.14" font-size="9" font-family="Arial" fill="#0f172a">N0009</text>
+<circle cx="910.38" cy="304.14" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0010 x=-3.161 y=11.772 inferred=False</title></circle>
+<text x="916.38" y="298.14" font-size="9" font-family="Arial" fill="#0f172a">N0010</text>
+<circle cx="806.52" cy="277.95" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0011 x=-5.342 y=12.322 inferred=False</title></circle>
+<text x="812.52" y="271.95" font-size="9" font-family="Arial" fill="#0f172a">N0011</text>
+<circle cx="440.57" cy="246.43" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0012 x=-13.027 y=12.984 inferred=False</title></circle>
+<text x="446.57" y="240.43" font-size="9" font-family="Arial" fill="#0f172a">N0012</text>
+<circle cx="241.00" cy="305.48" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0013 x=-17.218 y=11.744 inferred=False</title></circle>
+<text x="247.00" y="299.48" font-size="9" font-family="Arial" fill="#0f172a">N0013</text>
+<circle cx="154.33" cy="365.05" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0014 x=-19.038 y=10.493 inferred=False</title></circle>
+<text x="160.33" y="359.05" font-size="9" font-family="Arial" fill="#0f172a">N0014</text>
+<circle cx="377.29" cy="492.67" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0015 x=-14.356 y=7.813 inferred=False</title></circle>
+<text x="383.29" y="486.67" font-size="9" font-family="Arial" fill="#0f172a">N0015</text>
+<circle cx="433.81" cy="502.95" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0016 x=-13.169 y=7.597 inferred=False</title></circle>
+<text x="439.81" y="496.95" font-size="9" font-family="Arial" fill="#0f172a">N0016</text>
+<circle cx="827.71" cy="574.81" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0017 x=-4.897 y=6.088 inferred=False</title></circle>
+<text x="833.71" y="568.81" font-size="9" font-family="Arial" fill="#0f172a">N0017</text>
+<circle cx="995.38" cy="621.10" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0018 x=-1.376 y=5.116 inferred=False</title></circle>
+<text x="1001.38" y="615.10" font-size="9" font-family="Arial" fill="#0f172a">N0018</text>
+<circle cx="1120.33" cy="656.95" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0019 x=1.248 y=4.363 inferred=False</title></circle>
+<text x="1126.33" y="650.95" font-size="9" font-family="Arial" fill="#0f172a">N0019</text>
+<circle cx="267.14" cy="467.19" r="4.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.1"><title>N0020 x=-16.669 y=8.348 inferred=False</title></circle>
+<text x="273.14" y="461.19" font-size="9" font-family="Arial" fill="#0f172a">N0020</text>
+</g>
+<g id="semantic-points">
+<circle cx="585.90" cy="530.67" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-001 x=-9.975 y=7.015 yaw=-0.1804 edge=E_L-003_F node=</title></circle>
+<line x1="585.90" y1="530.67" x2="603.61" y2="533.90" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="593.90" y="534.67" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-001</text>
+<circle cx="794.71" cy="397.19" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-002 x=-5.590 y=9.818 yaw=-1.9714 edge=E_C-011_F node=</title></circle>
+<line x1="794.71" y1="397.19" x2="787.69" y2="413.77" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="802.71" y="401.19" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-002</text>
+<circle cx="683.10" cy="249.29" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-003 x=-7.934 y=12.924 yaw=2.9971 edge=E_C-004_F node=</title></circle>
+<line x1="683.10" y1="249.29" x2="665.28" y2="246.69" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="691.10" y="253.29" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-003</text>
+<circle cx="270.43" cy="343.33" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-004 x=-16.600 y=10.949 yaw=-2.1704 edge=E_C-016_F node=</title></circle>
+<line x1="270.43" y1="343.33" x2="260.27" y2="358.19" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="278.43" y="347.33" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-004</text>
+<circle cx="77.95" cy="537.76" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-005 x=-20.642 y=6.866 yaw=-1.2301 edge=E_C-008_F node=</title></circle>
+<line x1="77.95" y1="537.76" x2="83.97" y2="554.73" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="85.95" y="541.76" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-005</text>
+<circle cx="436.86" cy="636.38" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-006 x=-13.105 y=4.795 yaw=-1.8388 edge=E_C-018_F node=</title></circle>
+<line x1="436.86" y1="636.38" x2="432.09" y2="653.74" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="444.86" y="640.38" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-006</text>
+<circle cx="653.43" cy="678.67" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-007 x=-8.557 y=3.907 yaw=-1.7244 edge=E_C-013_F node=</title></circle>
+<line x1="653.43" y1="678.67" x2="650.67" y2="696.45" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="661.43" y="682.67" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-007</text>
+<circle cx="924.76" cy="835.81" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-008 x=-2.859 y=0.607 yaw=-0.1362 edge=E_C-012_F node=</title></circle>
+<line x1="924.76" y1="835.81" x2="942.60" y2="838.25" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="932.76" y="839.81" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-008</text>
+<circle cx="1059.48" cy="639.86" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-009 x=-0.030 y=4.722 yaw=-0.2737 edge=E_L-004_F node=</title></circle>
+<line x1="1059.48" y1="639.86" x2="1076.81" y2="644.72" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1067.48" y="643.86" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-009</text>
+<circle cx="1311.24" cy="466.29" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-010 x=5.257 y=8.367 yaw=2.6104 edge=E_C-022_F node=</title></circle>
+<line x1="1311.24" y1="466.29" x2="1295.72" y2="457.17" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1319.24" y="470.29" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-010</text>
+<circle cx="1525.05" cy="714.81" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-011 x=9.747 y=3.148 yaw=1.6636 edge=E_C-006_F node=</title></circle>
+<line x1="1525.05" y1="714.81" x2="1523.38" y2="696.89" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1533.05" y="718.81" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-011</text>
+<circle cx="1510.57" cy="635.43" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-012 x=9.443 y=4.815 yaw=1.9 edge=E_C-006_F node=</title></circle>
+<line x1="1510.57" y1="635.43" x2="1504.75" y2="618.40" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1518.57" y="639.43" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-012</text>
+<circle cx="1283.86" cy="737.10" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-013 x=4.682 y=2.680 yaw=-0.4705 edge=E_C-007_F node=</title></circle>
+<line x1="1283.86" y1="737.10" x2="1299.90" y2="745.26" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1291.86" y="741.10" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-013</text>
+<circle cx="889.67" cy="592.19" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-014 x=-3.596 y=5.723 yaw=-0.2737 edge=E_L-002_F node=</title></circle>
+<line x1="889.67" y1="592.19" x2="907.00" y2="597.06" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="897.67" y="596.19" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-014</text>
+<circle cx="161.05" cy="620.48" r="6" fill="#e11d48" stroke="#ffffff" stroke-width="1.2"><title>task:RP-018 x=-18.897 y=5.129 yaw=-0.483 edge=E_C-008_F node=</title></circle>
+<line x1="161.05" y1="620.48" x2="176.99" y2="628.84" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="169.05" y="624.48" font-size="11" font-family="Arial" font-weight="bold" fill="#e11d48">RP-018</text>
+<rect x="1027.71" y="337.43" width="10" height="10" fill="#2563eb" stroke="#ffffff" stroke-width="1.2"><title>parking:RP-015 x=-0.592 y=10.968 yaw=2.8115 edge=E_C-021_F node=</title></rect>
+<line x1="1032.71" y1="342.43" x2="1015.69" y2="336.59" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1040.71" y="346.43" font-size="11" font-family="Arial" font-weight="bold" fill="#2563eb">RP-015</text>
+<rect x="271.86" y="667.43" width="10" height="10" fill="#2563eb" stroke="#ffffff" stroke-width="1.2"><title>parking:RP-016 x=-16.465 y=4.038 yaw=-0.3884 edge=E_C-001_F node=</title></rect>
+<line x1="276.86" y1="672.43" x2="293.52" y2="679.25" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="284.86" y="676.43" font-size="11" font-family="Arial" font-weight="bold" fill="#2563eb">RP-016</text>
+<circle cx="521.48" cy="758.19" r="6" fill="#16a34a" stroke="#ffffff" stroke-width="1.2"><title>charging:RP-017 x=-11.328 y=2.237 yaw=-0.2506 edge=E_C-017_F node=</title></circle>
+<line x1="521.48" y1="758.19" x2="538.91" y2="762.65" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="529.48" y="762.19" font-size="11" font-family="Arial" font-weight="bold" fill="#16a34a">RP-017</text>
+<circle cx="585.90" cy="530.67" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-001 x=-9.975 y=7.015 yaw=-0.1804 edge= node=</title></circle>
+<line x1="585.90" y1="530.67" x2="603.61" y2="533.90" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="593.90" y="534.67" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-001</text>
+<circle cx="794.71" cy="397.19" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-002 x=-5.590 y=9.818 yaw=-1.9714 edge= node=</title></circle>
+<line x1="794.71" y1="397.19" x2="787.69" y2="413.77" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="802.71" y="401.19" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-002</text>
+<circle cx="683.10" cy="249.29" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-003 x=-7.934 y=12.924 yaw=2.9971 edge= node=</title></circle>
+<line x1="683.10" y1="249.29" x2="665.28" y2="246.69" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="691.10" y="253.29" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-003</text>
+<circle cx="270.43" cy="343.33" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-004 x=-16.600 y=10.949 yaw=-2.1704 edge= node=</title></circle>
+<line x1="270.43" y1="343.33" x2="260.27" y2="358.19" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="278.43" y="347.33" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-004</text>
+<circle cx="77.95" cy="537.76" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-005 x=-20.642 y=6.866 yaw=-1.2301 edge= node=</title></circle>
+<line x1="77.95" y1="537.76" x2="83.97" y2="554.73" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="85.95" y="541.76" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-005</text>
+<circle cx="436.86" cy="636.38" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-006 x=-13.105 y=4.795 yaw=-1.8388 edge= node=</title></circle>
+<line x1="436.86" y1="636.38" x2="432.09" y2="653.74" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="444.86" y="640.38" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-006</text>
+<circle cx="653.43" cy="678.67" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-007 x=-8.557 y=3.907 yaw=-1.7244 edge= node=</title></circle>
+<line x1="653.43" y1="678.67" x2="650.67" y2="696.45" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="661.43" y="682.67" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-007</text>
+<circle cx="924.76" cy="835.81" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-008 x=-2.859 y=0.607 yaw=-0.1362 edge= node=</title></circle>
+<line x1="924.76" y1="835.81" x2="942.60" y2="838.25" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="932.76" y="839.81" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-008</text>
+<circle cx="1059.48" cy="639.86" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-009 x=-0.030 y=4.722 yaw=-0.2737 edge= node=</title></circle>
+<line x1="1059.48" y1="639.86" x2="1076.81" y2="644.72" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1067.48" y="643.86" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-009</text>
+<circle cx="1311.24" cy="466.29" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-010 x=5.257 y=8.367 yaw=2.6104 edge= node=</title></circle>
+<line x1="1311.24" y1="466.29" x2="1295.72" y2="457.17" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1319.24" y="470.29" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-010</text>
+<circle cx="1525.05" cy="714.81" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-011 x=9.747 y=3.148 yaw=1.6636 edge= node=</title></circle>
+<line x1="1525.05" y1="714.81" x2="1523.38" y2="696.89" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1533.05" y="718.81" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-011</text>
+<circle cx="1510.57" cy="635.43" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-012 x=9.443 y=4.815 yaw=1.9 edge= node=</title></circle>
+<line x1="1510.57" y1="635.43" x2="1504.75" y2="618.40" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1518.57" y="639.43" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-012</text>
+<circle cx="1283.86" cy="737.10" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-013 x=4.682 y=2.680 yaw=-0.4705 edge= node=</title></circle>
+<line x1="1283.86" y1="737.10" x2="1299.90" y2="745.26" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1291.86" y="741.10" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-013</text>
+<circle cx="889.67" cy="592.19" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-014 x=-3.596 y=5.723 yaw=-0.2737 edge= node=</title></circle>
+<line x1="889.67" y1="592.19" x2="907.00" y2="597.06" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="897.67" y="596.19" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-014</text>
+<circle cx="1032.71" cy="342.43" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-015 x=-0.592 y=10.968 yaw=2.8115 edge= node=</title></circle>
+<line x1="1032.71" y1="342.43" x2="1015.69" y2="336.59" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="1040.71" y="346.43" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-015</text>
+<circle cx="276.86" cy="672.43" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-016 x=-16.465 y=4.038 yaw=-0.3884 edge= node=</title></circle>
+<line x1="276.86" y1="672.43" x2="293.52" y2="679.25" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="284.86" y="676.43" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-016</text>
+<circle cx="521.48" cy="758.19" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-017 x=-11.328 y=2.237 yaw=-0.2506 edge= node=</title></circle>
+<line x1="521.48" y1="758.19" x2="538.91" y2="762.65" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="529.48" y="762.19" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-017</text>
+<circle cx="161.05" cy="620.48" r="5" fill="#9333ea" stroke="#ffffff" stroke-width="1.2"><title>route:RP-018 x=-18.897 y=5.129 yaw=-0.483 edge= node=</title></circle>
+<line x1="161.05" y1="620.48" x2="176.99" y2="628.84" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-forward)" opacity="0.9"/>
+<text x="169.05" y="624.48" font-size="11" font-family="Arial" font-weight="bold" fill="#9333ea">RP-018</text>
+</g>
+<g id="legend" font-family="Arial" font-size="12">
+<rect x="24" y="994" width="14" height="14" fill="#374151"/>
+<text x="44" y="1005" fill="#111827">forward edge</text>
+<rect x="204" y="994" width="14" height="14" fill="#b45309"/>
+<text x="224" y="1005" fill="#111827">reverse edge</text>
+<rect x="384" y="994" width="14" height="14" fill="#e11d48"/>
+<text x="404" y="1005" fill="#111827">task point</text>
+<rect x="24" y="1018" width="14" height="14" fill="#2563eb"/>
+<text x="44" y="1029" fill="#111827">parking point</text>
+<rect x="204" y="1018" width="14" height="14" fill="#16a34a"/>
+<text x="224" y="1029" fill="#111827">charging point</text>
+<rect x="384" y="1018" width="14" height="14" fill="#9333ea"/>
+<text x="404" y="1029" fill="#111827">route point</text>
+</g>
+</svg>
