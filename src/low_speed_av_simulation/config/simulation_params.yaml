@@ -9,6 +9,7 @@ roadnet_visualization_node:
     topics:
       global_route_topic: "/planning/global_route"
       trajectory_topic: "/planning/trajectory"
+      full_reference_path_topic: "/planning/full_reference_path"
       localization_pose_topic: "/localization/pose"
       roadnet_markers: "/simulation/roadnet_markers"
       route_markers: "/simulation/route_markers"

@@ -49,6 +49,15 @@ install(TARGETS planning_node
 install(DIRECTORY include/ DESTINATION include)
 install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 
+if(BUILD_TESTING)
+  find_package(ament_cmake_pytest REQUIRED)
+  ament_add_pytest_test(
+    offline_trajectory_continuity
+    test/test_offline_trajectory_continuity.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../..
+  )
+endif()
+
 ament_export_include_directories(include)
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp geometry_msgs std_msgs low_speed_av_interfaces yaml-cpp)

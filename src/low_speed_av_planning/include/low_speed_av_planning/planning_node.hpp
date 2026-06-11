@@ -62,6 +62,7 @@ private:
   void publish_roadnet_status(bool ready, const std::string & message);
   void republish_last_route();
   void republish_last_trajectory();
+  void republish_last_full_reference_path();
   void republish_last_roadnet_status();
   void clear_cached_plan();
   void publish_failure_trajectory(const std::string & reason);
@@ -71,6 +72,12 @@ private:
     const PlanResult & route,
     const RoadnetAnchor & start_anchor,
     const RoadnetAnchor & goal_anchor);
+  Trajectory compute_full_reference_path_to_goal_anchor(
+    const PlanResult & route,
+    const RoadnetAnchor & start_anchor,
+    const RoadnetAnchor & goal_anchor);
+  Trajectory make_local_trajectory_from_full_reference(const Trajectory & full_reference) const;
+  bool trajectory_is_continuous(const Trajectory & trajectory, std::string * diagnostic) const;
   Trajectory make_arrived_stop_trajectory(const RoadnetAnchor & anchor, const std::string & behavior) const;
   Trajectory make_edge_segment_trajectory(
     const RoadnetAnchor & start_anchor,
@@ -149,6 +156,7 @@ private:
   std::string speed_planner_algorithm_{"curvature"};
   rclcpp::Publisher<low_speed_av_interfaces::msg::GlobalRoute>::SharedPtr global_route_pub_;
   rclcpp::Publisher<low_speed_av_interfaces::msg::Trajectory>::SharedPtr trajectory_pub_;
+  rclcpp::Publisher<low_speed_av_interfaces::msg::Trajectory>::SharedPtr full_reference_path_pub_;
   rclcpp::Publisher<low_speed_av_interfaces::msg::ModuleStatus>::SharedPtr planning_status_pub_;
   rclcpp::Publisher<low_speed_av_interfaces::msg::RoadnetStatus>::SharedPtr roadnet_status_pub_;
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_;
@@ -163,9 +171,12 @@ private:
   rclcpp::Time latest_pose_receive_time_;
   low_speed_av_interfaces::msg::GlobalRoute last_route_msg_;
   low_speed_av_interfaces::msg::Trajectory last_trajectory_msg_;
+  low_speed_av_interfaces::msg::Trajectory last_full_reference_path_msg_;
   low_speed_av_interfaces::msg::RoadnetStatus last_roadnet_status_msg_;
+  Trajectory last_full_reference_path_;
   bool has_last_route_msg_{false};
   bool has_last_trajectory_msg_{false};
+  bool has_last_full_reference_path_msg_{false};
   bool has_last_roadnet_status_msg_{false};
 };
 

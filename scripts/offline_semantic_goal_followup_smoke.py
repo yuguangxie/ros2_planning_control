@@ -51,6 +51,10 @@ def edge_range(index_entry: dict) -> tuple[int, int]:
 
 def project_point_to_edge(point: dict, package: dict) -> dict:
     edge_id = clean_optional_string(point.get("linked_edge_id"))
+    if not edge_id:
+        edge_id = clean_optional_string(point.get("entry_edge_id"))
+    if not edge_id and isinstance(point.get("approach"), dict):
+        edge_id = clean_optional_string(point["approach"].get("edge_id"))
     if edge_id not in package["edges"]:
         raise ValueError("semantic point has no valid linked_node_id or linked_edge_id")
     start, end = edge_range(package["waypoint_index"][edge_id])
@@ -104,7 +108,12 @@ def clamp(value: float, limit: float) -> float:
 
 
 def main() -> int:
-    root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("roadnet_ad_package_20260610T012525Z")
+    if len(sys.argv) > 1:
+        root = Path(sys.argv[1])
+    else:
+        root = Path("roadnet_ad_package_20260610T012525Z_2")
+        if not root.exists():
+            root = Path("roadnet_ad_package_20260610T012525Z_1")
     package = load_package(root)
 
     rp001 = project_point_to_edge(package["task_points"]["RP-001"], package)

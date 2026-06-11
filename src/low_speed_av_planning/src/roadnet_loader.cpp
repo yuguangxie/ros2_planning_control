@@ -197,8 +197,23 @@ SemanticPoint parse_semantic_point(const YAML::Node & src, const std::string & f
   }
   point.linked_node_id = yaml_string(src, "linked_node_id");
   point.linked_edge_id = yaml_string(src, "linked_edge_id");
+  if (point.linked_edge_id.empty()) {
+    point.linked_edge_id = yaml_string(src, "entry_edge_id");
+  }
+  if (point.linked_edge_id.empty() && src["approach"]) {
+    point.linked_edge_id = yaml_string(src["approach"], "edge_id");
+  }
   point.linked_path_id = yaml_string(src, "linked_path_id");
+  if (point.linked_path_id.empty() && src["properties"]) {
+    point.linked_path_id = yaml_string(src["properties"], "linked_path_id");
+  }
+  if (point.linked_path_id.empty() && src["properties"]) {
+    point.linked_path_id = yaml_string(src["properties"], "path_id");
+  }
   point.linked_s_m = yaml_double(src, "linked_s_m");
+  if (point.linked_s_m == 0.0 && src["properties"]) {
+    point.linked_s_m = yaml_double(src["properties"], "s_on_path");
+  }
   return point;
 }
 

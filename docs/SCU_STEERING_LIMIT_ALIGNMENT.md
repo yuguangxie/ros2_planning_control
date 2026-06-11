@@ -1,24 +1,12 @@
 # SCU 转角限值对齐说明
 
-## 背景
+## 目标
 
-Ubuntu 复测中，倒车路线 `N0015 -> N0014` 曾观察到 SCU 前轮转角约 `-29.79 deg`。底盘 driver 默认安全范围为约 `27 deg`，因此控制输出必须在 SCU 出口层做最终保护。
+统一控制模块、SCU mapper、bringup 配置和人工验证文档中的底盘转角限制，避免向 Yunle chassis driver 发布超过默认安全范围的前/后轮转角。
 
-## 当前规则
+## Canonical 参数名
 
-控制内部仍使用 SI 单位：
-
-- speed: `m/s`
-- steering: `rad`
-- curvature: `1/m`
-
-最终 `ScuCommandMapper` 才转换为底盘命令：
-
-- speed: `km/h`
-- steering: `deg`
-- shift: D=1, N=2, R=3
-
-默认配置已对齐到 27 度：
+当前工程的正式参数名是：
 
 ```yaml
 scu:
@@ -26,25 +14,37 @@ scu:
   overrange_policy: "clamp"
 ```
 
-## overrange policy
+请不要在新文档或复测命令中使用 `output.scu_max_steering_angle_deg` 或 `output.scu_overrange_policy`。`output.mode=scu_control_command` 仍然保留，用于选择输出模式；SCU 物理限值属于 `scu.*` 参数组。
 
-`ScuCommandMapper` 的出口规则：
+## 单位合同
 
-1. 非有限 steering：映射为 `0.0` 并 warning。
-2. 有限但超范围 steering：
-   - `overrange_policy: clamp` 时裁剪到 `[-max, +max]`。
-   - 其他策略时映射为 `0.0`。
-3. 非有限 speed：映射为 `0.0`。
-4. 超范围 speed：
-   - `clamp` 时裁剪到最大速度。
-   - 其他策略时映射为 `0.0`。
-5. shift 永远只发布 1/2/3；未知 gear 发布 brake stop。
+控制内部保持 SI 单位：
+
+- speed: `m/s`
+- steering: `rad`
+- curvature: `1/m`
+
+`ScuCommandMapper` 在最终输出层转换为底盘命令：
+
+- `target_speed_mps -> scu_target_speed`：`abs(m/s) * 3.6`，单位 `km/h`
+- `front_steering_angle_rad -> scu_steering_angle_front`：弧度转角度
+- `rear_steering_angle_rad -> scu_steering_angle_rear`：弧度转角度
+- gear：D=1，N=2，R=3
+
+## 限幅策略
+
+`scu.overrange_policy=clamp` 时：
+
+- 有限但超范围的前/后轮转角裁剪到 `[-scu.max_steering_angle_deg, +scu.max_steering_angle_deg]`。
+- 非有限转角映射为 `0.0` 并记录 warning。
+- 有限但超范围速度按配置裁剪或置零；非有限速度映射为 `0.0`。
+- shift 永远只发布 1/2/3，未知 gear 发布 brake stop。
 
 ## 安全停车
 
-以下情况必须输出 brake stop：
+以下场景必须输出 brake stop：
 
-- estop
+- safety estop
 - localization timeout
 - trajectory timeout
 - empty trajectory
@@ -61,7 +61,21 @@ scu_steering_angle_rear=0
 scu_shift_level_request=valid stop gear, default D=1
 ```
 
-## 复测重点
+## Ubuntu 复测重点
+
+```bash
+ros2 param get /low_speed_av_control scu.max_steering_angle_deg
+ros2 param get /low_speed_av_control scu.overrange_policy
+```
+
+期望：
+
+```text
+27.0
+clamp
+```
+
+倒车路线复测：
 
 ```bash
 ros2 service call /low_speed_av_planning/plan_route \
@@ -75,5 +89,13 @@ ros2 topic echo /yunle_chassis/control/scu_control_command
 
 - `abs(scu_steering_angle_front) <= 27.0`
 - `abs(scu_steering_angle_rear) <= 27.0`
-- reverse shift 为 3
-- speed 非负 km/h
+- reverse shift 为 `3`
+- speed 为非负 `km/h`
+
+## ROS2 命令
+
+本文档在 Windows Codex 环境更新，未执行 ROS2：
+
+```text
+SKIPPED_ROS2_UNAVAILABLE
+```

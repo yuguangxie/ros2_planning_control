@@ -52,6 +52,10 @@ low_speed_av_planning:
       route_republish_rate_hz: 1.0
       trajectory_republish_rate_hz: 10.0
       roadnet_status_publish_rate_hz: 1.0
+      publish_full_reference_path: true
+      full_reference_path_topic: "/planning/full_reference_path"
+      local_trajectory_from_current_pose: true
+      max_trajectory_point_jump_m: 2.0
       arrival_radius_m: 0.5
       arrival_heading_tolerance_rad: 0.35
       semantic_goal_use_edge_projection: true

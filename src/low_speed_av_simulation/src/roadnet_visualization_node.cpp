@@ -88,6 +88,7 @@ public:
     declare_parameter<double>("publish_rate_hz", 1.0);
     declare_parameter<std::string>("topics.global_route_topic", "/planning/global_route");
     declare_parameter<std::string>("topics.trajectory_topic", "/planning/trajectory");
+    declare_parameter<std::string>("topics.full_reference_path_topic", "/planning/full_reference_path");
     declare_parameter<std::string>("topics.localization_pose_topic", "/localization/pose");
     declare_parameter<std::string>("topics.roadnet_markers", "/simulation/roadnet_markers");
     declare_parameter<std::string>("topics.route_markers", "/simulation/route_markers");
@@ -113,6 +114,11 @@ public:
       get_parameter("topics.trajectory_topic").as_string(), 10,
       [this](low_speed_av_interfaces::msg::Trajectory::SharedPtr msg) {
         on_trajectory(*msg);
+      });
+    full_reference_path_sub_ = create_subscription<low_speed_av_interfaces::msg::Trajectory>(
+      get_parameter("topics.full_reference_path_topic").as_string(), 10,
+      [this](low_speed_av_interfaces::msg::Trajectory::SharedPtr msg) {
+        on_full_reference_path(*msg);
       });
     pose_sub_ = create_subscription<geometry_msgs::msg::PoseStamped>(
       get_parameter("topics.localization_pose_topic").as_string(), 10,
@@ -357,6 +363,40 @@ private:
     route_markers_pub_->publish(array);
   }
 
+  void on_full_reference_path(const low_speed_av_interfaces::msg::Trajectory & msg)
+  {
+    MarkerArray array;
+    const auto stamp = now();
+    auto line = base_marker(frame_id_, stamp, "full_reference_path", 0, Marker::LINE_STRIP);
+    line.scale.x = 0.055;
+    line.color = color(1.0F, 0.85F, 0.15F, 0.95F);
+    for (const auto & point_msg : msg.points) {
+      line.points.push_back(point(point_msg.x_m, point_msg.y_m, 0.30));
+    }
+    array.markers.push_back(line);
+
+    if (!msg.points.empty()) {
+      const auto & last = msg.points.back();
+      auto goal = base_marker(frame_id_, stamp, "full_reference_goal", 1, Marker::SPHERE);
+      goal.pose.position = point(last.x_m, last.y_m, 0.55);
+      goal.pose.orientation = quaternion_from_yaw(last.yaw_rad);
+      goal.scale.x = 0.35;
+      goal.scale.y = 0.35;
+      goal.scale.z = 0.35;
+      goal.color = color(1.0F, 0.85F, 0.15F, 1.0F);
+      array.markers.push_back(goal);
+
+      auto label = base_marker(frame_id_, stamp, "full_reference_goal_label", 2, Marker::TEXT_VIEW_FACING);
+      label.pose.position = point(last.x_m, last.y_m, 1.02);
+      label.scale.z = 0.30;
+      label.color = color(1.0F, 0.85F, 0.15F, 1.0F);
+      label.text = last.waypoint_id.empty() ? "full reference goal" : "full reference: " + last.waypoint_id;
+      array.markers.push_back(label);
+    }
+
+    route_markers_pub_->publish(array);
+  }
+
   void on_pose(const geometry_msgs::msg::PoseStamped & msg)
   {
     MarkerArray array;
@@ -380,6 +420,7 @@ private:
   rclcpp::Publisher<MarkerArray>::SharedPtr vehicle_markers_pub_;
   rclcpp::Subscription<low_speed_av_interfaces::msg::GlobalRoute>::SharedPtr route_sub_;
   rclcpp::Subscription<low_speed_av_interfaces::msg::Trajectory>::SharedPtr trajectory_sub_;
+  rclcpp::Subscription<low_speed_av_interfaces::msg::Trajectory>::SharedPtr full_reference_path_sub_;
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_;
   rclcpp::TimerBase::SharedPtr timer_;
 };
