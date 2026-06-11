@@ -59,6 +59,16 @@ low_speed_av_planning:
       arrival_radius_m: 0.5
       arrival_heading_tolerance_rad: 0.35
       semantic_goal_use_edge_projection: true
-      semantic_goal_allow_reverse_local_segment: true
+      semantic_goal_allow_reverse_local_segment: false
       semantic_goal_crop_waypoints: true
       semantic_goal_min_segment_length_m: 0.2
+      reverse:
+        allow_reverse_planning: false
+        allow_reverse_local_segment: false
+        require_reverse_confirmation: true
+        prefer_forward_route_when_reverse_disabled: true
+        fail_if_goal_behind_on_same_edge_when_reverse_disabled: false
+      start_anchor:
+        include_current_edge_prefix: true
+        max_start_projection_distance_m: 2.0
+        max_first_trajectory_point_distance_m: 2.0

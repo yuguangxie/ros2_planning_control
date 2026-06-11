@@ -168,7 +168,10 @@ def main() -> int:
 
     planning_yaml = Path("src/low_speed_av_bringup/config/planning_params.yaml").read_text(encoding="utf-8")
     assert "trajectory_republish_rate_hz: 10.0" in planning_yaml
-    assert "semantic_goal_allow_reverse_local_segment: true" in planning_yaml
+    assert "semantic_goal_allow_reverse_local_segment: false" in planning_yaml
+    assert "allow_reverse_planning: false" in planning_yaml
+    assert "allow_reverse_local_segment: false" in planning_yaml
+    assert "include_current_edge_prefix: true" in planning_yaml
     control_yaml = Path("src/low_speed_av_bringup/config/control_params.yaml").read_text(encoding="utf-8")
     assert "max_steering_angle_deg: 27.0" in control_yaml
     assert "status_publish_rate_hz: 5.0" in control_yaml

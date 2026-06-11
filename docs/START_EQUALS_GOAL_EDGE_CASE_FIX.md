@@ -38,8 +38,13 @@ edge_ids=[]
 
 ```yaml
 planning:
-  semantic_goal_allow_reverse_local_segment: true
+  semantic_goal_allow_reverse_local_segment: false
+  reverse:
+    allow_reverse_planning: false
+    allow_reverse_local_segment: false
 ```
+
+说明：旧参数仅保留兼容；当前是否允许倒车由 `planning.reverse.*` 显式控制。需要验证倒车局部段时，应临时将 `allow_reverse_planning` 和 `allow_reverse_local_segment` 同时置为 `true`。
 
 因此 `current pose -> RP-003` 应输出：
 

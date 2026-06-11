@@ -52,6 +52,11 @@ struct RoadnetAnchor {
   bool require_final_stop{false};
 };
 
+struct RouteDecision {
+  PlanResult route;
+  std::string note;
+};
+
 class PlanningNode : public rclcpp::Node {
 public:
   explicit PlanningNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
@@ -87,10 +92,25 @@ private:
     Trajectory & trajectory,
     const RoadnetAnchor & goal_anchor,
     bool reverse) const;
+  void append_edge_segment_between(
+    Trajectory & trajectory,
+    const RoadnetAnchor & start_anchor,
+    const RoadnetAnchor & goal_anchor,
+    bool reverse) const;
+  void append_start_edge_remaining_segment(Trajectory & trajectory, const RoadnetAnchor & start_anchor) const;
   void append_waypoint(Trajectory & trajectory, Waypoint waypoint) const;
   void regenerate_route_s(Trajectory & trajectory) const;
   void apply_semantic_speed_limits(Trajectory & trajectory) const;
   bool has_arrived(const RoadnetAnchor & goal_anchor) const;
+  bool reverse_planning_allowed() const;
+  bool reverse_local_segment_allowed() const;
+  bool start_and_goal_on_same_edge(const RoadnetAnchor & start_anchor, const RoadnetAnchor & goal_anchor) const;
+  bool goal_is_behind_start_on_same_edge(
+    const RoadnetAnchor & start_anchor,
+    const RoadnetAnchor & goal_anchor) const;
+  RouteDecision plan_route_between_anchors(
+    const RoadnetAnchor & start_anchor,
+    const RoadnetAnchor & goal_anchor);
   std::optional<RoadnetAnchor> resolve_start_anchor(
     const std::string & node_id,
     const std::string & task_point_id,

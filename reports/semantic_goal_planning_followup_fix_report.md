@@ -67,9 +67,12 @@ planning:
   arrival_radius_m: 0.5
   arrival_heading_tolerance_rad: 0.35
   semantic_goal_use_edge_projection: true
-  semantic_goal_allow_reverse_local_segment: true
+  semantic_goal_allow_reverse_local_segment: false
   semantic_goal_crop_waypoints: true
   semantic_goal_min_segment_length_m: 0.2
+  reverse:
+    allow_reverse_planning: false
+    allow_reverse_local_segment: false
 ```
 
 新增/更新 control 参数：

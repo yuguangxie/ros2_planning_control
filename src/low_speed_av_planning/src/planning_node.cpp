@@ -192,9 +192,17 @@ PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
   declare_parameter<double>("planning.arrival_radius_m", 0.5);
   declare_parameter<double>("planning.arrival_heading_tolerance_rad", 0.35);
   declare_parameter<bool>("planning.semantic_goal_use_edge_projection", true);
-  declare_parameter<bool>("planning.semantic_goal_allow_reverse_local_segment", true);
+  declare_parameter<bool>("planning.semantic_goal_allow_reverse_local_segment", false);
   declare_parameter<bool>("planning.semantic_goal_crop_waypoints", true);
   declare_parameter<double>("planning.semantic_goal_min_segment_length_m", 0.2);
+  declare_parameter<bool>("planning.reverse.allow_reverse_planning", false);
+  declare_parameter<bool>("planning.reverse.allow_reverse_local_segment", false);
+  declare_parameter<bool>("planning.reverse.require_reverse_confirmation", true);
+  declare_parameter<bool>("planning.reverse.prefer_forward_route_when_reverse_disabled", true);
+  declare_parameter<bool>("planning.reverse.fail_if_goal_behind_on_same_edge_when_reverse_disabled", false);
+  declare_parameter<bool>("planning.start_anchor.include_current_edge_prefix", true);
+  declare_parameter<double>("planning.start_anchor.max_start_projection_distance_m", 2.0);
+  declare_parameter<double>("planning.start_anchor.max_first_trajectory_point_distance_m", 2.0);
   declare_parameter<bool>("planning.publish_full_reference_path", true);
   declare_parameter<bool>("planning.local_trajectory_from_current_pose", true);
   declare_parameter<double>("planning.max_trajectory_point_jump_m", 2.0);
@@ -434,7 +442,8 @@ void PlanningNode::publish_failure_trajectory(const std::string & reason)
 GlobalPlannerOptions PlanningNode::read_global_options() const
 {
   GlobalPlannerOptions options;
-  options.allow_reverse = get_parameter("global_planner.allow_reverse").as_bool();
+  options.allow_reverse =
+    get_parameter("global_planner.allow_reverse").as_bool() && reverse_planning_allowed();
   options.heuristic_weight = get_parameter("global_planner.heuristic_weight").as_double();
   for (const auto & edge_id : get_parameter("global_planner.blocked_edges").as_string_array()) {
     options.blocked_edges.insert(edge_id);
@@ -443,6 +452,105 @@ GlobalPlannerOptions PlanningNode::read_global_options() const
     options.blocked_edges.insert(package_->blocked_edges.begin(), package_->blocked_edges.end());
   }
   return options;
+}
+
+bool PlanningNode::reverse_planning_allowed() const
+{
+  return get_parameter("planning.reverse.allow_reverse_planning").as_bool();
+}
+
+bool PlanningNode::reverse_local_segment_allowed() const
+{
+  return reverse_planning_allowed() &&
+    get_parameter("planning.reverse.allow_reverse_local_segment").as_bool();
+}
+
+bool PlanningNode::start_and_goal_on_same_edge(
+  const RoadnetAnchor & start_anchor,
+  const RoadnetAnchor & goal_anchor) const
+{
+  return start_anchor.has_edge && goal_anchor.has_edge &&
+    !start_anchor.edge_id.empty() && start_anchor.edge_id == goal_anchor.edge_id;
+}
+
+bool PlanningNode::goal_is_behind_start_on_same_edge(
+  const RoadnetAnchor & start_anchor,
+  const RoadnetAnchor & goal_anchor) const
+{
+  if (!start_and_goal_on_same_edge(start_anchor, goal_anchor)) {
+    return false;
+  }
+  return goal_anchor.s_on_edge_m + 1e-3 < start_anchor.s_on_edge_m;
+}
+
+RouteDecision PlanningNode::plan_route_between_anchors(
+  const RoadnetAnchor & start_anchor,
+  const RoadnetAnchor & goal_anchor)
+{
+  RouteDecision decision;
+  if (!package_) {
+    decision.route = {false, "roadnet package not loaded", global_planner_algorithm_, {}, {}, 0.0, 0.0};
+    return decision;
+  }
+
+  if (start_and_goal_on_same_edge(start_anchor, goal_anchor)) {
+    const bool goal_behind = goal_is_behind_start_on_same_edge(start_anchor, goal_anchor);
+    if (!goal_behind) {
+      decision.route = {
+        true, "same edge forward segment", global_planner_algorithm_,
+        {start_anchor.node_id}, {}, 0.0, 0.0};
+      decision.note = "same edge forward segment selected";
+      return decision;
+    }
+
+    if (reverse_local_segment_allowed()) {
+      decision.route = {
+        true, "same edge reverse local segment", global_planner_algorithm_,
+        {start_anchor.node_id}, {}, 0.0, 0.0};
+      decision.note = "reverse local segment selected";
+      return decision;
+    }
+
+    if (get_parameter("planning.reverse.fail_if_goal_behind_on_same_edge_when_reverse_disabled").as_bool()) {
+      decision.route = {
+        false, "reverse planning is disabled and same-edge goal is behind current pose",
+        global_planner_algorithm_, {}, {}, 0.0, 0.0};
+      decision.note = "reverse disabled; no forward detour attempted";
+      return decision;
+    }
+
+    if (!goal_anchor.edge_from_node_id.empty()) {
+      decision.route = compute_route(start_anchor.node_id, goal_anchor.edge_from_node_id);
+      if (decision.route.success) {
+        decision.note = "reverse disabled; using forward detour";
+        return decision;
+      }
+    }
+    decision.route = {
+      false, "reverse planning is disabled and forward route to goal is unavailable",
+      global_planner_algorithm_, {}, {}, 0.0, 0.0};
+    decision.note = "reverse disabled; no forward detour available";
+    return decision;
+  }
+
+  const bool prefer_goal_edge_from = goal_anchor.has_edge && !goal_anchor.edge_from_node_id.empty();
+  if (prefer_goal_edge_from) {
+    decision.route = compute_route(start_anchor.node_id, goal_anchor.edge_from_node_id);
+    if (decision.route.success) {
+      return decision;
+    }
+    decision.route = compute_route(start_anchor.node_id, goal_anchor.node_id);
+    return decision;
+  }
+
+  decision.route = compute_route(start_anchor.node_id, goal_anchor.node_id);
+  if (!decision.route.success && goal_anchor.has_edge && !goal_anchor.edge_from_node_id.empty()) {
+    const auto route_to_edge_from = compute_route(start_anchor.node_id, goal_anchor.edge_from_node_id);
+    if (route_to_edge_from.success) {
+      decision.route = route_to_edge_from;
+    }
+  }
+  return decision;
 }
 
 MotionPlannerOptions PlanningNode::read_motion_options() const
@@ -508,18 +616,35 @@ Trajectory PlanningNode::compute_full_reference_path_to_goal_anchor(
   MotionPlannerOptions full_options = read_motion_options();
   full_options.horizon_distance_m = 0.0;
   const auto motion = MotionPlannerFactory::create(motion_planner_algorithm_);
-  auto full_reference = motion->make_trajectory(*package_, route.edge_ids, nullptr, full_options);
+  Trajectory full_reference;
+  if (start_and_goal_on_same_edge(start_anchor, goal_anchor) && goal_anchor.has_edge) {
+    const bool reverse_segment = goal_is_behind_start_on_same_edge(start_anchor, goal_anchor);
+    if (reverse_segment && reverse_local_segment_allowed()) {
+      append_edge_segment_between(full_reference, start_anchor, goal_anchor, true);
+    } else if (!reverse_segment) {
+      append_edge_segment_between(full_reference, start_anchor, goal_anchor, false);
+    }
+  }
+
+  if (full_reference.empty()) {
+    append_start_edge_remaining_segment(full_reference, start_anchor);
+    auto route_reference = motion->make_trajectory(*package_, route.edge_ids, nullptr, full_options);
+    for (auto & wp : route_reference) {
+      append_waypoint(full_reference, wp);
+    }
+  }
 
   const bool semantic_crop = get_parameter("planning.semantic_goal_crop_waypoints").as_bool();
-  const bool allow_reverse =
-    get_parameter("planning.semantic_goal_allow_reverse_local_segment").as_bool() &&
-    get_parameter("global_planner.allow_reverse").as_bool();
 
   if (semantic_crop && goal_anchor.has_edge) {
     const bool reverse_goal_segment =
-      (!route.node_ids.empty() && route.node_ids.back() == goal_anchor.edge_to_node_id && allow_reverse) ||
-      (route.edge_ids.empty() && start_anchor.node_id == goal_anchor.edge_to_node_id && allow_reverse);
-    append_edge_segment(full_reference, goal_anchor, reverse_goal_segment);
+      (!route.node_ids.empty() && route.node_ids.back() == goal_anchor.edge_to_node_id &&
+      reverse_local_segment_allowed()) ||
+      (route.edge_ids.empty() && start_anchor.node_id == goal_anchor.edge_to_node_id &&
+      reverse_local_segment_allowed());
+    if (!(start_and_goal_on_same_edge(start_anchor, goal_anchor) && !full_reference.empty())) {
+      append_edge_segment(full_reference, goal_anchor, reverse_goal_segment);
+    }
   }
 
   const double min_length = get_parameter("planning.semantic_goal_min_segment_length_m").as_double();
@@ -800,6 +925,33 @@ std::optional<RoadnetAnchor> PlanningNode::match_current_pose_to_start_anchor(st
   if (best) {
     anchor.edge_id = best->edge_id;
     (void)project_anchor_to_edge(anchor, nullptr);
+    const double projection_distance = std::sqrt(best_distance_sq);
+    const double max_projection =
+      get_parameter("planning.start_anchor.max_start_projection_distance_m").as_double();
+    if (max_projection > 0.0 && projection_distance > max_projection) {
+      if (diagnostic) {
+        std::ostringstream oss;
+        oss << *diagnostic << "; start anchor projection is too far: distance=" <<
+          projection_distance << "m max=" << max_projection << "m";
+        *diagnostic = oss.str();
+      }
+      return std::nullopt;
+    }
+    if (get_parameter("planning.start_anchor.include_current_edge_prefix").as_bool() &&
+      anchor.has_edge && !anchor.edge_to_node_id.empty())
+    {
+      anchor.node_id = anchor.edge_to_node_id;
+      anchor.has_node = true;
+      if (diagnostic) {
+        std::ostringstream oss;
+        oss << *diagnostic << "; start anchor kept on edge=" << anchor.edge_id <<
+          " waypoint_index=" << anchor.waypoint_index <<
+          " s_on_edge=" << anchor.s_on_edge_m <<
+          " route_start_node_after_prefix=" << anchor.node_id <<
+          " (not collapsed before current-edge remainder)";
+        *diagnostic = oss.str();
+      }
+    }
   }
   return anchor;
 }
@@ -950,6 +1102,105 @@ void PlanningNode::append_edge_segment(
       last.target_speed_mps = 0.0;
       last.behavior = reverse ? "semantic_goal_reverse_stop" : "semantic_goal_stop";
     }
+  }
+}
+
+void PlanningNode::append_edge_segment_between(
+  Trajectory & trajectory,
+  const RoadnetAnchor & start_anchor,
+  const RoadnetAnchor & goal_anchor,
+  bool reverse) const
+{
+  if (!package_ || !start_and_goal_on_same_edge(start_anchor, goal_anchor)) {
+    return;
+  }
+  const auto range_it = package_->waypoint_index_by_edge.find(goal_anchor.edge_id);
+  if (range_it == package_->waypoint_index_by_edge.end() ||
+    range_it->second.count == 0U || package_->waypoints.empty())
+  {
+    return;
+  }
+  const auto edge_start = range_it->second.start_index;
+  const auto edge_end = std::min(range_it->second.end_index_exclusive, package_->waypoints.size());
+  const auto start_index = std::min(std::max(start_anchor.waypoint_index, edge_start), edge_end - 1U);
+  const auto goal_index = std::min(std::max(goal_anchor.waypoint_index, edge_start), edge_end - 1U);
+
+  if (reverse) {
+    for (std::size_t i = start_index + 1U; i-- > goal_index;) {
+      auto wp = package_->waypoints[i];
+      if (i == start_index && start_anchor.has_pose) {
+        wp.x_m = start_anchor.x_m;
+        wp.y_m = start_anchor.y_m;
+        wp.yaw_rad = start_anchor.yaw_rad;
+        wp.edge_s_m = start_anchor.s_on_edge_m;
+      }
+      wp.gear = 2;
+      wp.behavior = "semantic_reverse_local";
+      append_waypoint(trajectory, wp);
+      if (i == 0U) {
+        break;
+      }
+    }
+  } else {
+    for (std::size_t i = start_index; i <= goal_index && i < edge_end; ++i) {
+      auto wp = package_->waypoints[i];
+      if (i == start_index && start_anchor.has_pose) {
+        wp.x_m = start_anchor.x_m;
+        wp.y_m = start_anchor.y_m;
+        wp.yaw_rad = start_anchor.yaw_rad;
+        wp.edge_s_m = start_anchor.s_on_edge_m;
+      }
+      wp.behavior = "semantic_forward_local";
+      append_waypoint(trajectory, wp);
+      if (i == std::numeric_limits<std::size_t>::max()) {
+        break;
+      }
+    }
+  }
+
+  if (!trajectory.empty() && goal_anchor.has_pose) {
+    auto & last = trajectory.back();
+    last.waypoint_id = goal_anchor.point_id.empty() ? last.waypoint_id : goal_anchor.point_id;
+    last.x_m = goal_anchor.x_m;
+    last.y_m = goal_anchor.y_m;
+    last.yaw_rad = goal_anchor.yaw_rad;
+    last.edge_s_m = goal_anchor.s_on_edge_m;
+    if (goal_anchor.require_final_stop) {
+      last.target_speed_mps = 0.0;
+      last.behavior = reverse ? "semantic_goal_reverse_stop" : "semantic_goal_stop";
+    }
+  }
+}
+
+void PlanningNode::append_start_edge_remaining_segment(
+  Trajectory & trajectory,
+  const RoadnetAnchor & start_anchor) const
+{
+  if (!package_ || !start_anchor.has_edge ||
+    !get_parameter("planning.start_anchor.include_current_edge_prefix").as_bool())
+  {
+    return;
+  }
+  const auto range_it = package_->waypoint_index_by_edge.find(start_anchor.edge_id);
+  if (range_it == package_->waypoint_index_by_edge.end() ||
+    range_it->second.count == 0U || package_->waypoints.empty())
+  {
+    return;
+  }
+  const auto edge_end = std::min(range_it->second.end_index_exclusive, package_->waypoints.size());
+  const auto start_index =
+    std::min(std::max(start_anchor.waypoint_index, range_it->second.start_index), edge_end - 1U);
+  for (std::size_t i = start_index; i < edge_end; ++i) {
+    auto wp = package_->waypoints[i];
+    if (i == start_index && start_anchor.has_pose) {
+      wp.x_m = start_anchor.x_m;
+      wp.y_m = start_anchor.y_m;
+      wp.yaw_rad = start_anchor.yaw_rad;
+      wp.edge_s_m = start_anchor.s_on_edge_m;
+    }
+    wp.gear = 1;
+    wp.behavior = "start_anchor_forward_prefix";
+    append_waypoint(trajectory, wp);
   }
 }
 
@@ -1303,28 +1554,8 @@ void PlanningNode::on_plan_route(
   }
 
   try {
-    PlanResult route;
-    const bool allow_reverse_local =
-      get_parameter("planning.semantic_goal_allow_reverse_local_segment").as_bool() &&
-      get_parameter("global_planner.allow_reverse").as_bool();
-    const bool prefer_goal_edge_from =
-      goal_anchor->has_edge &&
-      !(allow_reverse_local && start_anchor->node_id == goal_anchor->edge_to_node_id) &&
-      !goal_anchor->edge_from_node_id.empty();
-    if (prefer_goal_edge_from) {
-      route = compute_route(start_anchor->node_id, goal_anchor->edge_from_node_id);
-      if (!route.success) {
-        route = compute_route(start_anchor->node_id, goal_anchor->node_id);
-      }
-    } else {
-      route = compute_route(start_anchor->node_id, goal_anchor->node_id);
-      if (!route.success && goal_anchor->has_edge && !goal_anchor->edge_from_node_id.empty()) {
-        const auto route_to_edge_from = compute_route(start_anchor->node_id, goal_anchor->edge_from_node_id);
-        if (route_to_edge_from.success) {
-          route = route_to_edge_from;
-        }
-      }
-    }
+    const auto decision = plan_route_between_anchors(*start_anchor, *goal_anchor);
+    const auto & route = decision.route;
     const auto route_for_message = route_with_goal_edge_for_message(route, *goal_anchor);
     response->route = to_msg(route_for_message);
     global_route_pub_->publish(response->route);
@@ -1332,6 +1563,7 @@ void PlanningNode::on_plan_route(
       has_last_route_msg_ = false;
       response->success = false;
       response->message = "route planning failed: " + route.message +
+        (decision.note.empty() ? "" : "; " + decision.note) +
         (start_diagnostic.empty() ? "" : "; start: " + start_diagnostic) +
         (goal_diagnostic.empty() ? "" : "; goal: " + goal_diagnostic);
       publish_status("failure", response->message);
@@ -1345,6 +1577,22 @@ void PlanningNode::on_plan_route(
       publish_status("failure", response->message);
       publish_failure_trajectory(response->message);
       return;
+    }
+    if (start_anchor->type == RoadnetAnchor::Type::CurrentPose && latest_pose_) {
+      const double max_first_distance =
+        get_parameter("planning.start_anchor.max_first_trajectory_point_distance_m").as_double();
+      const double first_distance = distance_xy(
+        latest_pose_->x_m, latest_pose_->y_m, trajectory.front().x_m, trajectory.front().y_m);
+      if (max_first_distance > 0.0 && first_distance > max_first_distance) {
+        response->success = false;
+        std::ostringstream oss;
+        oss << "local trajectory start is too far from current pose: distance=" << first_distance <<
+          "m max=" << max_first_distance << "m";
+        response->message = oss.str();
+        publish_status("failure", response->message);
+        publish_failure_trajectory(response->message);
+        return;
+      }
     }
     std::string continuity_error;
     if (!trajectory_is_continuous(trajectory, &continuity_error)) {
@@ -1361,10 +1609,15 @@ void PlanningNode::on_plan_route(
     trajectory_pub_->publish(last_trajectory_msg_);
     response->success = true;
     response->message = compose_success_message(start_diagnostic, goal_diagnostic);
+    if (!decision.note.empty()) {
+      response->message += "; " + decision.note;
+    }
     const auto diagnostics = start_diagnostic + (goal_diagnostic.empty() ? "" : "; " + goal_diagnostic);
-    const auto status_message = diagnostics.empty() ?
+    const auto status_message = diagnostics.empty() && decision.note.empty() ?
       "planned route with " + std::to_string(trajectory.size()) + " trajectory points" :
-      "planned route with " + std::to_string(trajectory.size()) + " trajectory points; " + diagnostics;
+      "planned route with " + std::to_string(trajectory.size()) + " trajectory points" +
+        (decision.note.empty() ? "" : "; " + decision.note) +
+        (diagnostics.empty() ? "" : "; " + diagnostics);
     publish_status("active", status_message);
   } catch (const std::exception & e) {
     response->success = false;
@@ -1437,28 +1690,8 @@ void PlanningNode::on_plan_mission(
   }
 
   try {
-    PlanResult route;
-    const bool allow_reverse_local =
-      get_parameter("planning.semantic_goal_allow_reverse_local_segment").as_bool() &&
-      get_parameter("global_planner.allow_reverse").as_bool();
-    const bool prefer_goal_edge_from =
-      goal_anchor->has_edge &&
-      !(allow_reverse_local && start_anchor->node_id == goal_anchor->edge_to_node_id) &&
-      !goal_anchor->edge_from_node_id.empty();
-    if (prefer_goal_edge_from) {
-      route = compute_route(start_anchor->node_id, goal_anchor->edge_from_node_id);
-      if (!route.success) {
-        route = compute_route(start_anchor->node_id, goal_anchor->node_id);
-      }
-    } else {
-      route = compute_route(start_anchor->node_id, goal_anchor->node_id);
-      if (!route.success && goal_anchor->has_edge && !goal_anchor->edge_from_node_id.empty()) {
-        const auto route_to_edge_from = compute_route(start_anchor->node_id, goal_anchor->edge_from_node_id);
-        if (route_to_edge_from.success) {
-          route = route_to_edge_from;
-        }
-      }
-    }
+    const auto decision = plan_route_between_anchors(*start_anchor, *goal_anchor);
+    const auto & route = decision.route;
     const auto route_for_message = route_with_goal_edge_for_message(route, *goal_anchor);
     response->route = to_msg(route_for_message);
     global_route_pub_->publish(response->route);
@@ -1466,6 +1699,7 @@ void PlanningNode::on_plan_mission(
       has_last_route_msg_ = false;
       response->success = false;
       response->message = "route planning failed: " + route.message +
+        (decision.note.empty() ? "" : "; " + decision.note) +
         (start_diagnostic.empty() ? "" : "; start: " + start_diagnostic) +
         (goal_diagnostic.empty() ? "" : "; goal: " + goal_diagnostic);
       publish_status("failure", response->message);
@@ -1479,6 +1713,22 @@ void PlanningNode::on_plan_mission(
       publish_status("failure", response->message);
       publish_failure_trajectory(response->message);
       return;
+    }
+    if (start_anchor->type == RoadnetAnchor::Type::CurrentPose && latest_pose_) {
+      const double max_first_distance =
+        get_parameter("planning.start_anchor.max_first_trajectory_point_distance_m").as_double();
+      const double first_distance = distance_xy(
+        latest_pose_->x_m, latest_pose_->y_m, trajectory.front().x_m, trajectory.front().y_m);
+      if (max_first_distance > 0.0 && first_distance > max_first_distance) {
+        response->success = false;
+        std::ostringstream oss;
+        oss << "local trajectory start is too far from current pose: distance=" << first_distance <<
+          "m max=" << max_first_distance << "m";
+        response->message = oss.str();
+        publish_status("failure", response->message);
+        publish_failure_trajectory(response->message);
+        return;
+      }
     }
     std::string continuity_error;
     if (!trajectory_is_continuous(trajectory, &continuity_error)) {
@@ -1495,10 +1745,16 @@ void PlanningNode::on_plan_mission(
     trajectory_pub_->publish(last_trajectory_msg_);
     response->success = true;
     response->message = compose_success_message(start_diagnostic, goal_diagnostic);
+    if (!decision.note.empty()) {
+      response->message += "; " + decision.note;
+    }
     publish_status(
       "active",
       "planned mission with " + std::to_string(trajectory.size()) +
-        " trajectory points; " + start_diagnostic + "; " + goal_diagnostic);
+        " trajectory points" +
+        (decision.note.empty() ? "" : "; " + decision.note) +
+        (start_diagnostic.empty() ? "" : "; " + start_diagnostic) +
+        (goal_diagnostic.empty() ? "" : "; " + goal_diagnostic));
   } catch (const std::exception & e) {
     response->success = false;
     response->message = e.what();
