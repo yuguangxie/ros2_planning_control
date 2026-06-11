@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://low-speed-roadnet-editor.local/schemas/project_manifest.schema.json",
+  "title": "Low Speed Roadnet AD Package Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "exported_at",
+    "export_source",
+    "project",
+    "map",
+    "vehicle_profile",
+    "coordinate_system",
+    "units",
+    "files",
+    "hashes",
+    "validation"
+  ],
+  "properties": {
+    "schema": { "const": "low_speed_roadnet_ad_package" },
+    "schema_version": { "const": "1.1.0" },
+    "package_id": { "type": "string", "pattern": "^pkg_.+" },
+    "exported_at": { "type": "string", "format": "date-time" },
+    "export_source": { "const": "backend" },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "version"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["map_id", "map_version", "frame_id", "resolution_m_per_px", "origin", "width_px", "height_px"],
+      "properties": {
+        "map_id": { "type": "string" },
+        "map_version": { "type": "string" },
+        "frame_id": { "const": "map" },
+        "resolution_m_per_px": { "type": "number", "exclusiveMinimum": 0 },
+        "origin": { "$ref": "#/$defs/pose" },
+        "width_px": { "type": "integer", "exclusiveMinimum": 0 },
+        "height_px": { "type": "integer", "exclusiveMinimum": 0 }
+      }
+    },
+    "vehicle_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "wheel_base_m", "rear_axle_reference"],
+      "properties": {
+        "profile_id": { "type": "string" },
+        "wheel_base_m": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "rear_axle_reference": { "type": "boolean" }
+      }
+    },
+    "coordinate_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["global_frame", "control_reference_frame", "angle_unit", "distance_unit"],
+      "properties": {
+        "global_frame": { "const": "map" },
+        "control_reference_frame": { "enum": ["rear_axle", "base_link"] },
+        "angle_unit": { "const": "rad" },
+        "distance_unit": { "const": "m" }
+      }
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["distance", "angle", "speed", "curvature"],
+      "properties": {
+        "distance": { "const": "m" },
+        "angle": { "const": "rad" },
+        "speed": { "const": "mps" },
+        "curvature": { "const": "1/m" }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "required": [
+        "project_manifest",
+        "checksums",
+        "map_metadata",
+        "roadnet",
+        "topology",
+        "route_graph_yaml",
+        "waypoints_yaml",
+        "waypoints_csv",
+        "waypoint_index",
+        "areas",
+        "route_points",
+        "task_points",
+        "parking_points",
+        "charging_points",
+        "validation_report",
+        "mission_example",
+        "schema_project_manifest",
+        "schema_roadnet",
+        "schema_topology",
+        "schema_waypoints",
+        "schema_waypoint_index",
+        "schema_semantics",
+        "schema_validation_report"
+      ]
+    },
+    "hashes": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "score", "blocking_errors", "warnings"],
+      "properties": {
+        "status": { "enum": ["passed", "warning", "failed"] },
+        "score": { "type": "number", "minimum": 0 },
+        "blocking_errors": { "type": "integer", "minimum": 0 },
+        "warnings": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "pose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "yaw"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "yaw": { "type": "number" }
+      }
+    }
+  }
+}

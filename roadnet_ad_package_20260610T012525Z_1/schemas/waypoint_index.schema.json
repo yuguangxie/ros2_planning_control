@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://low-speed-roadnet-editor.local/schemas/waypoint_index.schema.json",
+  "title": "Low Speed Waypoint Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "edges", "paths"],
+  "properties": {
+    "schema": { "const": "low_speed_waypoint_index" },
+    "schema_version": { "const": "1.1.0" },
+    "edges": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["start_index", "end_index", "path_id", "direction"],
+        "properties": {
+          "start_index": { "type": "integer", "minimum": 0 },
+          "end_index": { "type": "integer", "minimum": 0 },
+          "path_id": { "type": "string" },
+          "direction": { "enum": ["forward", "reverse"] }
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["edge_id", "start_index", "end_index"],
+          "properties": {
+            "edge_id": { "type": "string" },
+            "start_index": { "type": "integer", "minimum": 0 },
+            "end_index": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "coordinate_system": {
+    "angle_unit": "rad",
+    "control_reference_frame": "rear_axle",
+    "distance_unit": "m",
+    "global_frame": "map"
+  },
+  "export_source": "backend",
+  "exported_at": "2026-06-11T01:10:40Z",
+  "files": {
+    "areas": "semantics/areas.json",
+    "charging_points": "semantics/charging_points.json",
+    "checksums": "checksums.sha256",
+    "map_metadata": "map/map_metadata.yaml",
+    "mission_example": "examples/mission.example.json",
+    "parking_points": "semantics/parking_points.json",
+    "project_manifest": "project_manifest.json",
+    "roadnet": "roadnet/roadnet.json",
+    "route_graph_yaml": "roadnet/route_graph.yaml",
+    "route_points": "semantics/route_points.json",
+    "schema_project_manifest": "schemas/project_manifest.schema.json",
+    "schema_roadnet": "schemas/roadnet.schema.json",
+    "schema_semantics": "schemas/semantics.schema.json",
+    "schema_topology": "schemas/topology.schema.json",
+    "schema_validation_report": "schemas/validation_report.schema.json",
+    "schema_waypoint_index": "schemas/waypoint_index.schema.json",
+    "schema_waypoints": "schemas/waypoints.schema.json",
+    "task_points": "semantics/task_points.json",
+    "topology": "roadnet/topology.json",
+    "validation_report": "validation/validation_report.json",
+    "waypoint_index": "trajectory/waypoint_index.json",
+    "waypoints_csv": "trajectory/waypoints.csv",
+    "waypoints_yaml": "trajectory/waypoints.yaml"
+  },
+  "hashes": {
+    "examples/mission.example.json": "782b10725cf82853bdc84b043932a0ba7d9663131415b957fd6c017b62780ae2",
+    "map/map_metadata.yaml": "b305e4bc440a65cff1875e9a5cf27643158ba3fed060f475f4c24b096a694051",
+    "roadnet/roadnet.json": "71ae24a423419e684641255fb16c0935ff7402263e4699759edff02328235aca",
+    "roadnet/route_graph.yaml": "1304da35c5acc617e1b2b2654c5c0a796ab498671000722724fed155e84b98ce",
+    "roadnet/topology.json": "450a8a4803ac56c86e628331960d4bf40b55965fd59fbc86d11fd61bfa8b7f6f",
+    "schemas/project_manifest.schema.json": "1e1adcb8126d03934142348dd2e82720165c6062a3dc39b4098fa0c812d0d8ba",
+    "schemas/roadnet.schema.json": "eb8a05cdc052954f9057025ff7a7db36915cff100d1ab04b25310ca85425e537",
+    "schemas/semantics.schema.json": "2d883c6528e68f5f5b54e19fb542fdbb6a44090e8e08d6933cfa7809947cddbb",
+    "schemas/topology.schema.json": "36c64605cf92dff21fdaad41abc98917d07674c1d34c2a3036974187354d6731",
+    "schemas/validation_report.schema.json": "f644ef0682a0c4453d91f053507f5925530dd89736bd0cc00c12c0fa8119a446",
+    "schemas/waypoint_index.schema.json": "fb6fcda6b281b8b7548f5bb31151daa1bd9584a861a5a6755cf98f5986183a07",
+    "schemas/waypoints.schema.json": "0d60bd3a8cfdd24eea7f325d03df22c3f196724400e399e95a4f08cde78b4c34",
+    "semantics/areas.json": "43e70fa4e7519981f372e6104272c35b208ea4c84cd9326b7563cdf0f8c9767a",
+    "semantics/charging_points.json": "791ed63154a52c5441513fec95a16e7b2e984c7ab66426794391b5bb67f2271d",
+    "semantics/parking_points.json": "c578f351475831a8f2d8687d93903d128796b70b72d419374f46b27868df4494",
+    "semantics/route_points.json": "d985580acf65976e1e5708e379182fac1e85df3e466d7ac4d804442f7040d40b",
+    "semantics/task_points.json": "2df138433fbd182ead3298d9847761da76a141c3509511bf7d5e72b5b0582b45",
+    "trajectory/waypoint_index.json": "4e9bb424774a84dcadd5ae5f0297e7bed6bd67cf0b947b2c3dee38004b648e29",
+    "trajectory/waypoints.csv": "30a33f700e33390dde6e00ec6b7cddae5edcd83214955d098ed9c78cea1c363c",
+    "trajectory/waypoints.yaml": "da7909e971ae9e43e5a8a62d3f365ab9eaf5f5854c807c947824bf2c7336003a",
+    "validation/validation_report.json": "7f064c61568bf81b1b0b97f16113108234f4d7c043ea72af072b4e8cd13be55d"
+  },
+  "map": {
+    "frame_id": "map",
+    "height_px": 910,
+    "map_id": "cdfdfba7-fd0a-4eaf-88ab-aa8608961689",
+    "map_version": "1.0.0",
+    "origin": {
+      "x": -28.771,
+      "y": -4.388,
+      "yaw": 0.0
+    },
+    "resolution_m_per_px": 0.02,
+    "width_px": 2540
+  },
+  "package_id": "pkg_f9711a93-304a-4ff2-9f9a-b1aa96070e99_20260611T011040Z",
+  "project": {
+    "id": "f9711a93-304a-4ff2-9f9a-b1aa96070e99",
+    "name": "pytest 园区项目",
+    "version": "1.0.0"
+  },
+  "schema": "low_speed_roadnet_ad_package",
+  "schema_version": "1.1.0",
+  "units": {
+    "angle": "rad",
+    "curvature": "1/m",
+    "distance": "m",
+    "speed": "mps"
+  },
+  "validation": {
+    "blocking_errors": 0,
+    "score": 0.0,
+    "status": "warning",
+    "warnings": 55
+  },
+  "vehicle_profile": {
+    "profile_id": "ackermann_v1",
+    "rear_axle_reference": true,
+    "wheel_base_m": null
+  }
+}

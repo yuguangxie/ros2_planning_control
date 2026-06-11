@@ -1,0 +1,489 @@
+{
+  "items": [
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 0.913 1/m exceeds recommended value.",
+      "object_id": "C-002",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 2.193 1/m exceeds recommended value.",
+      "object_id": "C-006",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 0.917 1/m exceeds recommended value.",
+      "object_id": "C-003",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 100.337 1/m exceeds recommended value.",
+      "object_id": "C-005",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 0.490 1/m exceeds recommended value.",
+      "object_id": "C-008",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 0.910 1/m exceeds recommended value.",
+      "object_id": "C-009",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 0.507 1/m exceeds recommended value.",
+      "object_id": "C-011",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 0.506 1/m exceeds recommended value.",
+      "object_id": "C-013",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 0.473 1/m exceeds recommended value.",
+      "object_id": "C-016",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 1.293 1/m exceeds recommended value.",
+      "object_id": "C-018",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "HIGH_CURVATURE",
+      "message": "Max curvature 0.788 1/m exceeds recommended value.",
+      "object_id": "C-020",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "Smooth the path or reduce speed."
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 2.8掳",
+      "object_id": "C-012->C-002",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 4.5掳",
+      "object_id": "C-002->C-006",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 24.8掳",
+      "object_id": "C-006->C-003",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 9.4掳",
+      "object_id": "C-003->C-022",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 23.3掳",
+      "object_id": "C-022->C-020",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 18.0掳",
+      "object_id": "C-021->C-011",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 62.5掳",
+      "object_id": "C-014->C-005",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 0.8掳",
+      "object_id": "C-005->C-008",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 43.1掳",
+      "object_id": "C-005->C-009",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 14.1掳",
+      "object_id": "L-001->C-018",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 175.8掳",
+      "object_id": "L-003->C-013",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 0.5掳",
+      "object_id": "L-004->C-007",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 0.6掳",
+      "object_id": "C-009->C-015",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "CURVATURE_CONTINUITY",
+      "message": "杩炴帴鐐硅埅鍚戝樊 154.8掳",
+      "object_id": "C-011->C-013",
+      "object_type": "path",
+      "severity": "warning",
+      "suggestion": "调整连接点两侧控制点或启用自动平滑"
+    },
+    {
+      "blocking": false,
+      "code": "TOPOLOGY_EDGE_HIGH_CURVATURE",
+      "message": "Max curvature 0.408961 1/m exceeds configured limit 0.350000 1/m.",
+      "object_id": "C-002",
+      "object_type": "edge",
+      "severity": "warning",
+      "suggestion": "Smooth the path or lower speed before formal use."
+    },
+    {
+      "blocking": false,
+      "code": "TOPOLOGY_EDGE_HIGH_CURVATURE",
+      "message": "Max curvature 0.763364 1/m exceeds configured limit 0.350000 1/m.",
+      "object_id": "C-006",
+      "object_type": "edge",
+      "severity": "warning",
+      "suggestion": "Smooth the path or lower speed before formal use."
+    },
+    {
+      "blocking": false,
+      "code": "TOPOLOGY_EDGE_HIGH_CURVATURE",
+      "message": "Max curvature 0.353998 1/m exceeds configured limit 0.350000 1/m.",
+      "object_id": "C-005",
+      "object_type": "edge",
+      "severity": "warning",
+      "suggestion": "Smooth the path or lower speed before formal use."
+    },
+    {
+      "blocking": false,
+      "code": "TOPOLOGY_EDGE_HIGH_CURVATURE",
+      "message": "Max curvature 0.452977 1/m exceeds configured limit 0.350000 1/m.",
+      "object_id": "C-009",
+      "object_type": "edge",
+      "severity": "warning",
+      "suggestion": "Smooth the path or lower speed before formal use."
+    },
+    {
+      "blocking": false,
+      "code": "TOPOLOGY_EDGE_HIGH_CURVATURE",
+      "message": "Max curvature 0.639967 1/m exceeds configured limit 0.350000 1/m.",
+      "object_id": "C-018",
+      "object_type": "edge",
+      "severity": "warning",
+      "suggestion": "Smooth the path or lower speed before formal use."
+    },
+    {
+      "blocking": false,
+      "code": "TOPOLOGY_EDGE_HIGH_CURVATURE",
+      "message": "Max curvature 0.392364 1/m exceeds configured limit 0.350000 1/m.",
+      "object_id": "C-020",
+      "object_type": "edge",
+      "severity": "warning",
+      "suggestion": "Smooth the path or lower speed before formal use."
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-002_F_000018",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-002_F_000019",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-002_F_000020",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-002_F_000021",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-006_F_000016",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-006_F_000017",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-006_F_000018",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-005_F_000000",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-005_F_000001",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-009_F_000000",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-009_F_000001",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-009_F_000002",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-009_F_000003",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-009_F_000004",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-009_F_000005",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-018_F_000000",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-018_F_000001",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-018_F_000002",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-018_F_000003",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-018_F_000004",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-018_F_000005",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-020_F_000033",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-020_F_000034",
+      "object_type": "waypoint",
+      "severity": "warning"
+    },
+    {
+      "blocking": false,
+      "code": "WAYPOINT_CURVATURE_EXCEEDS_CONSTRAINT",
+      "message": "Waypoint curvature exceeds edge max_curvature_abs constraint.",
+      "object_id": "WP_E_C-020_F_000035",
+      "object_type": "waypoint",
+      "severity": "warning"
+    }
+  ],
+  "schema": "low_speed_validation_report",
+  "schema_version": "1.1.0",
+  "score": 0.0,
+  "status": "warning",
+  "summary": {
+    "areas": 0,
+    "blocking_errors": 0,
+    "edges": 26,
+    "nodes": 20,
+    "parking_points": 2,
+    "paths": 26,
+    "warnings": 55,
+    "waypoints": 737
+  }
+}

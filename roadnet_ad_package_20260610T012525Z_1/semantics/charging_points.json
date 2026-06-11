@@ -1,0 +1,38 @@
+{
+  "charging_points": [
+    {
+      "dock_angle_rad": -0.2506,
+      "dock_type": "manual",
+      "entry_edge_id": "E_C-017_F",
+      "exit_edge_id": "E_C-017_F",
+      "id": "RP-017",
+      "linked_task_point_id": null,
+      "pose": {
+        "x": -11.328,
+        "y": 2.237,
+        "yaw": -0.2506
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:35.084Z",
+        "docking_yaw": -0.25055285721552667,
+        "linked_path_id": "C-017",
+        "name": "充电点",
+        "parking_precision": 0.2,
+        "path_id": "C-017",
+        "s_on_path": 1.5676939438746604,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "type": "charging",
+        "updated_at": "2026-06-11T01:05:38.909Z",
+        "x": -11.328305894091626,
+        "y": 2.237308904389891,
+        "yaw": -0.25055285721552667
+      },
+      "source_route_point_id": "RP-017"
+    }
+  ],
+  "coordinate_frame": "map",
+  "schema": "low_speed_charging_points",
+  "schema_version": "1.1.0"
+}

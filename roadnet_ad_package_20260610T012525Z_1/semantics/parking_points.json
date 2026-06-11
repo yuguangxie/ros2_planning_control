@@ -1,0 +1,81 @@
+{
+  "coordinate_frame": "map",
+  "parking_points": [
+    {
+      "approach": {
+        "distance_m": 0.0,
+        "edge_id": "E_C-021_F"
+      },
+      "id": "RP-015",
+      "linked_edge_id": "E_C-021_F",
+      "linked_path_id": "C-021",
+      "parking_direction": "forward",
+      "pose": {
+        "x": -0.592,
+        "y": 10.968,
+        "yaw": 2.8115
+      },
+      "precision": 0.2,
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:16.329Z",
+        "docking_yaw": 2.811511560210582,
+        "name": "停车点",
+        "path_id": "C-021",
+        "s_on_path": 1.8682264140653704,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "type": "parking",
+        "updated_at": "2026-06-11T01:09:34.518Z",
+        "x": -0.5920751246739274,
+        "y": 10.96773303398867,
+        "yaw": 2.811511560210582
+      },
+      "slot_size": {
+        "length_m": 0.0,
+        "width_m": 0.0
+      },
+      "source_route_point_id": "RP-015",
+      "wait_time_s": 0.0
+    },
+    {
+      "approach": {
+        "distance_m": 0.0,
+        "edge_id": "E_C-001_F"
+      },
+      "id": "RP-016",
+      "linked_edge_id": "E_C-001_F",
+      "linked_path_id": "C-001",
+      "parking_direction": "forward",
+      "pose": {
+        "x": -16.465,
+        "y": 4.038,
+        "yaw": -0.3884
+      },
+      "precision": 0.2,
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:19.771Z",
+        "docking_yaw": -0.38844325457446427,
+        "name": "停车点",
+        "path_id": "C-001",
+        "s_on_path": 2.373939345951529,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "type": "parking",
+        "updated_at": "2026-06-11T01:05:30.088Z",
+        "x": -16.46483973270869,
+        "y": 4.0379976822595385,
+        "yaw": -0.38844325457446427
+      },
+      "slot_size": {
+        "length_m": 0.0,
+        "width_m": 0.0
+      },
+      "source_route_point_id": "RP-016",
+      "wait_time_s": 0.0
+    }
+  ],
+  "schema": "low_speed_parking_points",
+  "schema_version": "1.1.0"
+}

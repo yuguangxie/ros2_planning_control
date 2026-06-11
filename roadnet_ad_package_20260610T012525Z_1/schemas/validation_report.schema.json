@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://low-speed-roadnet-editor.local/schemas/validation_report.schema.json",
+  "title": "Low Speed Validation Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "status", "score", "summary", "items"],
+  "properties": {
+    "schema": { "const": "low_speed_validation_report" },
+    "schema_version": { "const": "1.1.0" },
+    "status": { "enum": ["passed", "warning", "failed"] },
+    "score": { "type": "number", "minimum": 0 },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blocking_errors", "warnings", "nodes", "paths", "edges", "waypoints", "areas", "parking_points"],
+      "properties": {
+        "blocking_errors": { "type": "integer", "minimum": 0 },
+        "warnings": { "type": "integer", "minimum": 0 },
+        "nodes": { "type": "integer", "minimum": 0 },
+        "paths": { "type": "integer", "minimum": 0 },
+        "edges": { "type": "integer", "minimum": 0 },
+        "waypoints": { "type": "integer", "minimum": 0 },
+        "areas": { "type": "integer", "minimum": 0 },
+        "parking_points": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/item" }
+    }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "code", "message", "object_type", "object_id", "blocking"],
+      "properties": {
+        "severity": { "enum": ["info", "warning", "error"] },
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string" },
+        "object_type": { "enum": ["path", "node", "edge", "area", "waypoint", "parking_point", "map"] },
+        "object_id": { "type": ["string", "null"] },
+        "blocking": { "type": "boolean" },
+        "suggestion": { "type": "string" }
+      }
+    }
+  }
+}

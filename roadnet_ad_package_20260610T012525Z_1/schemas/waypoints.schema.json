@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://low-speed-roadnet-editor.local/schemas/waypoints.schema.json",
+  "title": "Low Speed Waypoints",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metadata", "waypoints"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "schema_version", "coordinate_frame", "units"],
+      "properties": {
+        "schema": { "const": "low_speed_waypoints" },
+        "schema_version": { "const": "1.1.0" },
+        "coordinate_frame": { "const": "map" },
+        "units": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["distance", "angle", "speed", "curvature"],
+          "properties": {
+            "distance": { "const": "m" },
+            "angle": { "const": "rad" },
+            "speed": { "const": "mps" },
+            "curvature": { "const": "1/m" }
+          }
+        }
+      }
+    },
+    "waypoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["global_index", "waypoint_id", "edge_id", "path_id", "node_from", "node_to", "s_m", "x", "y", "yaw", "kappa", "v_mps", "speed_limit_mps", "behavior", "direction", "flags"],
+        "properties": {
+          "global_index": { "type": "integer", "minimum": 0 },
+          "waypoint_id": { "type": "string" },
+          "edge_id": { "type": "string" },
+          "path_id": { "type": "string" },
+          "node_from": { "type": "string" },
+          "node_to": { "type": "string" },
+          "s_m": { "type": "number", "minimum": 0 },
+          "x": { "type": "number" },
+          "y": { "type": "number" },
+          "yaw": { "type": "number" },
+          "kappa": { "type": "number" },
+          "v_mps": { "type": "number", "minimum": 0 },
+          "speed_limit_mps": { "type": "number", "minimum": 0 },
+          "behavior": { "enum": ["follow", "slow_down", "stop", "parking_approach", "charging_approach", "wait"] },
+          "direction": { "enum": ["forward", "reverse"] },
+          "flags": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

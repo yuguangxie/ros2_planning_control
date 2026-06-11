@@ -1,0 +1,475 @@
+{
+  "coordinate_frame": "map",
+  "route_points": [
+    {
+      "action": "task",
+      "id": "RP-001",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -9.975,
+        "y": 7.015,
+        "yaw": -0.1804
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:45.321Z",
+        "docking_yaw": -0.18040938468192294,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "L-003",
+        "s_on_path": 3.2461516640547443,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:04:45.321Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-002",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -5.59,
+        "y": 9.818,
+        "yaw": -1.9714
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:46.573Z",
+        "docking_yaw": -1.971351981482262,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-011",
+        "s_on_path": 3.290679218687021,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:04:46.573Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-003",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -7.934,
+        "y": 12.924,
+        "yaw": 2.9971
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:47.920Z",
+        "docking_yaw": 2.997133584780264,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-004",
+        "s_on_path": 2.6648811416481544,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:04:47.920Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-004",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -16.6,
+        "y": 10.949,
+        "yaw": -2.1704
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:49.238Z",
+        "docking_yaw": -2.1703766252919814,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-016",
+        "s_on_path": 4.184712941629782,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:04:49.238Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-005",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -20.642,
+        "y": 6.866,
+        "yaw": -1.2301
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:51.044Z",
+        "docking_yaw": -1.2300902837962548,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-008",
+        "s_on_path": 4.23359645855927,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:04:51.044Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-006",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -13.105,
+        "y": 4.795,
+        "yaw": -1.8388
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:52.121Z",
+        "docking_yaw": -1.838845058730123,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-018",
+        "s_on_path": 3.106991297528737,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:04:52.121Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-007",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -8.557,
+        "y": 3.907,
+        "yaw": -1.7244
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:53.539Z",
+        "docking_yaw": -1.724396000826145,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-013",
+        "s_on_path": 4.662232160265011,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:04:53.539Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-008",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -2.859,
+        "y": 0.607,
+        "yaw": -0.1362
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:55.228Z",
+        "docking_yaw": -0.13618325956174296,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-012",
+        "s_on_path": 4.5288708265863225,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:04:55.228Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-009",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -0.03,
+        "y": 4.722,
+        "yaw": -0.2737
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:55.970Z",
+        "docking_yaw": -0.2736593210820892,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "L-004",
+        "s_on_path": 2.215152232805955,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:05:58.884Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-010",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": 5.257,
+        "y": 8.367,
+        "yaw": 2.6104
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:04:56.823Z",
+        "docking_yaw": 2.61036951190856,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-022",
+        "s_on_path": 3.342891245203992,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:09:58.046Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-011",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": 9.747,
+        "y": 3.148,
+        "yaw": 1.6636
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:00.208Z",
+        "docking_yaw": 1.663635103930803,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-006",
+        "s_on_path": 0.9090225541567872,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:05:00.208Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-012",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": 9.443,
+        "y": 4.815,
+        "yaw": 1.9
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:04.372Z",
+        "docking_yaw": 1.8999867417811143,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-006",
+        "s_on_path": 2.6077031420494405,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:05:04.372Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-013",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": 4.682,
+        "y": 2.68,
+        "yaw": -0.4705
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:06.524Z",
+        "docking_yaw": -0.47053995047767583,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-007",
+        "s_on_path": 3.831885006633956,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:05:06.524Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-014",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -3.596,
+        "y": 5.723,
+        "yaw": -0.2737
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:12.516Z",
+        "docking_yaw": -0.2736593210820892,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "L-002",
+        "s_on_path": 1.3511329153549474,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:05:12.516Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "parking",
+      "id": "RP-015",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -0.592,
+        "y": 10.968,
+        "yaw": 2.8115
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:16.329Z",
+        "docking_yaw": 2.811511560210582,
+        "name": "停车点",
+        "parking_precision": 0.2,
+        "path_id": "C-021",
+        "s_on_path": 1.8682264140653704,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:09:34.518Z"
+      },
+      "type": "parking",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "parking",
+      "id": "RP-016",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -16.465,
+        "y": 4.038,
+        "yaw": -0.3884
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:19.771Z",
+        "docking_yaw": -0.38844325457446427,
+        "name": "停车点",
+        "parking_precision": 0.2,
+        "path_id": "C-001",
+        "s_on_path": 2.373939345951529,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:05:30.088Z"
+      },
+      "type": "parking",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "charging",
+      "id": "RP-017",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -11.328,
+        "y": 2.237,
+        "yaw": -0.2506
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:35.084Z",
+        "docking_yaw": -0.25055285721552667,
+        "name": "充电点",
+        "parking_precision": 0.2,
+        "path_id": "C-017",
+        "s_on_path": 1.5676939438746604,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:05:38.909Z"
+      },
+      "type": "charging",
+      "wait_time_s": 0.0
+    },
+    {
+      "action": "task",
+      "id": "RP-018",
+      "linked_edge_id": null,
+      "linked_node_id": null,
+      "linked_path_id": null,
+      "pose": {
+        "x": -18.897,
+        "y": 5.129,
+        "yaw": -0.483
+      },
+      "properties": {
+        "charging_duration": 0.0,
+        "created_at": "2026-06-11T01:05:42.101Z",
+        "docking_yaw": -0.4829891569895199,
+        "name": "任务点",
+        "parking_precision": 0.2,
+        "path_id": "C-008",
+        "s_on_path": 6.752028976441521,
+        "stop_command": "",
+        "stop_duration": 0.0,
+        "updated_at": "2026-06-11T01:05:42.101Z"
+      },
+      "type": "task",
+      "wait_time_s": 0.0
+    }
+  ],
+  "schema": "low_speed_route_points",
+  "schema_version": "1.1.0"
+}

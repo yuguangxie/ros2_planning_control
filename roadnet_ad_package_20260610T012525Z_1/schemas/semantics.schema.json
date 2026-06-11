@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://low-speed-roadnet-editor.local/schemas/semantics.schema.json",
+  "title": "Low Speed Semantics Files",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/areas_file" },
+    { "$ref": "#/$defs/route_points_file" },
+    { "$ref": "#/$defs/task_points_file" },
+    { "$ref": "#/$defs/parking_points_file" },
+    { "$ref": "#/$defs/charging_points_file" }
+  ],
+  "$defs": {
+    "xy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "pose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "yaw"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "yaw": { "type": "number" }
+      }
+    },
+    "base_file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "schema_version", "coordinate_frame"],
+      "properties": {
+        "schema": { "type": "string" },
+        "schema_version": { "const": "1.1.0" },
+        "coordinate_frame": { "const": "map" }
+      }
+    },
+    "area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "polygon", "speed_limit_mps", "allow_planning_through", "allow_parking", "priority"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "enum": ["drivable_area", "no_go_area", "speed_zone", "parking_allowed", "slow_zone", "keepout"] },
+        "polygon": { "type": "array", "items": { "$ref": "#/$defs/xy" } },
+        "speed_limit_mps": { "type": ["number", "null"], "minimum": 0 },
+        "allow_planning_through": { "type": "boolean" },
+        "allow_parking": { "type": "boolean" },
+        "priority": { "type": "integer" }
+      }
+    },
+    "route_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "pose", "action", "wait_time_s", "properties"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "pose": { "$ref": "#/$defs/pose" },
+        "linked_node_id": { "type": ["string", "null"] },
+        "linked_edge_id": { "type": ["string", "null"] },
+        "linked_path_id": { "type": ["string", "null"] },
+        "action": { "type": "string" },
+        "wait_time_s": { "type": "number", "minimum": 0 },
+        "properties": { "type": "object" }
+      }
+    },
+    "parking_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "pose", "linked_path_id", "linked_edge_id", "parking_direction", "precision", "wait_time_s", "slot_size", "approach", "properties"],
+      "properties": {
+        "id": { "type": "string" },
+        "pose": { "$ref": "#/$defs/pose" },
+        "linked_path_id": { "type": ["string", "null"] },
+        "linked_edge_id": { "type": ["string", "null"] },
+        "parking_direction": { "type": "string" },
+        "precision": { "type": "number", "exclusiveMinimum": 0 },
+        "wait_time_s": { "type": "number", "minimum": 0 },
+        "slot_size": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["length_m", "width_m"],
+          "properties": {
+            "length_m": { "type": "number", "minimum": 0 },
+            "width_m": { "type": "number", "minimum": 0 }
+          }
+        },
+        "approach": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["edge_id", "distance_m"],
+          "properties": {
+            "edge_id": { "type": ["string", "null"] },
+            "distance_m": { "type": "number", "minimum": 0 }
+          }
+        },
+        "source_route_point_id": { "type": ["string", "null"] },
+        "properties": { "type": "object" }
+      }
+    },
+    "charging_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "pose", "dock_angle_rad", "entry_edge_id", "exit_edge_id", "dock_type", "properties"],
+      "properties": {
+        "id": { "type": "string" },
+        "pose": { "$ref": "#/$defs/pose" },
+        "dock_angle_rad": { "type": "number" },
+        "entry_edge_id": { "type": ["string", "null"] },
+        "exit_edge_id": { "type": ["string", "null"] },
+        "linked_task_point_id": { "type": ["string", "null"] },
+        "dock_type": { "type": "string" },
+        "source_route_point_id": { "type": ["string", "null"] },
+        "properties": { "type": "object" }
+      }
+    },
+    "areas_file": {
+      "allOf": [
+        { "$ref": "#/$defs/base_file" },
+        {
+          "type": "object",
+          "required": ["areas"],
+          "properties": {
+            "schema": { "const": "low_speed_areas" },
+            "areas": { "type": "array", "items": { "$ref": "#/$defs/area" } }
+          }
+        }
+      ]
+    },
+    "route_points_file": {
+      "allOf": [
+        { "$ref": "#/$defs/base_file" },
+        {
+          "type": "object",
+          "required": ["route_points"],
+          "properties": {
+            "schema": { "const": "low_speed_route_points" },
+            "route_points": { "type": "array", "items": { "$ref": "#/$defs/route_point" } }
+          }
+        }
+      ]
+    },
+    "task_points_file": {
+      "allOf": [
+        { "$ref": "#/$defs/base_file" },
+        {
+          "type": "object",
+          "required": ["task_points"],
+          "properties": {
+            "schema": { "const": "low_speed_task_points" },
+            "task_points": { "type": "array", "items": { "$ref": "#/$defs/route_point" } }
+          }
+        }
+      ]
+    },
+    "parking_points_file": {
+      "allOf": [
+        { "$ref": "#/$defs/base_file" },
+        {
+          "type": "object",
+          "required": ["parking_points"],
+          "properties": {
+            "schema": { "const": "low_speed_parking_points" },
+            "parking_points": { "type": "array", "items": { "$ref": "#/$defs/parking_point" } }
+          }
+        }
+      ]
+    },
+    "charging_points_file": {
+      "allOf": [
+        { "$ref": "#/$defs/base_file" },
+        {
+          "type": "object",
+          "required": ["charging_points"],
+          "properties": {
+            "schema": { "const": "low_speed_charging_points" },
+            "charging_points": { "type": "array", "items": { "$ref": "#/$defs/charging_point" } }
+          }
+        }
+      ]
+    }
+  }
+}
