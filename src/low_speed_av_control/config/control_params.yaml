@@ -26,6 +26,9 @@ low_speed_av_control:
       trajectory_timeout_s: 0.5
       hold_last_command_s: 0.05
 
+    control:
+      status_publish_rate_hz: 5.0
+
     safety:
       estop_latched: true
       clear_level: 0
@@ -87,10 +90,11 @@ low_speed_av_control:
       stop_enable_mode: "disable_after_stop"
 
     scu:
-      max_steering_angle_deg: 30.0
+      max_steering_angle_deg: 27.0
       max_target_speed_kmh: 5.0
       front_steer_sign: 1.0
       rear_steer_sign: 1.0
+      overrange_policy: "clamp"
       stop_shift_level: 1
       torque_or_speed_mode: 1
       steering_angle_speed_valid: false

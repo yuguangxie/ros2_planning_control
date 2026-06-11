@@ -247,6 +247,15 @@ private:
       marker.points.push_back(point(item.second.pose.x_m, item.second.pose.y_m, 0.2));
     }
     array.markers.push_back(marker);
+    int text_id = 100;
+    for (const auto & item : points) {
+      auto text = base_marker(frame_id_, stamp, ns + "_labels", text_id++, Marker::TEXT_VIEW_FACING);
+      text.pose.position = point(item.second.pose.x_m, item.second.pose.y_m, 0.65);
+      text.scale.z = 0.28;
+      text.color = marker_color;
+      text.text = item.first;
+      array.markers.push_back(text);
+    }
   }
 
   void on_route(const low_speed_av_interfaces::msg::GlobalRoute & msg)
@@ -327,6 +336,24 @@ private:
       line.points.push_back(pose.pose.position);
     }
     array.markers.push_back(line);
+    if (!path.poses.empty()) {
+      const auto & goal_pose = path.poses.back();
+      auto goal = base_marker(frame_id_, path.header.stamp, "current_trajectory_goal", 1, Marker::SPHERE);
+      goal.pose = goal_pose.pose;
+      goal.pose.position.z = 0.45;
+      goal.scale.x = 0.45;
+      goal.scale.y = 0.45;
+      goal.scale.z = 0.45;
+      goal.color = color(1.0F, 0.0F, 0.8F, 1.0F);
+      array.markers.push_back(goal);
+      auto label = base_marker(frame_id_, path.header.stamp, "current_trajectory_goal_label", 2, Marker::TEXT_VIEW_FACING);
+      label.pose.position = goal.pose.position;
+      label.pose.position.z = 0.95;
+      label.scale.z = 0.32;
+      label.color = color(1.0F, 0.0F, 0.8F, 1.0F);
+      label.text = "trajectory goal";
+      array.markers.push_back(label);
+    }
     route_markers_pub_->publish(array);
   }
 

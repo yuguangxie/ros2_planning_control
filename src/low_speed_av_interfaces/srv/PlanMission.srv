@@ -1,0 +1,11 @@
+# Business-level mission planning request.
+# start_type: "", "current_pose", "node", "task", "parking", "charging"
+# goal_type:  "node", "task", "parking", "charging"
+string start_type
+string start_id
+string goal_type
+string goal_id
+---
+bool success
+string message
+GlobalRoute route

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cctype>
 #include <cmath>
 #include <exception>
 #include <limits>
@@ -10,6 +11,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "low_speed_av_planning/global_planner_factory.hpp"
@@ -68,6 +70,16 @@ double squared_distance(const Pose2d & a, const Waypoint & b)
   return dx * dx + dy * dy;
 }
 
+double distance_xy(double ax, double ay, double bx, double by)
+{
+  return std::hypot(ax - bx, ay - by);
+}
+
+double waypoint_distance(const Waypoint & a, const Waypoint & b)
+{
+  return distance_xy(a.x_m, a.y_m, b.x_m, b.y_m);
+}
+
 std::chrono::nanoseconds period_from_rate(double rate_hz)
 {
   if (rate_hz <= 0.0 || !std::isfinite(rate_hz)) {
@@ -115,6 +127,12 @@ PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
   declare_parameter<double>("planning.route_republish_rate_hz", 1.0);
   declare_parameter<double>("planning.trajectory_republish_rate_hz", 10.0);
   declare_parameter<double>("planning.roadnet_status_publish_rate_hz", 1.0);
+  declare_parameter<double>("planning.arrival_radius_m", 0.5);
+  declare_parameter<double>("planning.arrival_heading_tolerance_rad", 0.35);
+  declare_parameter<bool>("planning.semantic_goal_use_edge_projection", true);
+  declare_parameter<bool>("planning.semantic_goal_allow_reverse_local_segment", true);
+  declare_parameter<bool>("planning.semantic_goal_crop_waypoints", true);
+  declare_parameter<double>("planning.semantic_goal_min_segment_length_m", 0.2);
 
   global_planner_algorithm_ = get_parameter("global_planner.algorithm").as_string();
   motion_planner_algorithm_ = get_parameter("motion_planner.algorithm").as_string();
@@ -148,6 +166,13 @@ PlanningNode::PlanningNode(const rclcpp::NodeOptions & options)
       const std::shared_ptr<low_speed_av_interfaces::srv::PlanRoute::Request> request,
       std::shared_ptr<low_speed_av_interfaces::srv::PlanRoute::Response> response) {
       on_plan_route(request, response);
+    });
+  plan_mission_srv_ = create_service<low_speed_av_interfaces::srv::PlanMission>(
+    "~/plan_mission",
+    [this](
+      const std::shared_ptr<low_speed_av_interfaces::srv::PlanMission::Request> request,
+      std::shared_ptr<low_speed_av_interfaces::srv::PlanMission::Response> response) {
+      on_plan_mission(request, response);
     });
   set_algorithm_srv_ = create_service<low_speed_av_interfaces::srv::SetPlannerAlgorithm>(
     "~/set_planner_algorithm",
@@ -365,6 +390,422 @@ Trajectory PlanningNode::compute_trajectory(const PlanResult & route)
   auto trajectory = motion->make_trajectory(*package_, route.edge_ids, nullptr, read_motion_options());
   const auto speed = SpeedPlannerFactory::create(speed_planner_algorithm_);
   speed->apply(trajectory, read_speed_options());
+  apply_semantic_speed_limits(trajectory);
+  return trajectory;
+}
+
+std::optional<RoadnetAnchor> PlanningNode::make_node_anchor(
+  const std::string & node_id,
+  RoadnetAnchor::Type type,
+  const std::string & point_id,
+  std::string * diagnostic) const
+{
+  if (!package_) {
+    if (diagnostic) {
+      *diagnostic = "roadnet package not loaded";
+    }
+    return std::nullopt;
+  }
+  TopologyGraph graph(*package_);
+  const auto * node = graph.node(node_id);
+  if (!node) {
+    if (diagnostic) {
+      *diagnostic = "node is not in topology: " + node_id;
+    }
+    return std::nullopt;
+  }
+  RoadnetAnchor anchor;
+  anchor.type = type;
+  anchor.point_id = point_id.empty() ? node_id : point_id;
+  anchor.node_id = node_id;
+  anchor.x_m = node->pose.x_m;
+  anchor.y_m = node->pose.y_m;
+  anchor.yaw_rad = node->pose.yaw_rad;
+  anchor.has_pose = true;
+  anchor.has_node = true;
+  return anchor;
+}
+
+bool PlanningNode::project_anchor_to_edge(RoadnetAnchor & anchor, std::string * diagnostic) const
+{
+  if (!package_ || anchor.edge_id.empty()) {
+    return false;
+  }
+  TopologyGraph graph(*package_);
+  const auto * edge = graph.edge(anchor.edge_id);
+  if (!edge) {
+    if (diagnostic) {
+      *diagnostic = "semantic point linked_edge_id is not in topology: " + anchor.edge_id;
+    }
+    return false;
+  }
+  const auto range_it = package_->waypoint_index_by_edge.find(anchor.edge_id);
+  if (range_it == package_->waypoint_index_by_edge.end() || range_it->second.count == 0U) {
+    if (diagnostic) {
+      *diagnostic = "semantic point linked_edge_id has no waypoint range: " + anchor.edge_id;
+    }
+    return false;
+  }
+
+  std::size_t best_index = range_it->second.start_index;
+  double best_distance = std::numeric_limits<double>::infinity();
+  for (std::size_t i = range_it->second.start_index;
+    i < range_it->second.end_index_exclusive && i < package_->waypoints.size(); ++i)
+  {
+    const auto & wp = package_->waypoints[i];
+    const double d = distance_xy(anchor.x_m, anchor.y_m, wp.x_m, wp.y_m);
+    if (d < best_distance) {
+      best_distance = d;
+      best_index = i;
+    }
+  }
+
+  const auto & best = package_->waypoints[best_index];
+  anchor.has_edge = true;
+  anchor.edge_from_node_id = edge->from_node_id;
+  anchor.edge_to_node_id = edge->to_node_id;
+  anchor.waypoint_index = best_index;
+  anchor.s_on_edge_m = best.edge_s_m;
+  anchor.edge_progress = range_it->second.count > 1U ?
+    static_cast<double>(best_index - range_it->second.start_index) /
+      static_cast<double>(range_it->second.count - 1U) :
+    0.0;
+  return true;
+}
+
+std::optional<RoadnetAnchor> PlanningNode::make_semantic_anchor(
+  const std::string & point_id,
+  const std::map<std::string, SemanticPoint> & points,
+  const std::string & point_kind,
+  RoadnetAnchor::Type type,
+  bool prefer_edge_to_node,
+  std::string * diagnostic) const
+{
+  if (!package_) {
+    if (diagnostic) {
+      *diagnostic = "roadnet package not loaded";
+    }
+    return std::nullopt;
+  }
+  const auto point_it = points.find(point_id);
+  if (point_it == points.end()) {
+    if (diagnostic) {
+      *diagnostic = point_kind + " not found: " + point_id;
+    }
+    return std::nullopt;
+  }
+
+  const TopologyGraph graph(*package_);
+  const auto & point = point_it->second;
+  RoadnetAnchor anchor;
+  anchor.type = type;
+  anchor.point_id = point.id;
+  anchor.x_m = point.pose.x_m;
+  anchor.y_m = point.pose.y_m;
+  anchor.yaw_rad = point.pose.yaw_rad;
+  anchor.has_pose = true;
+  anchor.require_final_stop = true;
+
+  if (!point.linked_node_id.empty()) {
+    if (const auto * node = graph.node(point.linked_node_id)) {
+      anchor.node_id = node->id;
+      anchor.has_node = true;
+    } else {
+      RCLCPP_WARN(
+        get_logger(), "%s %s references unknown linked_node_id '%s'; trying linked_edge_id fallback",
+        point_kind.c_str(), point_id.c_str(), point.linked_node_id.c_str());
+    }
+  }
+
+  if (!point.linked_edge_id.empty()) {
+    anchor.edge_id = point.linked_edge_id;
+    if (!project_anchor_to_edge(anchor, diagnostic)) {
+      return std::nullopt;
+    }
+    if (!anchor.has_node) {
+      anchor.node_id = prefer_edge_to_node ? anchor.edge_to_node_id : anchor.edge_from_node_id;
+      anchor.has_node = !anchor.node_id.empty();
+    }
+  }
+
+  if (!anchor.has_node && !anchor.has_edge) {
+    if (diagnostic) {
+      *diagnostic = point_kind + " " + point_id + " has no valid linked_node_id or linked_edge_id";
+    }
+    return std::nullopt;
+  }
+
+  if (diagnostic) {
+    std::ostringstream oss;
+    oss << point_kind << " " << point_id << " resolved to";
+    if (anchor.has_node) {
+      oss << " node=" << anchor.node_id;
+    }
+    if (anchor.has_edge) {
+      oss << " edge=" << anchor.edge_id << " s_on_edge=" << anchor.s_on_edge_m <<
+        " progress=" << anchor.edge_progress;
+    }
+    *diagnostic = oss.str();
+  }
+  return anchor;
+}
+
+std::optional<RoadnetAnchor> PlanningNode::match_current_pose_to_start_anchor(std::string * diagnostic) const
+{
+  const auto matched_node = match_current_pose_to_start_node(diagnostic);
+  if (!matched_node || !package_ || !latest_pose_) {
+    return std::nullopt;
+  }
+
+  RoadnetAnchor anchor;
+  anchor.type = RoadnetAnchor::Type::CurrentPose;
+  anchor.point_id = "current_pose";
+  anchor.node_id = *matched_node;
+  anchor.has_node = true;
+  anchor.x_m = latest_pose_->x_m;
+  anchor.y_m = latest_pose_->y_m;
+  anchor.yaw_rad = latest_pose_->yaw_rad;
+  anchor.has_pose = true;
+
+  const auto max_heading = get_parameter("planning.start_match_max_heading_error_rad").as_double();
+  const Waypoint * best = nullptr;
+  double best_distance_sq = std::numeric_limits<double>::infinity();
+  for (const auto & wp : package_->waypoints) {
+    const double heading_error = std::fabs(normalize_angle(latest_pose_->yaw_rad - wp.yaw_rad));
+    if (heading_error > max_heading) {
+      continue;
+    }
+    const double dist_sq = squared_distance(*latest_pose_, wp);
+    if (dist_sq < best_distance_sq) {
+      best = &wp;
+      best_distance_sq = dist_sq;
+    }
+  }
+  if (best) {
+    anchor.edge_id = best->edge_id;
+    (void)project_anchor_to_edge(anchor, nullptr);
+  }
+  return anchor;
+}
+
+std::optional<RoadnetAnchor> PlanningNode::resolve_start_anchor(
+  const std::string & node_id,
+  const std::string & task_point_id,
+  std::string * diagnostic) const
+{
+  if (!node_id.empty()) {
+    return make_node_anchor(node_id, RoadnetAnchor::Type::Node, node_id, diagnostic);
+  }
+  if (package_ && !task_point_id.empty()) {
+    return make_semantic_anchor(
+      task_point_id, package_->task_points, "task point", RoadnetAnchor::Type::TaskPoint, false, diagnostic);
+  }
+  if (!get_parameter("planning.use_current_pose_as_start").as_bool()) {
+    if (diagnostic) {
+      *diagnostic = "start node is empty and planning.use_current_pose_as_start is false";
+    }
+    return std::nullopt;
+  }
+  return match_current_pose_to_start_anchor(diagnostic);
+}
+
+std::optional<RoadnetAnchor> PlanningNode::resolve_goal_anchor(
+  const std::string & node_id,
+  const std::string & task_point_id,
+  const std::string & parking_point_id,
+  std::string * diagnostic) const
+{
+  if (!node_id.empty()) {
+    return make_node_anchor(node_id, RoadnetAnchor::Type::Node, node_id, diagnostic);
+  }
+  if (package_ && !task_point_id.empty()) {
+    return make_semantic_anchor(
+      task_point_id, package_->task_points, "task point", RoadnetAnchor::Type::TaskPoint, true, diagnostic);
+  }
+  if (package_ && !parking_point_id.empty()) {
+    return make_semantic_anchor(
+      parking_point_id, package_->parking_points, "parking point", RoadnetAnchor::Type::ParkingPoint, true,
+      diagnostic);
+  }
+  if (diagnostic) {
+    *diagnostic = "goal node or semantic goal is empty";
+  }
+  return std::nullopt;
+}
+
+bool PlanningNode::has_arrived(const RoadnetAnchor & goal_anchor) const
+{
+  if (!latest_pose_ || !goal_anchor.has_pose) {
+    return false;
+  }
+  const double distance = distance_xy(latest_pose_->x_m, latest_pose_->y_m, goal_anchor.x_m, goal_anchor.y_m);
+  const double heading_error = std::fabs(normalize_angle(latest_pose_->yaw_rad - goal_anchor.yaw_rad));
+  return distance <= get_parameter("planning.arrival_radius_m").as_double() &&
+    heading_error <= get_parameter("planning.arrival_heading_tolerance_rad").as_double();
+}
+
+void PlanningNode::append_waypoint(Trajectory & trajectory, Waypoint waypoint) const
+{
+  if (!trajectory.empty() && waypoint_distance(trajectory.back(), waypoint) < 1e-4) {
+    return;
+  }
+  trajectory.push_back(std::move(waypoint));
+}
+
+void PlanningNode::regenerate_route_s(Trajectory & trajectory) const
+{
+  if (trajectory.empty()) {
+    return;
+  }
+  trajectory.front().route_s_m = 0.0;
+  for (std::size_t i = 1; i < trajectory.size(); ++i) {
+    trajectory[i].route_s_m = trajectory[i - 1].route_s_m + waypoint_distance(trajectory[i - 1], trajectory[i]);
+  }
+}
+
+Trajectory PlanningNode::make_arrived_stop_trajectory(
+  const RoadnetAnchor & anchor,
+  const std::string & behavior) const
+{
+  Trajectory trajectory;
+  Waypoint point;
+  point.index = 0;
+  point.waypoint_id = anchor.point_id.empty() ? "arrived_stop" : anchor.point_id;
+  point.edge_id = anchor.edge_id;
+  point.x_m = anchor.x_m;
+  point.y_m = anchor.y_m;
+  point.yaw_rad = anchor.yaw_rad;
+  point.kappa_1pm = 0.0;
+  point.edge_s_m = anchor.s_on_edge_m;
+  point.route_s_m = 0.0;
+  point.target_speed_mps = 0.0;
+  point.gear = 1;
+  point.behavior = behavior;
+  trajectory.push_back(point);
+  return trajectory;
+}
+
+void PlanningNode::append_edge_segment(
+  Trajectory & trajectory,
+  const RoadnetAnchor & goal_anchor,
+  bool reverse) const
+{
+  if (!package_ || !goal_anchor.has_edge) {
+    return;
+  }
+  const auto range_it = package_->waypoint_index_by_edge.find(goal_anchor.edge_id);
+  if (range_it == package_->waypoint_index_by_edge.end() ||
+    range_it->second.count == 0U || package_->waypoints.empty())
+  {
+    return;
+  }
+  const auto start = range_it->second.start_index;
+  const auto end = std::min(range_it->second.end_index_exclusive, package_->waypoints.size());
+  const auto goal_index = std::min(std::max(goal_anchor.waypoint_index, start), end - 1U);
+  if (reverse) {
+    for (std::size_t i = end; i-- > goal_index;) {
+      auto wp = package_->waypoints[i];
+      wp.gear = 2;
+      wp.behavior = "semantic_reverse_local";
+      append_waypoint(trajectory, wp);
+      if (i == 0U) {
+        break;
+      }
+    }
+  } else {
+    for (std::size_t i = start; i <= goal_index && i < end; ++i) {
+      auto wp = package_->waypoints[i];
+      wp.behavior = "semantic_forward_local";
+      append_waypoint(trajectory, wp);
+      if (i == std::numeric_limits<std::size_t>::max()) {
+        break;
+      }
+    }
+  }
+
+  if (!trajectory.empty() && goal_anchor.has_pose) {
+    auto & last = trajectory.back();
+    last.waypoint_id = goal_anchor.point_id.empty() ? last.waypoint_id : goal_anchor.point_id;
+    last.x_m = goal_anchor.x_m;
+    last.y_m = goal_anchor.y_m;
+    last.yaw_rad = goal_anchor.yaw_rad;
+    last.edge_s_m = goal_anchor.s_on_edge_m;
+    if (goal_anchor.require_final_stop) {
+      last.target_speed_mps = 0.0;
+      last.behavior = reverse ? "semantic_goal_reverse_stop" : "semantic_goal_stop";
+    }
+  }
+}
+
+Trajectory PlanningNode::make_edge_segment_trajectory(
+  const RoadnetAnchor &,
+  const RoadnetAnchor & goal_anchor,
+  bool reverse) const
+{
+  Trajectory trajectory;
+  append_edge_segment(trajectory, goal_anchor, reverse);
+  regenerate_route_s(trajectory);
+  return trajectory;
+}
+
+Trajectory PlanningNode::compute_trajectory_to_goal_anchor(
+  const PlanResult & route,
+  const RoadnetAnchor & start_anchor,
+  const RoadnetAnchor & goal_anchor)
+{
+  if (!route.success) {
+    return {};
+  }
+
+  if (start_anchor.node_id == goal_anchor.node_id && has_arrived(goal_anchor)) {
+    return make_arrived_stop_trajectory(goal_anchor, "arrived_stop");
+  }
+
+  bool append_goal_segment = false;
+  bool reverse_goal_segment = false;
+  PlanResult route_to_use = route;
+  const bool semantic_crop = get_parameter("planning.semantic_goal_crop_waypoints").as_bool();
+  const bool allow_reverse =
+    get_parameter("planning.semantic_goal_allow_reverse_local_segment").as_bool() &&
+    get_parameter("global_planner.allow_reverse").as_bool();
+
+  if (semantic_crop && goal_anchor.has_edge) {
+    if (start_anchor.node_id == goal_anchor.edge_to_node_id && allow_reverse) {
+      route_to_use.edge_ids.clear();
+      route_to_use.node_ids = {start_anchor.node_id, goal_anchor.node_id};
+      append_goal_segment = true;
+      reverse_goal_segment = true;
+    } else if (start_anchor.node_id == goal_anchor.edge_from_node_id) {
+      route_to_use.edge_ids.clear();
+      route_to_use.node_ids = {start_anchor.node_id, goal_anchor.node_id};
+      append_goal_segment = true;
+      reverse_goal_segment = false;
+    } else if (route.edge_ids.empty() && start_anchor.node_id == goal_anchor.node_id && allow_reverse) {
+      append_goal_segment = true;
+      reverse_goal_segment = goal_anchor.node_id == goal_anchor.edge_to_node_id;
+    } else if (!route.edge_ids.empty()) {
+      append_goal_segment = true;
+      reverse_goal_segment = route.node_ids.empty() ? false : route.node_ids.back() == goal_anchor.edge_to_node_id;
+    }
+  }
+
+  auto trajectory = compute_trajectory(route_to_use);
+  if (append_goal_segment) {
+    append_edge_segment(trajectory, goal_anchor, reverse_goal_segment);
+    regenerate_route_s(trajectory);
+  }
+
+  const double min_length = get_parameter("planning.semantic_goal_min_segment_length_m").as_double();
+  if (trajectory.size() == 1U && goal_anchor.has_pose && start_anchor.has_pose &&
+    distance_xy(start_anchor.x_m, start_anchor.y_m, goal_anchor.x_m, goal_anchor.y_m) > min_length)
+  {
+    auto start = trajectory.front();
+    start.x_m = start_anchor.x_m;
+    start.y_m = start_anchor.y_m;
+    start.yaw_rad = start_anchor.yaw_rad;
+    trajectory.insert(trajectory.begin(), start);
+    regenerate_route_s(trajectory);
+  }
   apply_semantic_speed_limits(trajectory);
   return trajectory;
 }
@@ -676,15 +1117,15 @@ void PlanningNode::on_plan_route(
 {
   std::string start_diagnostic;
   std::string goal_diagnostic;
-  const auto start = resolve_start_node(
+  const auto start_anchor = resolve_start_anchor(
     request->start_node_id, request->start_task_point_id, &start_diagnostic);
-  const auto goal = resolve_goal_node(
+  const auto goal_anchor = resolve_goal_anchor(
     request->goal_node_id, request->goal_task_point_id, request->goal_parking_point_id, &goal_diagnostic);
-  if (start.empty() || goal.empty()) {
+  if (!start_anchor || !goal_anchor || start_anchor->node_id.empty() || goal_anchor->node_id.empty()) {
     response->success = false;
-    if (start.empty() && !start_diagnostic.empty()) {
+    if ((!start_anchor || start_anchor->node_id.empty()) && !start_diagnostic.empty()) {
       response->message = start_diagnostic;
-    } else if (goal.empty() && !goal_diagnostic.empty()) {
+    } else if ((!goal_anchor || goal_anchor->node_id.empty()) && !goal_diagnostic.empty()) {
       response->message = goal_diagnostic;
     } else {
       response->message = "start or goal node cannot be resolved";
@@ -695,7 +1136,24 @@ void PlanningNode::on_plan_route(
   }
 
   try {
-    const auto route = compute_route(start, goal);
+    PlanResult route;
+    const bool prefer_goal_edge_from =
+      goal_anchor->has_edge && start_anchor->node_id != goal_anchor->edge_to_node_id &&
+      !goal_anchor->edge_from_node_id.empty();
+    if (prefer_goal_edge_from) {
+      route = compute_route(start_anchor->node_id, goal_anchor->edge_from_node_id);
+      if (!route.success) {
+        route = compute_route(start_anchor->node_id, goal_anchor->node_id);
+      }
+    } else {
+      route = compute_route(start_anchor->node_id, goal_anchor->node_id);
+      if (!route.success && goal_anchor->has_edge && !goal_anchor->edge_from_node_id.empty()) {
+        const auto route_to_edge_from = compute_route(start_anchor->node_id, goal_anchor->edge_from_node_id);
+        if (route_to_edge_from.success) {
+          route = route_to_edge_from;
+        }
+      }
+    }
     response->route = to_msg(route);
     global_route_pub_->publish(response->route);
     if (!route.success) {
@@ -706,7 +1164,7 @@ void PlanningNode::on_plan_route(
       publish_failure_trajectory(route.message);
       return;
     }
-    const auto trajectory = compute_trajectory(route);
+    const auto trajectory = compute_trajectory_to_goal_anchor(route, *start_anchor, *goal_anchor);
     if (trajectory.empty()) {
       response->success = false;
       response->message = "motion planner produced empty trajectory";
@@ -721,10 +1179,126 @@ void PlanningNode::on_plan_route(
     trajectory_pub_->publish(last_trajectory_msg_);
     response->success = true;
     response->message = "ok";
-    const auto status_message = start_diagnostic.empty() ?
+    const auto diagnostics = start_diagnostic + (goal_diagnostic.empty() ? "" : "; " + goal_diagnostic);
+    const auto status_message = diagnostics.empty() ?
       "planned route with " + std::to_string(trajectory.size()) + " trajectory points" :
-      "planned route with " + std::to_string(trajectory.size()) + " trajectory points; " + start_diagnostic;
+      "planned route with " + std::to_string(trajectory.size()) + " trajectory points; " + diagnostics;
     publish_status("active", status_message);
+  } catch (const std::exception & e) {
+    response->success = false;
+    response->message = e.what();
+    publish_status("failure", response->message);
+    publish_failure_trajectory(response->message);
+  }
+}
+
+void PlanningNode::on_plan_mission(
+  const std::shared_ptr<low_speed_av_interfaces::srv::PlanMission::Request> request,
+  std::shared_ptr<low_speed_av_interfaces::srv::PlanMission::Response> response)
+{
+  auto normalized = [](std::string value) {
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) {
+      return static_cast<char>(std::tolower(c));
+    });
+    return value;
+  };
+
+  std::string start_diagnostic;
+  std::string goal_diagnostic;
+  const auto start_type = normalized(request->start_type);
+  const auto goal_type = normalized(request->goal_type);
+
+  std::optional<RoadnetAnchor> start_anchor;
+  if (start_type.empty() || start_type == "current_pose") {
+    start_anchor = resolve_start_anchor("", "", &start_diagnostic);
+  } else if (start_type == "node") {
+    start_anchor = resolve_start_anchor(request->start_id, "", &start_diagnostic);
+  } else if (start_type == "task") {
+    start_anchor = resolve_start_anchor("", request->start_id, &start_diagnostic);
+  } else if (start_type == "parking" && package_) {
+    start_anchor = make_semantic_anchor(
+      request->start_id, package_->parking_points, "parking point", RoadnetAnchor::Type::ParkingPoint, false,
+      &start_diagnostic);
+  } else if (start_type == "charging" && package_) {
+    start_anchor = make_semantic_anchor(
+      request->start_id, package_->charging_points, "charging point", RoadnetAnchor::Type::ChargingPoint, false,
+      &start_diagnostic);
+  } else {
+    start_diagnostic = "unsupported mission start_type: " + request->start_type;
+  }
+
+  std::optional<RoadnetAnchor> goal_anchor;
+  if (goal_type == "node") {
+    goal_anchor = resolve_goal_anchor(request->goal_id, "", "", &goal_diagnostic);
+  } else if (goal_type == "task") {
+    goal_anchor = resolve_goal_anchor("", request->goal_id, "", &goal_diagnostic);
+  } else if (goal_type == "parking") {
+    goal_anchor = resolve_goal_anchor("", "", request->goal_id, &goal_diagnostic);
+  } else if (goal_type == "charging" && package_) {
+    goal_anchor = make_semantic_anchor(
+      request->goal_id, package_->charging_points, "charging point", RoadnetAnchor::Type::ChargingPoint, true,
+      &goal_diagnostic);
+  } else {
+    goal_diagnostic = "unsupported mission goal_type: " + request->goal_type;
+  }
+
+  if (!start_anchor || !goal_anchor || start_anchor->node_id.empty() || goal_anchor->node_id.empty()) {
+    response->success = false;
+    response->message = !start_diagnostic.empty() ? start_diagnostic :
+      !goal_diagnostic.empty() ? goal_diagnostic : "mission start or goal cannot be resolved";
+    publish_status("failure", response->message);
+    publish_failure_trajectory(response->message);
+    return;
+  }
+
+  try {
+    PlanResult route;
+    const bool prefer_goal_edge_from =
+      goal_anchor->has_edge && start_anchor->node_id != goal_anchor->edge_to_node_id &&
+      !goal_anchor->edge_from_node_id.empty();
+    if (prefer_goal_edge_from) {
+      route = compute_route(start_anchor->node_id, goal_anchor->edge_from_node_id);
+      if (!route.success) {
+        route = compute_route(start_anchor->node_id, goal_anchor->node_id);
+      }
+    } else {
+      route = compute_route(start_anchor->node_id, goal_anchor->node_id);
+      if (!route.success && goal_anchor->has_edge && !goal_anchor->edge_from_node_id.empty()) {
+        const auto route_to_edge_from = compute_route(start_anchor->node_id, goal_anchor->edge_from_node_id);
+        if (route_to_edge_from.success) {
+          route = route_to_edge_from;
+        }
+      }
+    }
+    response->route = to_msg(route);
+    global_route_pub_->publish(response->route);
+    if (!route.success) {
+      has_last_route_msg_ = false;
+      response->success = false;
+      response->message = route.message;
+      publish_status("failure", route.message);
+      publish_failure_trajectory(route.message);
+      return;
+    }
+    const auto trajectory = compute_trajectory_to_goal_anchor(route, *start_anchor, *goal_anchor);
+    if (trajectory.empty()) {
+      response->success = false;
+      response->message = "motion planner produced empty trajectory";
+      publish_status("failure", response->message);
+      publish_failure_trajectory(response->message);
+      return;
+    }
+    last_route_msg_ = response->route;
+    has_last_route_msg_ = true;
+    last_trajectory_msg_ = to_msg(trajectory, "ok");
+    has_last_trajectory_msg_ = true;
+    trajectory_pub_->publish(last_trajectory_msg_);
+    response->success = true;
+    response->message = "ok";
+    publish_status(
+      "active",
+      "planned mission with " + std::to_string(trajectory.size()) +
+        " trajectory points; " + start_diagnostic + "; " + goal_diagnostic);
   } catch (const std::exception & e) {
     response->success = false;
     response->message = e.what();

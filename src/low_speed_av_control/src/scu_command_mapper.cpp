@@ -1,5 +1,6 @@
 #include "low_speed_av_control/scu_command_mapper.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <sstream>
 #include <string>
@@ -32,15 +33,31 @@ std::string format_warning(const std::string & field, double value)
   return out.str();
 }
 
+std::string format_clamp_warning(const std::string & field, double value, double limit)
+{
+  std::ostringstream out;
+  out << field << " exceeded SCU limit and was clamped: value=" << value << " limit=" << limit;
+  return out.str();
+}
+
 double sanitize_steering_deg(
   double steering_rad,
   double sign,
   double max_abs_deg,
+  const std::string & overrange_policy,
   const std::string & field,
   std::vector<std::string> & warnings)
 {
   const double steering_deg = steering_rad * kRadToDeg * sign;
-  if (!std::isfinite(steering_deg) || std::abs(steering_deg) > max_abs_deg) {
+  if (!std::isfinite(steering_deg)) {
+    warnings.push_back(format_warning(field, steering_deg));
+    return 0.0;
+  }
+  if (std::abs(steering_deg) > max_abs_deg) {
+    if (overrange_policy == "clamp") {
+      warnings.push_back(format_clamp_warning(field, steering_deg, max_abs_deg));
+      return std::clamp(steering_deg, -max_abs_deg, max_abs_deg);
+    }
     warnings.push_back(format_warning(field, steering_deg));
     return 0.0;
   }
@@ -50,10 +67,19 @@ double sanitize_steering_deg(
 double sanitize_speed_kmh(
   double speed_mps,
   double max_speed_kmh,
+  const std::string & overrange_policy,
   std::vector<std::string> & warnings)
 {
   const double speed_kmh = std::abs(speed_mps) * 3.6;
-  if (!std::isfinite(speed_kmh) || speed_kmh > max_speed_kmh) {
+  if (!std::isfinite(speed_kmh)) {
+    warnings.push_back(format_warning("scu_target_speed", speed_kmh));
+    return 0.0;
+  }
+  if (speed_kmh > max_speed_kmh) {
+    if (overrange_policy == "clamp") {
+      warnings.push_back(format_clamp_warning("scu_target_speed", speed_kmh, max_speed_kmh));
+      return max_speed_kmh;
+    }
     warnings.push_back(format_warning("scu_target_speed", speed_kmh));
     return 0.0;
   }
@@ -130,17 +156,20 @@ ScuMappingResult ScuCommandMapper::map(
     command.front_steering_angle_rad,
     options.front_steer_sign,
     options.max_steering_angle_deg,
+    options.overrange_policy,
     "scu_steering_angle_front",
     result.warnings));
   msg.scu_steering_angle_rear = static_cast<float>(sanitize_steering_deg(
     command.rear_steering_angle_rad,
     options.rear_steer_sign,
     options.max_steering_angle_deg,
+    options.overrange_policy,
     "scu_steering_angle_rear",
     result.warnings));
   msg.scu_target_speed = static_cast<float>(sanitize_speed_kmh(
     command.speed_mps,
     options.max_target_speed_kmh,
+    options.overrange_policy,
     result.warnings));
   msg.scu_brake_enable = false;
   result.command = msg;

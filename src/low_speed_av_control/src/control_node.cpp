@@ -29,6 +29,7 @@ ControlNode::ControlNode(const rclcpp::NodeOptions & options)
   declare_parameter<double>("controller.control_rate_hz", 50.0);
   declare_parameter<double>("controller.localization_timeout_s", 0.2);
   declare_parameter<double>("controller.trajectory_timeout_s", 0.5);
+  declare_parameter<double>("control.status_publish_rate_hz", 5.0);
   declare_parameter<std::string>("vehicle.model", "front_ackermann");
   declare_parameter<double>("vehicle.wheel_base_m", 1.2);
   declare_parameter<double>("vehicle.max_speed_mps", 1.2);
@@ -65,10 +66,11 @@ ControlNode::ControlNode(const rclcpp::NodeOptions & options)
   declare_parameter<double>("mpc_sampler.steering_effort_weight", 0.05);
   declare_parameter<double>("command_smoother.max_speed_step_mps", 0.05);
   declare_parameter<double>("command_smoother.max_steer_rate_radps", 0.35);
-  declare_parameter<double>("scu.max_steering_angle_deg", 30.0);
+  declare_parameter<double>("scu.max_steering_angle_deg", 27.0);
   declare_parameter<double>("scu.max_target_speed_kmh", 5.0);
   declare_parameter<double>("scu.front_steer_sign", 1.0);
   declare_parameter<double>("scu.rear_steer_sign", 1.0);
+  declare_parameter<std::string>("scu.overrange_policy", "clamp");
   declare_parameter<int>("scu.stop_shift_level", 1);
   declare_parameter<int>("scu.torque_or_speed_mode", 1);
   declare_parameter<bool>("scu.steering_angle_speed_valid", false);
@@ -176,6 +178,7 @@ void ControlNode::load_runtime_options()
   scu_options_.max_target_speed_kmh = get_parameter("scu.max_target_speed_kmh").as_double();
   scu_options_.front_steer_sign = get_parameter("scu.front_steer_sign").as_double();
   scu_options_.rear_steer_sign = get_parameter("scu.rear_steer_sign").as_double();
+  scu_options_.overrange_policy = get_parameter("scu.overrange_policy").as_string();
   scu_options_.stop_shift_level = static_cast<uint8_t>(
     std::max<int64_t>(0, get_parameter("scu.stop_shift_level").as_int()));
   scu_options_.torque_or_speed_mode = static_cast<uint8_t>(
@@ -309,7 +312,9 @@ void ControlNode::on_timer()
     return;
   }
 
-  publish_command(finalize_command(compute_tracking_command()));
+  const auto command = finalize_command(compute_tracking_command());
+  publish_command(command);
+  publish_periodic_status("tracking", 0, "tracking trajectory");
 }
 
 void ControlNode::on_set_controller_algorithm(
@@ -345,7 +350,26 @@ void ControlNode::publish_status(const std::string & state, uint8_t level, const
   status.state = state;
   status.level = level;
   status.message = message;
+  last_status_time_ = status.header.stamp;
   status_pub_->publish(status);
+}
+
+void ControlNode::publish_periodic_status(
+  const std::string & state,
+  uint8_t level,
+  const std::string & message)
+{
+  const double rate_hz = get_parameter("control.status_publish_rate_hz").as_double();
+  if (rate_hz <= 0.0 || !std::isfinite(rate_hz)) {
+    return;
+  }
+  const auto now_time = now();
+  if (last_status_time_.nanoseconds() != 0 &&
+    (now_time - last_status_time_).seconds() < 1.0 / rate_hz)
+  {
+    return;
+  }
+  publish_status(state, level, message);
 }
 
 void ControlNode::publish_command(const ControlCommand & command)

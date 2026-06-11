@@ -36,6 +36,7 @@ private:
   ControlCommand compute_tracking_command();
   ControlCommand finalize_command(const ControlCommand & command);
   void publish_status(const std::string & state, uint8_t level, const std::string & message);
+  void publish_periodic_status(const std::string & state, uint8_t level, const std::string & message);
   void load_runtime_options();
   void on_set_controller_algorithm(
     const std::shared_ptr<low_speed_av_interfaces::srv::SetControllerAlgorithm::Request> request,
@@ -67,6 +68,7 @@ private:
   bool have_trajectory_{false};
   rclcpp::Time last_pose_time_;
   rclcpp::Time last_trajectory_time_;
+  rclcpp::Time last_status_time_;
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_;
   rclcpp::Subscription<low_speed_av_interfaces::msg::Trajectory>::SharedPtr trajectory_sub_;
   rclcpp::Subscription<low_speed_av_interfaces::msg::VehicleState>::SharedPtr vehicle_state_sub_;

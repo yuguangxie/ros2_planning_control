@@ -53,10 +53,11 @@ struct ControlCommand {
 };
 
 struct ScuCommandOptions {
-  double max_steering_angle_deg{30.0};
+  double max_steering_angle_deg{27.0};
   double max_target_speed_kmh{5.0};
   double front_steer_sign{1.0};
   double rear_steer_sign{1.0};
+  std::string overrange_policy{"clamp"};
   uint8_t stop_shift_level{1};
   uint8_t torque_or_speed_mode{1};
   bool steering_angle_speed_valid{false};

@@ -15,6 +15,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RoadnetStatus.msg"
   "srv/ReloadRoadnet.srv"
   "srv/PlanRoute.srv"
+  "srv/PlanMission.srv"
   "srv/SetPlannerAlgorithm.srv"
   "srv/SetControllerAlgorithm.srv"
   DEPENDENCIES std_msgs

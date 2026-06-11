@@ -12,6 +12,7 @@
 #include <low_speed_av_interfaces/msg/module_status.hpp>
 #include <low_speed_av_interfaces/msg/roadnet_status.hpp>
 #include <low_speed_av_interfaces/msg/trajectory.hpp>
+#include <low_speed_av_interfaces/srv/plan_mission.hpp>
 #include <low_speed_av_interfaces/srv/plan_route.hpp>
 #include <low_speed_av_interfaces/srv/reload_roadnet.hpp>
 #include <low_speed_av_interfaces/srv/set_planner_algorithm.hpp>
@@ -22,6 +23,34 @@
 #include "low_speed_av_planning/speed_planner_base.hpp"
 
 namespace low_speed_av_planning {
+
+struct RoadnetAnchor {
+  enum class Type {
+    CurrentPose,
+    Node,
+    EdgePoint,
+    TaskPoint,
+    ParkingPoint,
+    ChargingPoint
+  };
+
+  Type type{Type::Node};
+  std::string point_id;
+  std::string node_id;
+  std::string edge_id;
+  std::string edge_from_node_id;
+  std::string edge_to_node_id;
+  double x_m{0.0};
+  double y_m{0.0};
+  double yaw_rad{0.0};
+  double s_on_edge_m{0.0};
+  double edge_progress{0.0};
+  std::size_t waypoint_index{0};
+  bool has_pose{false};
+  bool has_edge{false};
+  bool has_node{false};
+  bool require_final_stop{false};
+};
 
 class PlanningNode : public rclcpp::Node {
 public:
@@ -38,7 +67,46 @@ private:
   void publish_failure_trajectory(const std::string & reason);
   PlanResult compute_route(const std::string & start_node_id, const std::string & goal_node_id);
   Trajectory compute_trajectory(const PlanResult & route);
+  Trajectory compute_trajectory_to_goal_anchor(
+    const PlanResult & route,
+    const RoadnetAnchor & start_anchor,
+    const RoadnetAnchor & goal_anchor);
+  Trajectory make_arrived_stop_trajectory(const RoadnetAnchor & anchor, const std::string & behavior) const;
+  Trajectory make_edge_segment_trajectory(
+    const RoadnetAnchor & start_anchor,
+    const RoadnetAnchor & goal_anchor,
+    bool reverse) const;
+  void append_edge_segment(
+    Trajectory & trajectory,
+    const RoadnetAnchor & goal_anchor,
+    bool reverse) const;
+  void append_waypoint(Trajectory & trajectory, Waypoint waypoint) const;
+  void regenerate_route_s(Trajectory & trajectory) const;
   void apply_semantic_speed_limits(Trajectory & trajectory) const;
+  bool has_arrived(const RoadnetAnchor & goal_anchor) const;
+  std::optional<RoadnetAnchor> resolve_start_anchor(
+    const std::string & node_id,
+    const std::string & task_point_id,
+    std::string * diagnostic) const;
+  std::optional<RoadnetAnchor> resolve_goal_anchor(
+    const std::string & node_id,
+    const std::string & task_point_id,
+    const std::string & parking_point_id,
+    std::string * diagnostic) const;
+  std::optional<RoadnetAnchor> make_node_anchor(
+    const std::string & node_id,
+    RoadnetAnchor::Type type,
+    const std::string & point_id,
+    std::string * diagnostic) const;
+  std::optional<RoadnetAnchor> make_semantic_anchor(
+    const std::string & point_id,
+    const std::map<std::string, SemanticPoint> & points,
+    const std::string & point_kind,
+    RoadnetAnchor::Type type,
+    bool prefer_edge_to_node,
+    std::string * diagnostic) const;
+  std::optional<RoadnetAnchor> match_current_pose_to_start_anchor(std::string * diagnostic) const;
+  bool project_anchor_to_edge(RoadnetAnchor & anchor, std::string * diagnostic) const;
   std::string resolve_start_node(
     const std::string & node_id,
     const std::string & task_point_id,
@@ -67,6 +135,9 @@ private:
   void on_plan_route(
     const std::shared_ptr<low_speed_av_interfaces::srv::PlanRoute::Request> request,
     std::shared_ptr<low_speed_av_interfaces::srv::PlanRoute::Response> response);
+  void on_plan_mission(
+    const std::shared_ptr<low_speed_av_interfaces::srv::PlanMission::Request> request,
+    std::shared_ptr<low_speed_av_interfaces::srv::PlanMission::Response> response);
   void on_set_planner_algorithm(
     const std::shared_ptr<low_speed_av_interfaces::srv::SetPlannerAlgorithm::Request> request,
     std::shared_ptr<low_speed_av_interfaces::srv::SetPlannerAlgorithm::Response> response);
@@ -83,6 +154,7 @@ private:
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_;
   rclcpp::Service<low_speed_av_interfaces::srv::ReloadRoadnet>::SharedPtr reload_srv_;
   rclcpp::Service<low_speed_av_interfaces::srv::PlanRoute>::SharedPtr plan_route_srv_;
+  rclcpp::Service<low_speed_av_interfaces::srv::PlanMission>::SharedPtr plan_mission_srv_;
   rclcpp::Service<low_speed_av_interfaces::srv::SetPlannerAlgorithm>::SharedPtr set_algorithm_srv_;
   rclcpp::TimerBase::SharedPtr route_republish_timer_;
   rclcpp::TimerBase::SharedPtr trajectory_republish_timer_;

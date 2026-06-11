@@ -52,3 +52,9 @@ low_speed_av_planning:
       route_republish_rate_hz: 1.0
       trajectory_republish_rate_hz: 10.0
       roadnet_status_publish_rate_hz: 1.0
+      arrival_radius_m: 0.5
+      arrival_heading_tolerance_rad: 0.35
+      semantic_goal_use_edge_projection: true
+      semantic_goal_allow_reverse_local_segment: true
+      semantic_goal_crop_waypoints: true
+      semantic_goal_min_segment_length_m: 0.2

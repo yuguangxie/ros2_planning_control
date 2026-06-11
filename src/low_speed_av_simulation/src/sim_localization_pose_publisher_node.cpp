@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -60,6 +61,10 @@ public:
     declare_parameter<double>("initial_x", 0.554);
     declare_parameter<double>("initial_y", 1.473);
     declare_parameter<double>("initial_yaw", -0.9178);
+    declare_parameter<std::string>("initial_waypoint_id", "");
+    declare_parameter<std::string>("initial_task_point_id", "");
+    declare_parameter<std::string>("initial_edge_id", "");
+    declare_parameter<double>("initial_edge_progress", 0.0);
     declare_parameter<double>("speed_mps", 0.5);
     declare_parameter<bool>("loop", true);
     declare_parameter<bool>("start_paused", false);
@@ -141,9 +146,59 @@ private:
           roadnet_waypoints_.push_back(pose);
         }
       }
+      resolve_initial_pose_from_package(package);
       RCLCPP_INFO(get_logger(), "loaded %zu roadnet replay waypoints", roadnet_waypoints_.size());
     } catch (const std::exception & e) {
       RCLCPP_ERROR(get_logger(), "failed to load roadnet waypoints for simulation: %s", e.what());
+    }
+  }
+
+  void resolve_initial_pose_from_package(const low_speed_av_planning::RoadnetPackage & package)
+  {
+    const auto task_point_id = get_parameter("initial_task_point_id").as_string();
+    if (!task_point_id.empty()) {
+      const auto it = package.task_points.find(task_point_id);
+      if (it != package.task_points.end()) {
+        initial_pose_override_ = {it->second.pose.x_m, it->second.pose.y_m, it->second.pose.yaw_rad, 0.0};
+        RCLCPP_INFO(get_logger(), "simulation initial pose resolved from task point %s", task_point_id.c_str());
+        return;
+      }
+      RCLCPP_WARN(get_logger(), "initial_task_point_id was not found: %s", task_point_id.c_str());
+    }
+
+    const auto waypoint_id = get_parameter("initial_waypoint_id").as_string();
+    if (!waypoint_id.empty()) {
+      const auto it = std::find_if(package.waypoints.begin(), package.waypoints.end(), [&](const auto & wp) {
+        return wp.waypoint_id == waypoint_id;
+      });
+      if (it != package.waypoints.end()) {
+        initial_pose_override_ = {it->x_m, it->y_m, it->yaw_rad, it->edge_s_m};
+        replay_distance_m_ = it->route_s_m > 0.0 ? it->route_s_m : it->edge_s_m;
+        RCLCPP_INFO(get_logger(), "simulation initial pose resolved from waypoint %s", waypoint_id.c_str());
+        return;
+      }
+      RCLCPP_WARN(get_logger(), "initial_waypoint_id was not found: %s", waypoint_id.c_str());
+    }
+
+    const auto edge_id = get_parameter("initial_edge_id").as_string();
+    if (!edge_id.empty()) {
+      const auto range_it = package.waypoint_index_by_edge.find(edge_id);
+      if (range_it != package.waypoint_index_by_edge.end() && range_it->second.count > 0U &&
+        !package.waypoints.empty())
+      {
+        const double progress = std::clamp(get_parameter("initial_edge_progress").as_double(), 0.0, 1.0);
+        const auto offset = static_cast<std::size_t>(
+          std::round(progress * static_cast<double>(range_it->second.count - 1U)));
+        const auto index = std::min(range_it->second.start_index + offset, package.waypoints.size() - 1U);
+        const auto & wp = package.waypoints[index];
+        initial_pose_override_ = {wp.x_m, wp.y_m, wp.yaw_rad, wp.edge_s_m};
+        replay_distance_m_ = wp.route_s_m > 0.0 ? wp.route_s_m : wp.edge_s_m;
+        RCLCPP_INFO(
+          get_logger(), "simulation initial pose resolved from edge %s progress %.3f",
+          edge_id.c_str(), progress);
+        return;
+      }
+      RCLCPP_WARN(get_logger(), "initial_edge_id was not found or has no waypoints: %s", edge_id.c_str());
     }
   }
 
@@ -177,9 +232,13 @@ private:
 
     ReplayPose pose;
     if (mode_ == "fixed_pose") {
-      pose.x = get_parameter("initial_x").as_double();
-      pose.y = get_parameter("initial_y").as_double();
-      pose.yaw = get_parameter("initial_yaw").as_double();
+      if (initial_pose_override_) {
+        pose = *initial_pose_override_;
+      } else {
+        pose.x = get_parameter("initial_x").as_double();
+        pose.y = get_parameter("initial_y").as_double();
+        pose.yaw = get_parameter("initial_yaw").as_double();
+      }
     } else if (mode_ == "trajectory_replay") {
       replay_distance_m_ += speed_mps_ * dt;
       if (!sample_replay_pose(trajectory_points_, &pose)) {
@@ -266,6 +325,7 @@ private:
   bool paused_{false};
   double replay_distance_m_{0.0};
   rclcpp::Time last_tick_time_;
+  std::optional<ReplayPose> initial_pose_override_;
   std::vector<ReplayPose> trajectory_points_;
   std::vector<ReplayPose> roadnet_waypoints_;
   rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr pose_pub_;

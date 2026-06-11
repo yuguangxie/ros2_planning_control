@@ -27,6 +27,10 @@ sim_localization_pose_publisher:
     initial_x: 0.554
     initial_y: 1.473
     initial_yaw: -0.9178
+    initial_waypoint_id: ""
+    initial_task_point_id: ""
+    initial_edge_id: ""
+    initial_edge_progress: 0.0
     speed_mps: 0.5
     loop: true
     start_paused: false

@@ -14,6 +14,10 @@ def generate_launch_description():
     publish_rate_hz = LaunchConfiguration("publish_rate_hz")
     frame_id = LaunchConfiguration("frame_id")
     start_paused = LaunchConfiguration("start_paused")
+    initial_waypoint_id = LaunchConfiguration("initial_waypoint_id")
+    initial_task_point_id = LaunchConfiguration("initial_task_point_id")
+    initial_edge_id = LaunchConfiguration("initial_edge_id")
+    initial_edge_progress = LaunchConfiguration("initial_edge_progress")
     launch_planning_control = LaunchConfiguration("launch_planning_control")
     rviz = LaunchConfiguration("rviz")
 
@@ -44,6 +48,10 @@ def generate_launch_description():
         DeclareLaunchArgument("publish_rate_hz", default_value="20.0"),
         DeclareLaunchArgument("frame_id", default_value="map"),
         DeclareLaunchArgument("start_paused", default_value="false"),
+        DeclareLaunchArgument("initial_waypoint_id", default_value=""),
+        DeclareLaunchArgument("initial_task_point_id", default_value=""),
+        DeclareLaunchArgument("initial_edge_id", default_value=""),
+        DeclareLaunchArgument("initial_edge_progress", default_value="0.0"),
         DeclareLaunchArgument("launch_planning_control", default_value="false"),
         DeclareLaunchArgument("rviz", default_value="true"),
         IncludeLaunchDescription(
@@ -80,6 +88,10 @@ def generate_launch_description():
                     "publish_rate_hz": publish_rate_hz,
                     "frame_id": frame_id,
                     "start_paused": start_paused,
+                    "initial_waypoint_id": initial_waypoint_id,
+                    "initial_task_point_id": initial_task_point_id,
+                    "initial_edge_id": initial_edge_id,
+                    "initial_edge_progress": initial_edge_progress,
                 },
             ],
         ),
