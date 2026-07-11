@@ -40,7 +40,7 @@ low_speed_av_planning:
 low_speed_av_control:
   ros__parameters:
     output:
-      mode: "scu_control_command"
+      mode: "both"
     topics:
       localization_pose_topic: "/localization/pose"
       localization_pose_type: "pose_stamped"
@@ -55,6 +55,14 @@ low_speed_av_control:
       control_rate_hz: 50.0
       localization_timeout_s: 0.2
       trajectory_timeout_s: 0.5
+      allowed_trajectory_statuses: ["ok"]
+      trajectory_s_tolerance_m: 1.0e-4
+    vehicle_state:
+      required: false
+      timeout_s: 0.5
+    safety:
+      estop_latched: true
+      clear_speed_threshold_mps: 0.05
     vehicle:
       model: "front_ackermann"
       wheel_base_m: 1.2
@@ -138,5 +146,9 @@ use_sim_time
 4. Task manager or demo service requests route.
 5. Planning publishes global route and trajectory.
 6. Control subscribes trajectory and /localization/pose.
-7. Control publishes /yunle_chassis/control/scu_control_command.
+7. Control defaults to publishing `/control/command`, `/control/status`, and `/yunle_chassis/control/scu_control_command`.
 ```
+
+Control 的 localization/trajectory/VehicleState watchdog 使用本地 steady-clock receive time；不会把零 header stamp 或暂停的仿真时间直接判为消息超时。锁存急停只能通过 `/low_speed_av_control/clear_estop`（`std_srvs/srv/Trigger`）显式清除，并且清除后先进入 `READY`。
+
+运行边界：simulation 只验证软件消息语义；bench 必须断开驱动轮或架车并具备物理急停；vehicle 必须额外验证底盘硬件 watchdog。当前 Yunle Chassis Driver 尚无本阶段要求的独立周期命令 watchdog，不能把 Control 持续发布 stop 当成等价替代。

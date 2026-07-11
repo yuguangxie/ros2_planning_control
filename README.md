@@ -95,8 +95,10 @@ low_speed_av_simulation
   - `front_ackermann`
   - `dual_ackermann`
 - 控制输出经过限幅、平滑和有限值检查。
-- 支持定位超时、轨迹超时、空轨迹、安全急停、无效命令安全停车。
-- 发布内部调试命令 `/control/command`。
+- 完整消费 `Trajectory.status`、`emergency_stop`、消息标识和点合法性；规划失败轨迹不能进入控制器。
+- 支持定位超时、轨迹超时、车辆状态超时、自治未许可、人工制动、车辆故障和安全急停停车。
+- 通过显式 `/low_speed_av_control/clear_estop` 服务清除锁存急停，普通 OK 心跳不会自动清除。
+- 默认发布内部安全合同命令 `/control/command`。
 - 发布底盘命令 `/yunle_chassis/control/scu_control_command`。
 - 周期发布 `/control/status`。
 
@@ -506,7 +508,7 @@ src/low_speed_av_control/config/control_params.yaml
 
 ```yaml
 output:
-  mode: "scu_control_command"  # internal | scu_control_command | both
+  mode: "both"  # internal | scu_control_command | both
 
 topics:
   localization_pose_topic: "/localization/pose"
@@ -522,6 +524,12 @@ controller:
   control_rate_hz: 50.0
   localization_timeout_s: 0.2
   trajectory_timeout_s: 0.5
+  allowed_trajectory_statuses: ["ok"]
+  trajectory_s_tolerance_m: 1.0e-4
+
+vehicle_state:
+  required: false
+  timeout_s: 0.5
 
 vehicle:
   model: "front_ackermann"     # front_ackermann | dual_ackermann
@@ -533,6 +541,7 @@ control:
 
 safety:
   estop_latched: true
+  clear_speed_threshold_mps: 0.05
 
 scu:
   max_steering_angle_deg: 27.0

@@ -245,9 +245,11 @@ tan(delta_rear) = -rear_steer_ratio * tan(delta_front)
 清除条件：
 
 - 如果 `safety.estop_latched=false`，非触发状态会清除。
-- 如果 latch=true，则需要 `level <= safety.clear_level` 且 `state` 为 configured clear state、`clear`、`ok` 或 `standby`。
+- 如果 latch=true，普通 `ok/standby` 仅表示当前请求撤销，不能清除锁存。
+- 必须调用 `/low_speed_av_control/clear_estop`（`std_srvs/srv/Trigger`），且定位、轨迹、VehicleState、静止速度、自治许可、制动和故障条件全部满足。
+- 清除后先进入 `READY`，下一控制周期再次验证输入。
 
-证据：`src/low_speed_av_control/src/control_node.cpp:242` 至 `src/low_speed_av_control/src/control_node.cpp:254`。
+证据：`src/low_speed_av_control/src/control_node.cpp` 的 `on_safety_status()`、`on_clear_estop()` 与 `safety_state_machine.cpp`。
 
 ## 10. Limiter、Smoother、NaN/Inf guard
 

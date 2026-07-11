@@ -76,7 +76,9 @@ ros2 service call /low_speed_av_planning/reload_roadnet \
 | 项目 | 操作 | 期望结果 | 观察结果 | Pass/Fail | 备注 |
 |---|---|---|---|---|---|
 | Estop 触发 | 发布 `/safety/status` estop | SCU brake true、speed 0、steering 0 |  |  |  |
-| Estop 清除 | 发布 `state=ok level=0` | 控制状态恢复 active，仍需有效定位/轨迹 |  |  |  |
+| Estop OK 心跳 | 发布 `state=ok level=0` | 保持 `ESTOP_LATCHED`，不得自动恢复 |  |  |  |
+| Estop 显式清除 | 调用 `/low_speed_av_control/clear_estop` | 条件满足时先进入 `READY`；条件不足返回原因 |  |  |  |
+| VehicleState 门控 | 依次测试自治关闭、人工制动、故障码 | 均为零速、制动停车 |  |  |  |
 | 定位超时 | 停止 `/localization/pose` | controlled stop |  |  |  |
 | 轨迹超时 | 停止 `/planning/trajectory` | controlled stop |  |  |  |
 | 空轨迹 | 发布空 trajectory | controlled stop |  |  |  |
@@ -117,6 +119,14 @@ ros2 topic echo /control/status
 ```bash
 ros2 topic echo /control/command
 ```
+
+锁存急停清除命令：
+
+```bash
+ros2 service call /low_speed_av_control/clear_estop std_srvs/srv/Trigger "{}"
+```
+
+执行前必须确认最新 safety 不再请求急停、定位和轨迹新鲜、VehicleState 新鲜、车辆已静止、无故障、未踩制动且自治已许可。软件检查不能替代机械急停和底盘硬件 watchdog；实车测试前必须单独确认后者有效。
 
 | 项目 | 期望结果 | 观察结果 | Pass/Fail | 备注 |
 |---|---|---|---|---|

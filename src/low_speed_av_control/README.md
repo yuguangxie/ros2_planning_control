@@ -10,12 +10,12 @@
 chassis_interfaces/msg/ScuControlCommand
 ```
 
-内部 `/control/command` 仍可通过 `output.mode: "internal"` 或 `output.mode: "both"` 作为调试输出使用。
+默认 `output.mode: "both"`，因此同时发布规范控制合同 `/control/command` 和 Yunle SCU 命令。
 
 ## 输入
 - `/localization/pose`：默认定位输入，类型 `geometry_msgs/msg/PoseStamped`。
-- `/planning/trajectory`：规划轨迹。
-- `/vehicle/state`：可选车辆状态。
+- `/planning/trajectory`：规划轨迹；只允许配置白名单内的状态，默认仅 `ok`。
+- `/vehicle/state`：可通过 `vehicle_state.required` 配置为必需；一旦收到，自治许可、人工制动、故障和超时始终参与门控。
 - `/safety/status`：安全状态，`level >= 2` 或 `state=estop/emergency_stop/failure` 会触发停车。
 
 所有话题名均在 `config/control_params.yaml` 中配置。
@@ -24,6 +24,22 @@ chassis_interfaces/msg/ScuControlCommand
 - `/yunle_chassis/control/scu_control_command`：底盘控制命令，类型 `chassis_interfaces/msg/ScuControlCommand`。
 - `/control/command`：内部调试命令，类型 `low_speed_av_interfaces/msg/ControlCommand`。
 - `/control/status`：控制模块状态。
+
+## 安全状态机与输入合同
+
+控制入口先执行 ROS-independent 安全判定，再决定是否调用控制器。状态为 `WAIT_INPUTS`、`READY`、`ACTIVE`、`CONTROLLED_STOP`、`ESTOP_LATCHED`。原因优先级依次为：安全急停或显式 emergency trajectory、车辆故障/自治未许可/人工制动、定位失效、轨迹失效、正常跟踪。
+
+轨迹必须满足：`trajectory_id` 与 `source_package_id` 非空、`status` 在白名单内、`emergency_stop=false`、点非空、所有数值有限、`s_m` 在容差内单调、gear 合法。failure trajectory 即使带点或非零目标速度也直接停车，不进入 Pure Pursuit、Stanley、LQR 或 MPC sampler；两种车辆模型得到相同的零速、零转角、制动输出。
+
+本地 watchdog 使用消息接收时的 `std::chrono::steady_clock`，不依赖 header stamp，也不会因仿真时间为零或暂停而失效。header stamp 仅保留为消息来源时间，不作为本阶段本地超时的唯一依据。
+
+当 `safety.estop_latched=true` 时，普通 `ok/standby` 心跳不能清除急停。必须调用：
+
+```bash
+ros2 service call /low_speed_av_control/clear_estop std_srvs/srv/Trigger "{}"
+```
+
+清除要求安全请求已撤销、定位和轨迹有效且新鲜、存在有效且新鲜的 VehicleState、车速不超过阈值、无故障、未踩制动且自治已许可。成功后先进入 `READY`，下一控制周期重新检查，不能直接跳变为运动。
 
 ## 控制器
 控制器由 `ControllerFactory` 选择：
@@ -99,4 +115,3 @@ colcon test --packages-select low_speed_av_control
 ros2 launch low_speed_av_control control.launch.py params:=/path/to/control_params.yaml
 ros2 topic echo /yunle_chassis/control/scu_control_command
 ```
-

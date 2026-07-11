@@ -165,10 +165,11 @@ string message
 
 | 参数组 | 关键参数 |
 |---|---|
-| `output` | `mode: "scu_control_command"`，可选 `internal`、`scu_control_command`、`both` |
+| `output` | 默认 `mode: "both"`，可选 `internal`、`scu_control_command`、`both` |
 | `topics` | localization、trajectory、vehicle_state、safety、internal command、SCU command、status |
-| `controller` | `algorithm`、`control_rate_hz`、定位/轨迹超时 |
-| `safety` | `estop_latched`、`clear_level`、`clear_state` |
+| `controller` | `algorithm`、`control_rate_hz`、定位/轨迹超时、trajectory status 白名单与 s 容差 |
+| `vehicle_state` | `required`、VehicleState receive-time timeout |
+| `safety` | `estop_latched`、`clear_speed_threshold_mps`；锁存急停通过 Trigger service 清除 |
 | `vehicle` | `model`、`wheel_base_m`、speed/accel/steer 限制、`rear_steer_ratio` |
 | `pure_pursuit` | lookahead 参数 |
 | `stanley` | `k`、`epsilon_mps`、最大修正角 |

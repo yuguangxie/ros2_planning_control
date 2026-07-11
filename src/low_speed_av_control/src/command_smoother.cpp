@@ -18,8 +18,9 @@ ControlCommand CommandSmoother::smooth(const ControlCommand & target, const Smoo
     target.rear_steering_angle_rad - previous_.rear_steering_angle_rad, -steer_step, steer_step);
   out.steering_angle_rad = out.front_steering_angle_rad;
   out.desired_curvature_1pm = target.desired_curvature_1pm;
-  if (target.emergency_stop) {
-    // Emergency stop overrides normal smoothing so braking is immediate.
+  if (target.emergency_stop || target.brake > 0.0 || !target.enable) {
+    // Every safety stop overrides normal smoothing so speed/brake semantics
+    // cannot be delayed by the previous motion command.
     out.speed_mps = 0.0;
     out.desired_curvature_1pm = 0.0;
     out.steering_angle_rad = 0.0;

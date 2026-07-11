@@ -33,6 +33,8 @@ struct VehicleState {
   double rear_steering_angle_rad{0.0};
   int gear{1};
   bool autonomous_enabled{true};
+  bool brake_pressed{false};
+  std::string fault_code;
 };
 
 // Internal command before conversion to low_speed_av_interfaces/ControlCommand.

@@ -245,15 +245,21 @@ ros2 topic pub /safety/status low_speed_av_interfaces/msg/ModuleStatus \
 
 ## 15. 清除 Estop
 
-当前默认 `safety.estop_latched=true`，清除条件由 `safety.clear_level` 和 `safety.clear_state` 控制。默认 clear state 为 `ok`，clear level 为 `0`。
+当前默认 `safety.estop_latched=true`。下面的 OK 心跳只撤销当前 safety 请求，不会清除锁存：
 
 ```bash
 ros2 topic pub /safety/status low_speed_av_interfaces/msg/ModuleStatus \
-  "{module_name: 'safety', state: 'ok', level: 0, message: 'manual clear'}" \
+  "{module_name: 'safety', state: 'ok', level: 0, message: 'request released'}" \
   --once
 ```
 
-清除后仍需要有效定位和有效轨迹，控制才会恢复正常输出。
+随后显式调用：
+
+```bash
+ros2 service call /low_speed_av_control/clear_estop std_srvs/srv/Trigger "{}"
+```
+
+只有定位、轨迹和 VehicleState 新鲜有效、车辆静止、无故障、未踩制动且自治已许可时才会成功。成功后先进入 `READY`，不会在 service callback 中直接恢复运动。
 
 ## 16. D/R/Stop 观察
 

@@ -28,7 +28,7 @@ C++ include：
 ## 配置
 ```yaml
 output:
-  mode: "scu_control_command"   # internal | scu_control_command | both
+  mode: "both"   # internal | scu_control_command | both
 
 topics:
   scu_command_topic: "/yunle_chassis/control/scu_control_command"
@@ -69,7 +69,7 @@ scu:
 - 速度永不为负，倒车方向只由 R 挡选择。
 
 ## 停车命令
-安全停车、estop、定位超时、轨迹超时、空轨迹、无效命令、NaN/Inf guard 均发布：
+Planning failure/emergency trajectory、车辆门控、定位/轨迹/VehicleState 超时、空轨迹、无效命令和 NaN/Inf guard 均发布：
 
 ```text
 scu_shift_level_request = stop_shift_level, default 1
@@ -83,6 +83,10 @@ brake_force_command_valid = false
 lights = 0
 ```
 
+Control 先生成带 reason 的 `/control/command`，再映射 SCU 停车。controlled stop 的 `emergency_stop=false`，hard estop 的 `emergency_stop=true`；当前 SCU 接口只有 `scu_brake_enable` 布尔量，因此两者在 SCU 层都表现为 brake true、target speed 0，无法表达不同制动力曲线。
+
+Control watchdog 只保证 Control 进程存活时对上游输入 fail closed。Yunle Chassis Driver 的独立周期调度/命令超时不在本轮修改范围，当前不能覆盖 Control 到 Driver 之间的命令中断；即使未来实现软件 watchdog，Driver 进程硬崩溃和断电仍需底盘硬件 watchdog。
+
 ## ROS2 验证命令
 以下命令必须在真实 ROS2 环境运行。本 Codex Windows 环境若没有 ROS2，应记录为 `SKIPPED_ROS2_UNAVAILABLE`。
 
@@ -93,4 +97,3 @@ ros2 launch low_speed_av_control control.launch.py
 ros2 topic echo /yunle_chassis/control/scu_control_command
 ros2 topic pub /safety/status low_speed_av_interfaces/msg/ModuleStatus "{module_name: 'safety', state: 'estop', level: 2, message: 'test estop'}"
 ```
-

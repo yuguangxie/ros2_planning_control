@@ -10,6 +10,7 @@ find_package(rclcpp REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(chassis_interfaces REQUIRED)
 find_package(low_speed_av_interfaces REQUIRED)
 
@@ -23,6 +24,7 @@ add_library(${PROJECT_NAME}
   src/mpc_sampler_controller.cpp
   src/controller_factory.cpp
   src/scu_command_mapper.cpp
+  src/safety_state_machine.cpp
   src/command_limiter.cpp
   src/command_smoother.cpp
   src/tracking_error_estimator.cpp
@@ -37,6 +39,7 @@ ament_target_dependencies(${PROJECT_NAME}
   builtin_interfaces
   geometry_msgs
   std_msgs
+  std_srvs
   chassis_interfaces
   low_speed_av_interfaces)
 
@@ -53,5 +56,12 @@ install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
-ament_export_dependencies(rclcpp builtin_interfaces geometry_msgs std_msgs chassis_interfaces low_speed_av_interfaces)
+ament_export_dependencies(rclcpp builtin_interfaces geometry_msgs std_msgs std_srvs chassis_interfaces low_speed_av_interfaces)
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_safety_state_machine test/test_safety_state_machine.cpp)
+  target_link_libraries(test_safety_state_machine ${PROJECT_NAME})
+endif()
+
 ament_package()

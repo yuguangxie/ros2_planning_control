@@ -185,8 +185,12 @@ def control_policy_checks() -> None:
     latched = False
     latched = True if "estop" == "estop" else latched
     assert latched, "estop should latch"
-    latched = False if "ok" in {"ok", "clear", "standby"} else latched
-    assert not latched, "estop clear condition should recover"
+    latched = latched or ("ok" == "estop")
+    assert latched, "ordinary OK heartbeat must not clear latched estop"
+    explicit_clear_requested = True
+    clear_preconditions_met = True
+    latched = False if explicit_clear_requested and clear_preconditions_met else latched
+    assert not latched, "explicit safe clear should recover"
 
 
 def cpp_source_static_checks() -> None:
@@ -198,7 +202,8 @@ def cpp_source_static_checks() -> None:
     assert "sha256_hex" in loader and "checksum mismatch for" in loader
     assert "Python offline validator performs SHA-256" not in loader
     assert "package_->blocked_edges" in planning and "semantic_speed_zone" in planning
-    assert "safety.estop_latched" in control and "safety estop clear" in control
+    assert "safety.estop_latched" in control and "~/clear_estop" in control
+    assert "safety_estop_latch_.update" in control and "clear_explicit" in control
     assert "options.lqr_q_lateral_error" in lqr and "lqr_use_curvature_feedforward" in lqr
     assert "cmd.reason = \"lqr_tracking\"" in lqr
     assert "options.mpc_horizon_steps" in mpc and "options.mpc_lateral_error_weight" in mpc
@@ -231,7 +236,7 @@ def main() -> None:
     semantic_checks(ROOT)
     control_policy_checks()
     cpp_source_static_checks()
-    print("Remaining fixes smoke OK: checksum/bad_validation/bad_index rejected, semantics affect route/speed, LQR/MPC config changes output, estop latch clear policy OK")
+    print("Remaining fixes smoke OK: checksum/bad_validation/bad_index rejected, semantics affect route/speed, LQR/MPC config changes output, explicit estop clear policy OK")
 
 
 if __name__ == "__main__":

@@ -36,6 +36,9 @@ REQUIRED = [
     "src/low_speed_av_control/include/low_speed_av_control/command_limiter.hpp",
     "src/low_speed_av_control/include/low_speed_av_control/command_smoother.hpp",
     "src/low_speed_av_control/include/low_speed_av_control/scu_command_mapper.hpp",
+    "src/low_speed_av_control/include/low_speed_av_control/safety_state_machine.hpp",
+    "src/low_speed_av_control/src/safety_state_machine.cpp",
+    "src/low_speed_av_control/test/test_safety_state_machine.cpp",
     "src/low_speed_av_control/config/control_params.yaml",
     "src/low_speed_av_control/launch/control.launch.py",
     "src/low_speed_av_simulation/package.xml",
@@ -55,6 +58,7 @@ REQUIRED = [
     "scripts/offline_simulation_smoke.py",
     "scripts/offline_runtime_followup_smoke.py",
     "scripts/offline_scu_lqr_smoke.py",
+    "scripts/offline_phase13_safety_smoke.py",
     "docs/YUNLE_SCU_COMMAND_OUTPUT.md",
     "docs/LQR_CONTROLLER_DESIGN.md",
 ]

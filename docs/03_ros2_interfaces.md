@@ -165,6 +165,15 @@ bool success
 string message
 ```
 
+### Control clear-estop service
+
+```text
+service: /low_speed_av_control/clear_estop
+type: std_srvs/srv/Trigger
+```
+
+该服务不新增自定义接口字段。普通 safety OK/standby 心跳不能清除锁存急停；Trigger 仅在安全请求已撤销、定位/轨迹/VehicleState 有效且新鲜、车辆静止、无故障、未踩制动并已允许自治时返回 `success=true`。成功后控制状态先进入 `READY`，下一控制周期重新验证输入。
+
 ## Topics
 
 Default topics must be configurable:

@@ -7,7 +7,7 @@ low_speed_av_control:
       # internal: publish only /control/command
       # scu_control_command: publish only Yunle SCU command
       # both: publish debug internal command and Yunle SCU command
-      mode: "scu_control_command"
+      mode: "both"
 
     topics:
       localization_pose_topic: "/localization/pose"
@@ -24,6 +24,8 @@ low_speed_av_control:
       control_rate_hz: 50.0
       localization_timeout_s: 0.2
       trajectory_timeout_s: 0.5
+      allowed_trajectory_statuses: ["ok"]
+      trajectory_s_tolerance_m: 1.0e-4
       hold_last_command_s: 0.05
 
     control:
@@ -31,8 +33,11 @@ low_speed_av_control:
 
     safety:
       estop_latched: true
-      clear_level: 0
-      clear_state: "ok"
+      clear_speed_threshold_mps: 0.05
+
+    vehicle_state:
+      required: false
+      timeout_s: 0.5
 
     vehicle:
       model: "front_ackermann"
