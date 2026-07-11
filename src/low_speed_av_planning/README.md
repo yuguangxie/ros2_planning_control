@@ -165,3 +165,9 @@ colcon build --packages-select low_speed_av_interfaces low_speed_av_planning
 colcon test --packages-select low_speed_av_planning
 ros2 launch low_speed_av_planning planning.launch.py params:=/path/to/planning_params.yaml
 ```
+
+## Production-linked tests
+
+`test_roadnet_loader` 与 `test_planning_algorithms` 直接链接 `low_speed_av_planning` production library，覆盖当前 loader 合同、图搜索、轨迹拼接和速度规划行为。测试 fixture 使用临时目录，不修改正式 Roadnet 包。
+
+当前 Windows 环境没有 ROS2/C++ 工具链，这些 gtest 已注册但状态为 `GENERATED_NOT_EXECUTED`；Python smoke 只承担数据合同和快速回归，不作为 C++ 行为证明。

@@ -48,7 +48,7 @@ public:
   static bool encodeSignal(
     CanFrame & frame, const std::string & signal_name, double physical_value, bool clamp = true);
 
-private:
+  // Public raw bit helpers are part of the production core test interface.
   /** @brief Extract Intel-endian bitfield value. */
   /** @brief 提取 Intel 小端位域值。 */
   static uint64_t extractIntel(const std::array<uint8_t, 8> & data, uint16_t start_bit, uint16_t bit_length);

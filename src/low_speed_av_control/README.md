@@ -115,3 +115,9 @@ colcon test --packages-select low_speed_av_control
 ros2 launch low_speed_av_control control.launch.py params:=/path/to/control_params.yaml
 ros2 topic echo /yunle_chassis/control/scu_control_command
 ```
+
+## Production-linked tests
+
+`test_controllers`、`test_vehicle_command_pipeline` 和 `test_control_safety_state_machine` 直接链接 `low_speed_av_control` production library，分别覆盖四种控制器、车型/限幅/平滑/SCU 映射以及 Phase 13 安全状态机。
+
+当前 Windows 环境没有 ROS2/C++ 工具链，因此测试源码为 `GENERATED_NOT_EXECUTED`，不能表述为已经通过。Planning -> Control -> SCU 的 launch test 同样需要 ROS2 Humble 环境执行。

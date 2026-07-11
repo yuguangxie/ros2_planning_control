@@ -47,14 +47,19 @@ add_executable(control_node src/control_node_main.cpp)
 target_link_libraries(control_node ${PROJECT_NAME})
 ament_target_dependencies(control_node rclcpp)
 
-install(TARGETS ${PROJECT_NAME} control_node
+install(TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include)
+install(TARGETS control_node
   RUNTIME DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY include/ DESTINATION include)
 install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 
 ament_export_include_directories(include)
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_libraries(${PROJECT_NAME})
 ament_export_dependencies(rclcpp builtin_interfaces geometry_msgs std_msgs std_srvs chassis_interfaces low_speed_av_interfaces)
 
@@ -62,6 +67,10 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_safety_state_machine test/test_safety_state_machine.cpp)
   target_link_libraries(test_safety_state_machine ${PROJECT_NAME})
+  ament_add_gtest(test_controllers test/test_controllers.cpp)
+  target_link_libraries(test_controllers ${PROJECT_NAME})
+  ament_add_gtest(test_vehicle_command_pipeline test/test_vehicle_command_pipeline.cpp)
+  target_link_libraries(test_vehicle_command_pipeline ${PROJECT_NAME})
 endif()
 
 ament_package()

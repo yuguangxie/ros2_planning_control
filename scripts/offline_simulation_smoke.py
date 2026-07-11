@@ -119,7 +119,10 @@ def match_pose_to_start_node(topology, waypoint_index, waypoints, pose, max_dist
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("package", nargs="?", default="roadnet_ad_package_20260610T012525Z")
+    parser.add_argument(
+        "package", nargs="?", default="roadnet_ad_package_20260610T012525Z_2",
+        help="Roadnet package (default: deterministic _2 fixture)",
+    )
     args = parser.parse_args()
     root = Path(args.package)
     if not root.exists():

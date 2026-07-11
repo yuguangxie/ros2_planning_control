@@ -100,7 +100,10 @@ def static_republish_checks() -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("package", nargs="?", default="roadnet_ad_package_20260610T012525Z")
+    parser.add_argument(
+        "package", nargs="?", default="roadnet_ad_package_20260610T012525Z_2",
+        help="formal Roadnet package (default: deterministic _2 fixture)",
+    )
     args = parser.parse_args()
 
     root = Path(args.package)

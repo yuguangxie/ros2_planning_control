@@ -90,6 +90,29 @@ def stanley(pose, traj, speed=0.5, k=0.8):
     return float(nearest["v_mps"]), steer
 
 
+def front_ackermann(kappa, wheel_base=1.2):
+    front = math.atan(kappa * wheel_base)
+    return front, 0.0
+
+
+def dual_ackermann(kappa, wheel_base=1.2, rear_steer_ratio=0.5):
+    tan_front = kappa * wheel_base / (1.0 + rear_steer_ratio)
+    front = math.atan(tan_front)
+    rear = math.atan(-rear_steer_ratio * tan_front)
+    return front, rear
+
+
+def controlled_stop(reason):
+    return {
+        "speed_mps": 0.0,
+        "front_steering_angle_rad": 0.0,
+        "rear_steering_angle_rad": 0.0,
+        "enable": False,
+        "emergency_stop": True,
+        "reason": reason,
+    }
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("package", nargs="?", default="templates/sample_ad_package")
@@ -97,8 +120,16 @@ def main():
     root = Path(args.package)
     manifest = load_json(root / "project_manifest.json")
     topology = load_json(root / manifest["files"].get("topology", "roadnet/topology.json"))
+    parking = load_json(root / manifest["files"].get("parking_points", "semantics/parking_points.json"))
     waypoints = load_yaml(root / manifest["files"].get("waypoints_yaml", "trajectory/waypoints.yaml"))["waypoints"]
     index = load_json(root / manifest["files"].get("waypoint_index", "trajectory/waypoint_index.json"))
+    parking_points = parking.get("parking_points", [])
+    if parking_points:
+        parking_goal = parking_points[0]
+        assert parking_goal.get("linked_edge_id"), "parking goal must have a linked edge"
+        parking_result = f"checked:{parking_goal.get('id', 'unnamed')}"
+    else:
+        parking_result = "SKIPPED_EMPTY_PARKING_POINTS"
     edge_ids = dijkstra(topology["nodes"], topology["edges"], "N0001", "N0003")
     assert edge_ids, "no route found"
     traj = stitch(edge_ids, index, waypoints)
@@ -109,7 +140,16 @@ def main():
         assert math.isfinite(value), f"{name} not finite"
     assert abs(pp_steer) <= 0.7, "pure pursuit steer exceeds demo limit"
     assert abs(st_steer) <= 0.7, "stanley steer exceeds demo limit"
-    print(f"Offline algorithm smoke OK: route={edge_ids}, traj_points={len(traj)}, pp=({pp_speed:.3f},{pp_steer:.3f}), stanley=({st_speed:.3f},{st_steer:.3f})")
+    for model_name, values in [
+        ("front_ackermann", front_ackermann(math.tan(pp_steer) / 1.2)),
+        ("dual_ackermann", dual_ackermann(math.tan(pp_steer) / 1.2)),
+    ]:
+        for value in values:
+            assert math.isfinite(value), f"{model_name} steering not finite"
+            assert abs(value) <= 0.7, f"{model_name} steering exceeds demo limit"
+    estop = controlled_stop("safety_estop")
+    assert estop["emergency_stop"] and not estop["enable"] and estop["reason"] == "safety_estop"
+    print(f"Offline algorithm smoke OK: route={edge_ids}, traj_points={len(traj)}, pp=({pp_speed:.3f},{pp_steer:.3f}), stanley=({st_speed:.3f},{st_steer:.3f}), ackermann=finite, estop=ok, parking={parking_result}")
 
 if __name__ == "__main__":
     main()

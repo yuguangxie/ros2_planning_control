@@ -8,3 +8,26 @@
 - ROS2 commands skipped because ROS2 is unavailable: SKIPPED_ROS2_UNAVAILABLE: `source /opt/ros/<distro>/setup.bash`; SKIPPED_ROS2_UNAVAILABLE: `colcon build`; SKIPPED_ROS2_UNAVAILABLE: `colcon test`; SKIPPED_ROS2_UNAVAILABLE: `colcon test-result --verbose`; SKIPPED_ROS2_UNAVAILABLE: `ros2 launch low_speed_av_bringup planning_control_demo.launch.py`。
 - Known limitations: 当前机器没有 ROS2，未验证 CMake/IDL/节点链接；LQR、frenet_lite、hybrid_astar_parking 保持后续扩展骨架。
 - Next phase handoff: 在 ROS2 环境运行 build/test/test-result，并补充节点发布订阅集成测试。
+
+## 审计后两阶段优化状态
+
+### Phase 13：端到端安全语义
+
+- 状态：`PARTIALLY_COMPLETED`
+- 当前提交：`44485cc007e6fd4d82d3e90edb0222a0fbb32867`
+- `CDX-P0-001`：FIXED。Control 已消费 trajectory emergency/status 并在 controller 前 fail closed。
+- `CDX-P0-002`：OPEN。Chassis Driver 仍缺少独立周期 command scheduler、command timeout、startup/shutdown stop 和 watchdog diagnostics。
+- ROS2/C++ 执行：`SKIPPED_ROS2_UNAVAILABLE`；Phase 13 的 Python offline PASS 不等价于 ROS2/C++ 回归通过。
+- 证据：`reports/phase_13_report.md`。
+
+### Phase 14：自动化测试底座与 CI
+
+- 状态：`IMPLEMENTED_WITH_ACCEPTED_PHASE_13_GAP`
+- Gate override：依据 2026-07-11 明确授权继续实施，不再标记为 `BLOCKED_BY_PHASE_13`；该例外不接受或关闭 Chassis watchdog 缺口。
+- 已完成：Planning/Control 注册 production-linked gtest；Chassis 建立 `chassis_driver_core` 并为当前 DBC、codec、0x121 frame path 注册 production-linked gtest；Bringup 注册 Planning -> Control -> SCU failure/brake launch test；Python 默认入口、空 parking fixture、统一 runner、template/config/sample 漂移检查和 ROS2 Humble CI 已配置。
+- 实际执行：`scripts/run_offline_checks.py` 为 17 PASS / 0 FAIL / 0 SKIPPED；sample、正式 `_1`、正式 `_2` validator 均 PASS；仓库 UTF-8/JSON/Markdown link/hardware-isolation 检查 PASS；`git diff --check` PASS。
+- C++/ROS2：48 个 C++ test source cases 与 ROS2 launch source 均未执行，状态为 `GENERATED_NOT_EXECUTED` / `SKIPPED_ROS2_UNAVAILABLE`，不得推断为 PASS。
+- CI 状态：`CONFIGURED_NOT_EXECUTED`。workflow 已创建，但没有当前工作区提交的 GitHub Actions 执行证据。
+- `CDX-P1-006`：`PARTIALLY_FIXED`；`CDX-P1-007`：`CONFIGURED_NOT_EXECUTED`；`CDX-P3-001/002/003`：`FIXED`。
+- `CDX-P0-002`：`OPEN / ACCEPTED_PHASE_14_GAP`。startup/timeout/invalid replay/shutdown/diagnostics watchdog specs 明确跳过，不计为 PASS。
+- 证据：`reports/phase_14_report.md`。

@@ -113,3 +113,16 @@ sample AD Package 在 `templates/` 和 bringup 中有 23 个完全相同的文�
 - 覆盖率、测试报告、制品归档；
 - 参数 schema、ROS distro/依赖 lock、容器化开发环境；
 - 真实底盘安全 case 和 traceable requirement matrix。
+
+## Phase 14 状态补充（2026-07-11）
+
+本轮在明确授权的 Phase 13 gate override 下继续实施，阶段状态为 `IMPLEMENTED_WITH_ACCEPTED_PHASE_13_GAP`。Planning、Control 和当前 Chassis production core 已注册直接链接 production target 的 gtest；ROS2 launch test、跨平台 offline runner、template consistency check 和 GitHub Actions workflow 已配置。
+
+- `CDX-P1-006`：`PARTIALLY_FIXED`。测试底座和源码已建立，但当前 Windows 环境未编译执行 C++。
+- `CDX-P1-007`：`CONFIGURED_NOT_EXECUTED`。CI 已配置，本地无 ROS2，且尚无当前提交的远端 CI 成功证据。
+- `CDX-P3-001`：`FIXED`。runtime/simulation smoke 默认选择现存正式包 `_2`，并有入口回归检查。
+- `CDX-P3-002`：`FIXED`。空 `parking_points` 返回可解释的 `SKIPPED_EMPTY_PARKING_POINTS`，不再抛出未处理 `IndexError`。
+- `CDX-P3-003`：`FIXED`。`scripts` 为离线验证 canonical source，配置与 sample 的复制关系由自动检查约束。
+- `CDX-P0-002`：`OPEN / ACCEPTED_PHASE_14_GAP`。本轮 Chassis 测试只覆盖现有 DBC、codec 和 frame 构造路径；缺失的独立 scheduler/watchdog、startup/timeout/shutdown stop 与 diagnostics 未被伪造为已实现或已通过。
+
+测试层级、执行状态和复现方法见 `docs/PHASE14_TEST_MATRIX.md` 与 `reports/phase_14_report.md`。

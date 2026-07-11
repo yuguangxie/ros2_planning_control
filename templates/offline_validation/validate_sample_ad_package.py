@@ -59,10 +59,22 @@ def main() -> int:
         return 1
 
     manifest = load_json(root / "project_manifest.json")
+    for obsolete in ["manifest.json", "trajectory/waypoints.json", "validation_report.json"]:
+        if (root / obsolete).exists():
+            errors.append(f"obsolete path must not be used: {obsolete}")
     if manifest.get("schema") != "low_speed_roadnet_ad_package":
         errors.append("manifest schema mismatch")
     if not str(manifest.get("schema_version", "")).startswith("1.1"):
         errors.append("unsupported schema_version")
+    for key, fallback in {
+        "topology": "roadnet/topology.json",
+        "waypoints_yaml": "trajectory/waypoints.yaml",
+        "waypoint_index": "trajectory/waypoint_index.json",
+        "validation_report": "validation/validation_report.json",
+    }.items():
+        rel = manifest.get("files", {}).get(key, fallback)
+        if not (root / rel).exists():
+            errors.append(f"manifest.files.{key} missing target {rel}")
     validation = manifest.get("validation", {})
     if validation.get("status") == "failed" or int(validation.get("blocking_errors", 0)) > 0:
         errors.append("manifest validation failed")

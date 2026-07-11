@@ -1,71 +1,47 @@
 # ROS2 集成测试计划
 
-## 目标
-在真实 ROS2 环境中验证低速自动驾驶规划/控制工程的 build、test、launch、service、topic、Yunle SCU 底盘输出和安全停车链路。
+## 已注册的生产链路测试
 
-当前 Windows Codex 环境可能没有 ROS2。无 ROS2 时只能记录 `SKIPPED_ROS2_UNAVAILABLE`，不能声称 `colcon build`、`colcon test`、`ros2 launch` 或 topic/service 验证成功。
+`low_speed_av_bringup/test/test_planning_control_safety_launch.py` 使用 `launch_testing` 启动真实 `planning_node` 和 `control_node`，加载 canonical sample，调用无效 `PlanRoute`，并断言：
 
-## 环境检查
-先运行：
+1. Planning service 返回失败；
+2. `/planning/trajectory` 发布 `emergency_stop=true`；
+3. `/control/command` 为零速、制动、disable 且 reason 非空；
+4. `/yunle_chassis/control/scu_control_command` 为零 target speed、brake enable。
 
-```powershell
-.\scripts\check_ros2_env.ps1
+所有等待使用 monotonic deadline 和显式 timeout；失败信息包含已收到的 trajectory/internal/SCU 消息数量。测试不启动 Chassis Driver、不打开 UDP、不访问真实网关。
+
+Chassis publisher-loss watchdog 规格保留为跳过测试：
+
+```text
+SKIPPED_KNOWN_PRODUCTION_GAP: CDX-P0-002
 ```
 
-如果输出 `SKIPPED_ROS2_UNAVAILABLE`，停止 ROS2 集成测试，只运行离线 Python 检查。
+它不能计为 PASS，因为生产 driver 尚无 scheduler/timeout watchdog。
 
-## 构建与测试
-在已经 source ROS2 和当前 workspace 的环境中执行：
+## 后续 integration case
+
+- canonical sample ready RoadnetStatus；
+- PlanRoute/PlanMission 成功 route 与 trajectory；
+- 四 controller emergency 行为一致；
+- localization/trajectory timeout；
+- safety estop，普通 OK 不清 latch，Trigger clear 前置条件；
+- VehicleState disabled/fault/brake；
+- late subscriber 与 QoS；
+- 修复 CDX-P0-002 后再启用 Chassis publisher-loss stop。
+
+## 执行命令
 
 ```bash
-colcon build
-colcon test
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install
+source install/setup.bash
+colcon test --packages-select low_speed_av_bringup --event-handlers console_direct+
 colcon test-result --verbose
 ```
 
-## 启动 demo
-```bash
-ros2 launch low_speed_av_bringup planning_control_demo.launch.py
-```
+当前 Windows 环境没有 ROS2，因此本文件描述的是 expected procedure；当前 observed result 为 `SKIPPED_ROS2_UNAVAILABLE`，不是 PASS。
 
-## 规划链路验证
-```bash
-ros2 service call /low_speed_av_planning/plan_route low_speed_av_interfaces/srv/PlanRoute "{start_node_id: 'N0001', goal_node_id: 'N0003'}"
-ros2 topic echo /planning/global_route
-ros2 topic echo /planning/trajectory
-ros2 topic echo /planning/status
-```
+## HIL/实车边界
 
-## 控制链路验证
-默认控制输出为 Yunle SCU topic：
-
-```bash
-ros2 topic pub /localization/pose geometry_msgs/msg/PoseStamped "{header: {frame_id: 'map'}, pose: {position: {x: 0.0, y: 0.0, z: 0.0}, orientation: {w: 1.0}}}"
-ros2 topic echo /yunle_chassis/control/scu_control_command
-ros2 topic echo /control/status
-```
-
-如果 `output.mode` 配置为 `both` 或 `internal`，还可以检查内部调试命令：
-
-```bash
-ros2 topic echo /control/command
-```
-
-## 安全急停验证
-```bash
-ros2 topic pub /safety/status low_speed_av_interfaces/msg/ModuleStatus "{module_name: 'safety', state: 'estop', level: 2, message: 'test estop'}"
-ros2 topic echo /yunle_chassis/control/scu_control_command
-ros2 topic pub /safety/status low_speed_av_interfaces/msg/ModuleStatus "{module_name: 'safety', state: 'ok', level: 0, message: 'clear'}"
-```
-
-预期：急停时 `scu_brake_enable=true`，`scu_target_speed=0`，前后转角为 0，`scu_shift_level_request` 为 1/2/3 中的合法值。
-
-## 验收点
-- `PlanRoute N0001 -> N0003` 返回 success，并发布非空 `/planning/trajectory`。
-- 无效目标或 no-go 阻塞时发布 failure status 和安全停车轨迹。
-- 有效 pose 与 trajectory 下，`/yunle_chassis/control/scu_control_command` 数值有限。
-- `scu_shift_level_request` 永远是 1、2、3。
-- `scu_target_speed` 单位为 km/h，且非负。
-- `scu_steering_angle_front/rear` 单位为 degree。
-- estop 激活时发布刹车停车命令。
-- `colcon` 和 `ros2` 命令只有实际执行成功时才可写入成功报告。
+launch test 只验证 ROS2 消息链路。真实车辆仍必须独立验证 CAN capture、硬件 watchdog、制动距离、转角方向、DDS/Control/Driver 崩溃和断电；在 `CDX-P0-002` 关闭前不得据此放行实车运动测试。

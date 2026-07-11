@@ -50,7 +50,14 @@ install(DIRECTORY include/ DESTINATION include)
 install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_cmake_pytest REQUIRED)
+  ament_add_gtest(test_roadnet_loader test/test_roadnet_loader.cpp)
+  target_link_libraries(test_roadnet_loader ${PROJECT_NAME})
+  target_compile_definitions(test_roadnet_loader PRIVATE
+    LOW_SPEED_AV_TEST_REPO_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/../..")
+  ament_add_gtest(test_planning_algorithms test/test_planning_algorithms.cpp)
+  target_link_libraries(test_planning_algorithms ${PROJECT_NAME})
   ament_add_pytest_test(
     offline_trajectory_continuity
     test/test_offline_trajectory_continuity.py

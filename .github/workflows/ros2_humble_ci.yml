@@ -1,0 +1,112 @@
+name: ROS2 Humble CI
+
+on:
+  push:
+    branches: [main, "codex/**"]
+  pull_request:
+
+concurrency:
+  group: ros2-humble-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-22.04
+    container: ros:humble-ros-base-jammy
+    timeout-minutes: 35
+    env:
+      ROS_DISTRO: humble
+      PYTHONUNBUFFERED: "1"
+      LOW_SPEED_AV_CHASSIS_TEST_MODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Environment identity
+        run: |
+          echo "commit=${GITHUB_SHA}"
+          echo "ros_distro=${ROS_DISTRO}"
+          c++ --version
+          python3 --version
+      - name: Install dependencies
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends python3-pip python3-pytest python3-yaml clang-format
+          rosdep update
+          rosdep install --from-paths src --ignore-src -r -y
+      - name: Offline data and template checks
+        run: python3 scripts/run_offline_checks.py
+      - name: Python and formatting checks
+        shell: bash
+        run: |
+          python3 -m compileall -q scripts src/low_speed_av_bringup/test
+          git diff --check
+          clang-format --dry-run --Werror \
+            src/low_speed_av_planning/test/test_roadnet_loader.cpp \
+            src/low_speed_av_planning/test/test_planning_algorithms.cpp \
+            src/low_speed_av_control/test/test_controllers.cpp \
+            src/low_speed_av_control/test/test_vehicle_command_pipeline.cpp \
+            src/yunle_chassis/chassis_driver/include/chassis_driver/scu_control_frame_builder.hpp \
+            src/yunle_chassis/chassis_driver/src/scu_control_frame_builder.cpp \
+            src/yunle_chassis/chassis_driver/test/test_chassis_core.cpp
+      - name: Build
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          colcon build --symlink-install --event-handlers console_direct+
+      - name: Test
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          source install/setup.bash
+          colcon test --event-handlers console_direct+
+          colcon test-result --verbose
+      - name: Upload test and build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ros2-humble-test-results-${{ github.run_id }}
+          path: |
+            build/**/Testing
+            log
+          if-no-files-found: warn
+
+  sanitizers:
+    runs-on: ubuntu-22.04
+    container: ros:humble-ros-base-jammy
+    timeout-minutes: 35
+    env:
+      ROS_DISTRO: humble
+      ASAN_OPTIONS: detect_leaks=0:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+      LOW_SPEED_AV_CHASSIS_TEST_MODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends python3-yaml
+          rosdep update
+          rosdep install --from-paths src --ignore-src -r -y
+      - name: Build production-linked C++ tests with ASan and UBSan
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          colcon build --symlink-install \
+            --packages-up-to low_speed_av_planning low_speed_av_control chassis_driver \
+            --cmake-args -DCMAKE_BUILD_TYPE=Debug \
+              -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
+              -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+          source install/setup.bash
+          colcon test --packages-select low_speed_av_planning low_speed_av_control chassis_driver \
+            --event-handlers console_direct+
+          colcon test-result --verbose
+      - name: Upload sanitizer logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ros2-humble-sanitizers-${{ github.run_id }}
+          path: |
+            build/**/Testing
+            log
+          if-no-files-found: warn

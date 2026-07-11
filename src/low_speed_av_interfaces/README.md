@@ -113,3 +113,7 @@ colcon build --packages-select low_speed_av_interfaces
 ros2 interface show low_speed_av_interfaces/msg/ControlCommand
 ros2 interface show low_speed_av_interfaces/srv/PlanRoute
 ```
+
+## Phase 14 测试边界
+
+本接口包不复制生产算法。消息和 service 由 Planning、Control 的 production-linked gtest 以及 Bringup launch test 间接编译和验证；当前 Windows 环境无 ROS2，因此接口生成与集成执行均为 `SKIPPED_ROS2_UNAVAILABLE`。

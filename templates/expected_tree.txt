@@ -15,6 +15,7 @@ src/
     srv/
       ReloadRoadnet.srv
       PlanRoute.srv
+      PlanMission.srv
       SetPlannerAlgorithm.srv
       SetControllerAlgorithm.srv
   low_speed_av_planning/
@@ -58,6 +59,9 @@ src/
     launch/
       planning.launch.py
     README.md
+    test/
+      test_roadnet_loader.cpp
+      test_planning_algorithms.cpp
   low_speed_av_control/
     CMakeLists.txt
     package.xml
@@ -96,6 +100,10 @@ src/
     launch/
       control.launch.py
     README.md
+    test/
+      test_safety_state_machine.cpp
+      test_controllers.cpp
+      test_vehicle_command_pipeline.cpp
   low_speed_av_bringup/
     CMakeLists.txt
     package.xml
@@ -122,10 +130,22 @@ src/
       semantics/charging_points.json
       validation/validation_report.json
     README.md
+    test/
+      test_planning_control_safety_launch.py
+  yunle_chassis/chassis_driver/
+    include/chassis_driver/scu_control_frame_builder.hpp
+    src/scu_control_frame_builder.cpp
+    test/test_chassis_core.cpp
 scripts/
   validate_expected_tree.py
   validate_sample_ad_package.py
   offline_algorithm_smoke.py
+  offline_entrypoint_regression_smoke.py
+  check_template_consistency.py
+  offline_repository_hygiene.py
+  run_offline_checks.py
+.github/workflows/
+  ros2_humble_ci.yml
 reports/
   phase_00_report.md
   ...

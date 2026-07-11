@@ -1,3 +1,4 @@
+# Canonical mirror of src/low_speed_av_planning/config/planning_params.yaml.
 low_speed_av_planning:
   ros__parameters:
     roadnet:
@@ -17,7 +18,6 @@ low_speed_av_planning:
       algorithm: "astar"
       heuristic_weight: 1.0
       allow_reverse: true
-      blocked_edges: []
       max_edge_curvature_abs: 0.6
     motion_planner:
       algorithm: "reference_line"
@@ -32,4 +32,36 @@ low_speed_av_planning:
       max_speed_mps: 1.0
       min_speed_mps: 0.0
       max_lateral_accel_mps2: 0.5
+      obstacle_distance_m: -1.0
       obstacle_stop_distance_m: 2.0
+    planning:
+      localization_timeout_s: 1.0
+      use_current_pose_as_start: true
+      start_match_max_distance_m: 3.0
+      start_match_max_heading_error_rad: 1.57
+      start_match_prefer_edge_projection: true
+      republish_last_route: true
+      republish_last_trajectory: true
+      route_republish_rate_hz: 1.0
+      trajectory_republish_rate_hz: 10.0
+      roadnet_status_publish_rate_hz: 1.0
+      publish_full_reference_path: true
+      full_reference_path_topic: "/planning/full_reference_path"
+      local_trajectory_from_current_pose: true
+      max_trajectory_point_jump_m: 2.0
+      arrival_radius_m: 0.5
+      arrival_heading_tolerance_rad: 0.35
+      semantic_goal_use_edge_projection: true
+      semantic_goal_allow_reverse_local_segment: false
+      semantic_goal_crop_waypoints: true
+      semantic_goal_min_segment_length_m: 0.2
+      reverse:
+        allow_reverse_planning: false
+        allow_reverse_local_segment: false
+        require_reverse_confirmation: true
+        prefer_forward_route_when_reverse_disabled: true
+        fail_if_goal_behind_on_same_edge_when_reverse_disabled: false
+      start_anchor:
+        include_current_edge_prefix: true
+        max_start_projection_distance_m: 2.0
+        max_first_trajectory_point_distance_m: 2.0

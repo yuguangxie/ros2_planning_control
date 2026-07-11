@@ -1,5 +1,8 @@
+# Canonical mirror of src/low_speed_av_control/config/control_params.yaml.
 low_speed_av_control:
   ros__parameters:
+    output:
+      mode: "both"
     topics:
       localization_pose_topic: "/localization/pose"
       localization_pose_type: "pose_stamped"
@@ -7,13 +10,24 @@ low_speed_av_control:
       vehicle_state_topic: "/vehicle/state"
       safety_status_topic: "/safety/status"
       control_command_topic: "/control/command"
+      scu_command_topic: "/yunle_chassis/control/scu_control_command"
       control_status_topic: "/control/status"
     controller:
-      algorithm: "pure_pursuit"
+      algorithm: "lqr"
       control_rate_hz: 50.0
       localization_timeout_s: 0.2
       trajectory_timeout_s: 0.5
+      allowed_trajectory_statuses: ["ok"]
+      trajectory_s_tolerance_m: 1.0e-4
       hold_last_command_s: 0.05
+    control:
+      status_publish_rate_hz: 5.0
+    safety:
+      estop_latched: true
+      clear_speed_threshold_mps: 0.05
+    vehicle_state:
+      required: false
+      timeout_s: 0.5
     vehicle:
       model: "front_ackermann"
       wheel_base_m: 1.2
@@ -37,15 +51,21 @@ low_speed_av_control:
       epsilon_mps: 0.1
       max_correction_rad: 0.5
     lqr:
-      k_lat: 0.8
-      k_yaw: 1.5
-      k_lat_rate: 0.0
-      k_yaw_rate: 0.0
-      feedforward_gain: 1.0
+      q_lateral_error: 3.0
+      q_heading_error: 2.0
+      r_steering: 1.0
+      max_iterations: 80
+      convergence_eps: 1.0e-6
+      min_speed_mps: 0.2
+      preview_time_s: 0.2
+      use_curvature_feedforward: true
+      max_steering_angle_rad: 0.52
     mpc_sampler:
       horizon_steps: 10
       dt_s: 0.1
       curvature_samples: [-0.2, -0.1, 0.0, 0.1, 0.2]
+      sample_count: 5
+      max_curvature_1pm: 0.2
       lateral_error_weight: 1.0
       heading_error_weight: 0.5
       speed_error_weight: 0.2
@@ -57,3 +77,18 @@ low_speed_av_control:
       max_steer_rate_radps: 0.35
       emergency_decel_mps2: 1.0
       stop_enable_mode: "disable_after_stop"
+    scu:
+      max_steering_angle_deg: 27.0
+      max_target_speed_kmh: 5.0
+      front_steer_sign: 1.0
+      rear_steer_sign: 1.0
+      overrange_policy: "clamp"
+      stop_shift_level: 1
+      torque_or_speed_mode: 1
+      steering_angle_speed_valid: false
+      brake_force_command_valid: false
+      lights:
+        left: 0
+        right: 0
+        position: 0
+        low_beam: 0

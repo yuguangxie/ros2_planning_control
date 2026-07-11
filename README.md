@@ -954,3 +954,15 @@ ros2 topic echo /control/status
 | `docs/REALTIME_SIMULATION_WORKFLOW.md` | 实时仿真使用流程。 |
 | `docs/YUNLE_SCU_COMMAND_OUTPUT.md` | Yunle SCU 输出字段和单位映射。 |
 | `docs/LQR_CONTROLLER_DESIGN.md` | LQR 控制器设计。 |
+
+## Phase 14 自动化测试入口
+
+跨平台离线检查的统一入口为：
+
+```powershell
+uv run --python "C:\Program Files\FreeCAD 1.2\bin\python.exe" scripts/run_offline_checks.py
+```
+
+也可直接使用任意可用的 Python 3 执行 `scripts/run_offline_checks.py`。该入口验证 Python 数据合同、sample/正式 Roadnet 包、template/config/sample 同步和仓库卫生；它不证明生产 C++ 或 ROS2 运行行为。
+
+在 ROS2 Humble 环境中，生产链接的 C++ gtest 与 launch test 通过 `colcon build`、`colcon test` 执行。当前 Windows 审计环境没有 ROS2/colcon/C++ 工具链，因此这些测试源码状态为 `GENERATED_NOT_EXECUTED` 或 `SKIPPED_ROS2_UNAVAILABLE`，GitHub Actions 状态为 `CONFIGURED_NOT_EXECUTED`。Chassis 独立命令 watchdog 仍是 `CDX-P0-002` 已知生产缺口，其规格测试不得计为通过。

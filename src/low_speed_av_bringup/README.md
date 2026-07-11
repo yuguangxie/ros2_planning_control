@@ -138,3 +138,9 @@ python scripts\offline_algorithm_smoke.py
 - planning config 默认指向安装后的 sample package。
 - 增加 demo mission service call 示例。
 - 增加 ROS2 topic/service 验证脚本。
+
+## Phase 14 integration test
+
+`test/test_planning_control_safety_launch.py` 使用 `launch_testing` 启动 production Planning 与 Control，验证无效规划目标产生 emergency trajectory，并在 `/control/command` 与 SCU command 上得到 brake stop。所有等待都有超时，且不启动 Chassis 网络节点。
+
+当前 Windows 环境没有 ROS2，测试状态为 `SKIPPED_ROS2_UNAVAILABLE`。Chassis publisher 停止后的 watchdog stop 规格仍以 `SKIPPED_KNOWN_PRODUCTION_GAP: CDX-P0-002` 保留。

@@ -391,3 +391,9 @@ log_control_can_frames: true
 - 控制话题无发送：检查 `enabled_subscribe_topics`、`control_message_channel_map`、网关 IP/端口以及是否有节点实际发布控制话题。
 - `scu_control_command` 被丢弃：检查 `scu_shift_level_request` 是否为 `1`、`2` 或 `3`。
 - 控制速度或转角被置零：检查数值是否超过 `scu_control_max_target_speed_kmh` 或 `scu_control_max_steering_angle_deg`。
+
+## Phase 14 production-linked tests
+
+`chassis_driver_core` 是节点与 gtest 共用的 production core，包含 `DbcProtocol`、`CanEthernetCodec` 和当前 SCU 0x121 frame builder。`test_chassis_core` 直接链接该 target，并使用内存 fake sink；测试不会创建 UDP socket、启动 keyboard 节点或访问真实网关。
+
+本轮没有实现独立 scheduler、startup/timeout/shutdown stop 或 watchdog diagnostics。对应 `CDX-P0-002` 仍为 `OPEN / ACCEPTED_PHASE_14_GAP`，规格用例以 `SKIPPED_KNOWN_PRODUCTION_GAP` 保留，不计为 PASS。
