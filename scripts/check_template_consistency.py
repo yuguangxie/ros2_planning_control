@@ -81,6 +81,10 @@ def check_required_tree() -> None:
         "src/yunle_chassis/chassis_driver/src/scu_control_frame_builder.cpp",
         "src/yunle_chassis/chassis_driver/test/test_chassis_core.cpp",
         "src/low_speed_av_bringup/test/test_planning_control_safety_launch.py",
+        "src/low_speed_av_bringup/test/test_control_runtime_launch.py",
+        "src/low_speed_av_control/src/control_runtime_helpers.cpp",
+        "src/low_speed_av_control/test/test_control_runtime_helpers.cpp",
+        "scripts/check_control_config_contract.py",
         "scripts/run_offline_checks.py",
         ".github/workflows/ros2_humble_ci.yml",
     ]
@@ -96,7 +100,7 @@ def main() -> int:
     check_required_tree()
     print(
         "Template consistency OK: runtime validators canonical, configs synchronized, "
-        "sample AD Package hashes equal, Phase 14 tree complete"
+        "sample AD Package hashes equal, Phase 16 tree complete"
     )
     return 0
 

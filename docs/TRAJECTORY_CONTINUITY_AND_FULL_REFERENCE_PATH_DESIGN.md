@@ -101,3 +101,7 @@ RViz 中建议区分：
 ```text
 SKIPPED_ROS2_UNAVAILABLE
 ```
+
+## Phase 15 progress window
+
+Local crop 不再遍历整条回环轨迹寻找全局最近点。`TrajectoryProgressTracker` 保存 trajectory identity 和单调 progress index，只搜索有限 backward/forward point window，并以 heading 阈值排除方向不一致的交叉段。新 package、cached-plan clear 或 algorithm switch 会显式 reset。Full/local path 均重新生成 `route_s_m`，并使用 production continuity helper 检查最大相邻 jump。

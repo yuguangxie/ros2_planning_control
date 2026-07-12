@@ -138,8 +138,17 @@ ros2 service call /low_speed_av_control/clear_estop std_srvs/srv/Trigger "{}"
 | safety brake | 安全停车时 true |  |  |  |
 | lights | 默认 0 或按配置 |  |  |  |
 | valid flags | 默认 false 或按配置 |  |  |  |
+| Control 周期 | 默认约 20 ms；正常最大间隔小于 100 ms 告警阈值 |  |  |  |
+| cadence diagnostics | `interval_max/p95`、`missed_cycles`、`publish_age` 可见 |  |  |  |
+| hardware watchdog 状态 | 未完成台架证据时必须为 `DECLARED_NOT_HIL_VERIFIED` |  |  |  |
 
-## 8. 结束测试
+## 8. 500 ms 硬件 Watchdog 台架边界
+
+仅在 wheels-off 或受控安全台架执行。依次保存正常 0x121 周期、停止 Control、杀死 Driver、断开网络后的 CAN 时间戳，测量最后一帧到硬件停车触发时间。项目目标为不大于 500 ms，但没有供应商文件、CAN 抓包和安全负责人签字时必须记录 `HIL_NOT_EXECUTED`，不得勾选 PASS。
+
+Control 仍存活时，应主动持续发布零速制动命令，不允许通过故意停发来替代 semantic stop 测试。完整表格见 `docs/HARDWARE_WATCHDOG_500MS_VALIDATION.md`。
+
+## 9. 结束测试
 
 1. 触发 Estop。
 2. 确认 SCU brake stop。
@@ -152,7 +161,7 @@ ros2 service call /low_speed_av_control/clear_estop std_srvs/srv/Trigger "{}"
    - `/yunle_chassis/control/scu_control_command`。
    - chassis driver 或 CAN 工具输出。
 
-## 9. 人工确认签名
+## 10. 人工确认签名
 
 | 角色 | 姓名 | 日期 | 结论 | 备注 |
 |---|---|---|---|---|

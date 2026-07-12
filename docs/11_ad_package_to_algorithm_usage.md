@@ -103,3 +103,7 @@ x, y, yaw, kappa, v_mps, s_m
 ```
 
 Use horizon points. Sample curvature commands and roll out low-speed kinematic model. Pick candidate with minimum lateral, heading, speed and smoothness cost.
+
+## Phase 15 约束
+
+任何 manifest 引用必须先通过 package-root containment。图搜索前 edge cost 已验证为有限非负；默认 A* 使用与 cost 同量纲的 admissible scale，最优 cost 应与 Dijkstra 一致。等价 cost 通过稳定 node/edge ID tie-break 保证重复执行结果一致。

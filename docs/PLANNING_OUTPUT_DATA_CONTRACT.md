@@ -78,3 +78,7 @@ speed = 0
 ```text
 SKIPPED_ROS2_UNAVAILABLE
 ```
+
+## Phase 15 route/trajectory 一致性
+
+Semantic goal 可能位于 topology edge 中间。对外 `GlobalRoute` 保留最终相关 edge/node，但 `length_m` 与 `estimated_time_s` 按实际 full reference geometry 重算。Full reference 与 local trajectory 共用 terminal point；`route_s_m` 在拼接和 crop 后重新单调生成，final semantic goal 强制零目标速度。

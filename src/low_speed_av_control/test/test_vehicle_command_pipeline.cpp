@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <limits>
+#include <stdexcept>
 
 #include "low_speed_av_control/command_limiter.hpp"
 #include "low_speed_av_control/command_smoother.hpp"
@@ -75,28 +76,82 @@ TEST(CommandLimiterProduction, NonFiniteCommandFailsClosed) {
 }
 
 TEST(CommandSmootherProduction,
-     LimitsSequentialStepsAndEmergencyBypassesState) {
+     UsesActualDtForAccelDecelAndIndependentSteeringRates) {
   CommandSmoother smoother;
   SmootherOptions options;
-  options.max_speed_step_mps = 0.1;
-  options.max_steer_rate_radps = 0.5;
-  options.dt_s = 0.1;
+  options.max_accel_mps2 = 1.0;
+  options.max_decel_mps2 = 2.0;
+  options.max_jerk_mps3 = 100.0;
+  options.max_front_steer_rate_radps = 0.5;
+  options.max_rear_steer_rate_radps = 0.25;
   ControlCommand moving;
   moving.speed_mps = 1.0;
   moving.front_steering_angle_rad = 0.5;
-  const auto first = smoother.smooth(moving, options);
-  const auto second = smoother.smooth(moving, options);
+  moving.rear_steering_angle_rad = -0.5;
+  const auto first = smoother.smooth(moving, options, 0.1);
+  const auto second = smoother.smooth(moving, options, 0.1);
   EXPECT_DOUBLE_EQ(first.speed_mps, 0.1);
   EXPECT_DOUBLE_EQ(second.speed_mps, 0.2);
   EXPECT_NEAR(first.front_steering_angle_rad, 0.05, 1.0e-12);
+  EXPECT_NEAR(first.rear_steering_angle_rad, -0.025, 1.0e-12);
+
+  ControlCommand slower = moving;
+  slower.speed_mps = 0.0;
+  const auto held = smoother.smooth(slower, options, 0.1);
+  EXPECT_LE(held.speed_mps, second.speed_mps);
+  EXPECT_GE(held.acceleration_mps2, -options.max_decel_mps2);
+}
+
+TEST(CommandSmootherProduction, LimitsJerkClampsBadDtAndResetIsDeterministic) {
+  CommandSmoother smoother;
+  SmootherOptions options;
+  options.max_accel_mps2 = 1.0;
+  options.max_jerk_mps3 = 1.0;
+  options.min_dt_s = 0.01;
+  options.max_dt_s = 0.1;
+  ControlCommand moving;
+  moving.speed_mps = 1.0;
+  const auto first = smoother.smooth(moving, options, 0.1);
+  EXPECT_NEAR(first.acceleration_mps2, 0.1, 1.0e-12);
+  EXPECT_TRUE(smoother.diagnostics().jerk_limited);
+  const auto bad_dt = smoother.smooth(moving, options, 10.0);
+  EXPECT_TRUE(smoother.diagnostics().dt_clamped);
+  EXPECT_DOUBLE_EQ(smoother.diagnostics().applied_dt_s, 0.1);
+  EXPECT_GT(bad_dt.speed_mps, first.speed_mps);
+  smoother.reset();
+  const auto reset_first = smoother.smooth(moving, options, 0.1);
+  EXPECT_DOUBLE_EQ(reset_first.speed_mps, first.speed_mps);
+}
+
+TEST(CommandSmootherProduction, EverySafetyStopBypassesNormalSmoothing) {
+  CommandSmoother smoother;
+  SmootherOptions options;
+  ControlCommand moving;
+  moving.speed_mps = 1.0;
+  moving.front_steering_angle_rad = 0.5;
+  (void)smoother.smooth(moving, options, 0.02);
   ControlCommand stop;
   stop.enable = false;
   stop.brake = 1.0;
   stop.reason = "test_stop";
-  const auto emergency = smoother.smooth(stop, options);
+  const auto emergency = smoother.smooth(stop, options, 0.02);
   EXPECT_DOUBLE_EQ(emergency.speed_mps, 0.0);
   EXPECT_DOUBLE_EQ(emergency.front_steering_angle_rad, 0.0);
   EXPECT_DOUBLE_EQ(emergency.brake, 1.0);
+  EXPECT_TRUE(smoother.diagnostics().safety_bypass);
+}
+
+TEST(VehicleModelsProduction, InvalidGeometryFailsFast) {
+  VehicleLimits limits;
+  limits.wheel_base_m = 0.0;
+  EXPECT_THROW(VehicleModelFactory::create("front_ackermann")
+                   ->steering_from_curvature(0.1, limits),
+               std::invalid_argument);
+  limits.wheel_base_m = 1.2;
+  limits.rear_steer_ratio = -0.1;
+  EXPECT_THROW(VehicleModelFactory::create("dual_ackermann")
+                   ->steering_from_curvature(0.1, limits),
+               std::invalid_argument);
 }
 
 TEST(ScuCommandMapperProduction, ConvertsUnitsSignsAndDriveReverseNeutral) {

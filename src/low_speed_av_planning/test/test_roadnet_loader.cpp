@@ -48,6 +48,12 @@ public:
     output << text;
   }
 
+  void write(const fs::path &relative, const std::string &text) {
+    fs::create_directories((root_ / relative).parent_path());
+    std::ofstream output(root_ / relative, std::ios::binary | std::ios::trunc);
+    output << text;
+  }
+
 private:
   fs::path root_;
 };
@@ -146,6 +152,134 @@ TEST(RoadnetLoaderProduction, RejectsTamperedWaypointIndexRange) {
                   "\"end_index_exclusive\": 3", "\"end_index_exclusive\": 999");
   EXPECT_THROW(RoadnetLoader().load(fixture.root(), without_hashes()),
                std::runtime_error);
+}
+
+TEST(RoadnetLoaderProduction, RejectsAbsoluteAndMixedSeparatorManifestEscape) {
+  TemporaryPackage absolute;
+  absolute.replace("project_manifest.json", "roadnet/topology.json",
+                   "C:/outside/topology.json");
+  EXPECT_THROW(RoadnetLoader().load(absolute.root(), without_hashes()),
+               std::runtime_error);
+
+  TemporaryPackage relative;
+  relative.replace("project_manifest.json", "roadnet/topology.json",
+                   "roadnet\\\\..\\\\..\\\\outside.json");
+  EXPECT_THROW(RoadnetLoader().load(relative.root(), without_hashes()),
+               std::runtime_error);
+}
+
+TEST(RoadnetLoaderProduction, RejectsChecksumPathEscape) {
+  TemporaryPackage fixture;
+  fixture.append("checksums.sha256",
+                 "\n00000000000000000000000000000000000000000000000000000000000"
+                 "00000  ../outside.json\n");
+  EXPECT_THROW(RoadnetLoader().load(fixture.root(), RoadnetLoader::Options{}),
+               std::runtime_error);
+}
+
+TEST(RoadnetLoaderProduction,
+     RejectsSymlinkEscapeWhenPlatformSupportsSymlinks) {
+  TemporaryPackage fixture;
+  const auto outside =
+      fs::temp_directory_path() / "low_speed_av_loader_outside";
+  fs::remove_all(outside);
+  fs::create_directories(outside);
+  fs::copy_file(fixture.root() / "roadnet/topology.json",
+                outside / "topology.json");
+  std::error_code error;
+  fs::create_directory_symlink(outside, fixture.root() / "escape", error);
+  if (error) {
+    fs::remove_all(outside);
+    GTEST_SKIP() << "directory symlink unavailable: " << error.message();
+  }
+  fixture.replace("project_manifest.json", "roadnet/topology.json",
+                  "escape/topology.json");
+  EXPECT_THROW(RoadnetLoader().load(fixture.root(), without_hashes()),
+               std::runtime_error);
+  fs::remove_all(outside);
+}
+
+TEST(RoadnetLoaderProduction, RejectsDuplicateNodeAndEdgeIds) {
+  TemporaryPackage nodes;
+  nodes.replace("roadnet/topology.json", "\"id\": \"N0002\"",
+                "\"id\": \"N0001\"");
+  EXPECT_THROW(RoadnetLoader().load(nodes.root(), without_hashes()),
+               std::runtime_error);
+
+  TemporaryPackage edges;
+  edges.replace("roadnet/topology.json", "\"id\": \"E_L002_F\"",
+                "\"id\": \"E_L001_F\"");
+  EXPECT_THROW(RoadnetLoader().load(edges.root(), without_hashes()),
+               std::runtime_error);
+}
+
+TEST(RoadnetLoaderProduction, RejectsDuplicateWaypointAndSemanticIds) {
+  TemporaryPackage waypoints;
+  waypoints.replace("trajectory/waypoints.yaml", "WP_E_L001_F_000001",
+                    "WP_E_L001_F_000000");
+  EXPECT_THROW(RoadnetLoader().load(waypoints.root(), without_hashes()),
+               std::runtime_error);
+
+  TemporaryPackage semantics;
+  semantics.replace("semantics/parking_points.json", "\"id\": \"P001\"",
+                    "\"id\": \"T001\"");
+  EXPECT_THROW(RoadnetLoader().load(semantics.root(), without_hashes()),
+               std::runtime_error);
+}
+
+TEST(RoadnetLoaderProduction, RejectsUnknownNodeReference) {
+  TemporaryPackage fixture;
+  fixture.replace("roadnet/topology.json", "\"from\": \"N0001\"",
+                  "\"from\": \"NO_SUCH_NODE\"");
+  EXPECT_THROW(RoadnetLoader().load(fixture.root(), without_hashes()),
+               std::runtime_error);
+}
+
+TEST(RoadnetLoaderProduction, RejectsNegativeAndNonFiniteTopologyNumbers) {
+  TemporaryPackage negative;
+  negative.replace("roadnet/topology.json", "\"cost\": 2.5", "\"cost\": -1.0");
+  EXPECT_THROW(RoadnetLoader().load(negative.root(), without_hashes()),
+               std::runtime_error);
+
+  TemporaryPackage non_finite;
+  non_finite.replace("roadnet/topology.json", "\"length_m\": 2.0",
+                     "\"length_m\": .nan");
+  EXPECT_THROW(RoadnetLoader().load(non_finite.root(), without_hashes()),
+               std::exception);
+
+  TemporaryPackage waypoint;
+  waypoint.replace("trajectory/waypoints.yaml", "kappa: 0.0", "kappa: .nan");
+  EXPECT_THROW(RoadnetLoader().load(waypoint.root(), without_hashes()),
+               std::exception);
+}
+
+TEST(RoadnetLoaderProduction, RejectsIndexCountOverlapAndEdgeMismatch) {
+  TemporaryPackage count;
+  count.replace("trajectory/waypoint_index.json", "\"count\": 3",
+                "\"count\": 2");
+  EXPECT_THROW(RoadnetLoader().load(count.root(), without_hashes()),
+               std::runtime_error);
+
+  TemporaryPackage overlap;
+  overlap.replace("trajectory/waypoint_index.json", "\"start_index\": 3",
+                  "\"start_index\": 2");
+  EXPECT_THROW(RoadnetLoader().load(overlap.root(), without_hashes()),
+               std::runtime_error);
+
+  TemporaryPackage mismatch;
+  mismatch.replace("trajectory/waypoints.yaml", "edge_id: E_L002_F",
+                   "edge_id: E_L001_F");
+  EXPECT_THROW(RoadnetLoader().load(mismatch.root(), without_hashes()),
+               std::runtime_error);
+}
+
+TEST(RoadnetLoaderProduction, NoGoAreaBlocksIntersectingEdges) {
+  TemporaryPackage fixture;
+  fixture.replace("semantics/areas.json", "\"allow_planning_through\": true",
+                  "\"allow_planning_through\": false");
+  const auto package = RoadnetLoader().load(fixture.root(), without_hashes());
+  EXPECT_EQ(package.blocked_edges.count("E_L001_F"), 1U);
+  EXPECT_EQ(package.blocked_edges.count("E_L002_F"), 1U);
 }
 
 } // namespace

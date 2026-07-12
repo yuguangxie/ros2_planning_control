@@ -133,3 +133,9 @@ EMERGENCY_STOP
 - Goal not on topology.
 
 In failures, publish status and safe stop trajectory if appropriate.
+
+## Phase 15 图搜索与 helper 合同
+
+Edge cost 必须有限且不小于零，Loader 与 planner 两层都 fail closed。零 cost 允许，但会使 admissible heuristic scale 降为零，A* 安全退化为 Dijkstra。默认 `heuristic_weight <= 1` 时，启发式为直线距离乘以全图最小 `edge.cost / endpoint_distance`；大于 1 时明确报告 weighted A*，不承诺最优。
+
+邻接边按 `(to_node_id, edge_id)` 排序，open queue 与等价 parent 更新使用稳定 ID tie-break。`planning_helpers` 位于 production target 内，负责 node/semantic/current-pose anchor、linked-edge fallback、同 edge terminal segment、route s、GlobalRoute 几何摘要、连续性、semantic speed 和有状态 local crop。Progress tracker 以 trajectory identity 隔离路线，并在有限窗口内结合 heading 搜索，禁止回环处无约束全局最近点跳进度。

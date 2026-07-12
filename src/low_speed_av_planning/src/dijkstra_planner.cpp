@@ -1,8 +1,10 @@
 #include "low_speed_av_planning/dijkstra_planner.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <map>
 #include <queue>
+#include <tuple>
 
 namespace low_speed_av_planning {
 namespace {
@@ -24,8 +26,25 @@ PlanResult DijkstraPlanner::plan(
   const std::string & goal_node_id,
   const GlobalPlannerOptions & options) const
 {
+  PlanResult result;
+  result.planner_algorithm = name();
+  if (!graph.node(start_node_id) || !graph.node(goal_node_id)) {
+    result.message = "start or goal node is not in topology";
+    return result;
+  }
+  for (const auto & item : graph.edges()) {
+    if (!std::isfinite(item.second.cost) || item.second.cost < 0.0) {
+      result.message = "graph contains invalid negative/non-finite edge cost: " + item.first;
+      return result;
+    }
+  }
   struct Item { double cost; std::string node; };
-  struct Greater { bool operator()(const Item & a, const Item & b) const { return a.cost > b.cost; } };
+  struct Greater {
+    bool operator()(const Item & a, const Item & b) const
+    {
+      return std::tie(a.cost, a.node) > std::tie(b.cost, b.node);
+    }
+  };
 
   std::priority_queue<Item, std::vector<Item>, Greater> open;
   std::map<std::string, double> best;
@@ -49,7 +68,12 @@ PlanResult DijkstraPlanner::plan(
         continue;
       }
       const double next_cost = current.cost + edge.cost;
-      if (!best.count(edge.to_node_id) || next_cost < best[edge.to_node_id]) {
+      const bool better = !best.count(edge.to_node_id) || next_cost < best[edge.to_node_id] - 1e-12;
+      const bool equal_but_stable = best.count(edge.to_node_id) &&
+        std::fabs(next_cost - best[edge.to_node_id]) <= 1e-12 &&
+        std::tie(current.node, edge.id) <
+        std::tie(parent_node[edge.to_node_id], parent_edge[edge.to_node_id]);
+      if (better || equal_but_stable) {
         best[edge.to_node_id] = next_cost;
         parent_node[edge.to_node_id] = current.node;
         parent_edge[edge.to_node_id] = edge.id;
@@ -58,8 +82,6 @@ PlanResult DijkstraPlanner::plan(
     }
   }
 
-  PlanResult result;
-  result.planner_algorithm = name();
   if (!best.count(goal_node_id)) {
     result.message = "no valid global route";
     return result;

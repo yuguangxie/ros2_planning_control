@@ -146,3 +146,9 @@ project_manifest.json
 trajectory/waypoints.yaml
 validation/validation_report.json
 ```
+
+## Phase 15 路径与结构安全规则
+
+所有来自 `manifest.files`、`manifest.hashes` 和 `checksums.sha256` 的路径先统一反斜杠语义，再相对 canonical package root 解析。实现拒绝 POSIX/Windows 绝对路径、UNC、任意 `..` 分量，以及 canonical 后位于 root 外的 symlink 目标。Checksum 与最终文件读取使用同一 containment helper。
+
+Loader 还会 fail closed 拒绝重复 node/edge/waypoint/semantic ID、未知 node/edge 引用、负数或非有限 cost/length/speed/waypoint 数值、非法或重叠 waypoint range、count 不一致、range 内 edge_id 不一致和未被 index 覆盖的 waypoint。错误消息包含对应 ID、index 或字段。

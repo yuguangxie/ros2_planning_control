@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import re
 from pathlib import Path
 
 
@@ -95,7 +96,14 @@ def normalize_angle(a):
 def lqr_delta(pose, trajectory, state_speed=0.5, opts=None):
     opts = opts or {}
     if not trajectory or all(abs(p["v"]) < 1e-3 for p in trajectory):
-        return {"emergency_stop": True, "speed_mps": 0.0, "desired_curvature_1pm": 0.0}
+        return {
+            "emergency_stop": False,
+            "enable": False,
+            "brake": 1.0,
+            "speed_mps": 0.0,
+            "desired_curvature_1pm": 0.0,
+            "reason": "stop_trajectory",
+        }
     nearest = min(range(len(trajectory)), key=lambda i: math.hypot(trajectory[i]["x"] - pose[0], trajectory[i]["y"] - pose[1]))
     ref_speed = abs(trajectory[nearest]["v"])
     model_speed = max(opts.get("min_speed_mps", 0.2), abs(state_speed) if abs(state_speed) > 1e-6 else ref_speed)
@@ -217,7 +225,7 @@ def test_ackermann_and_lqr():
     low = lqr_delta((0.0, 0.1, 0.0), traj, state_speed=0.0)
     assert math.isfinite(low["steering_angle_rad"])
     stop = lqr_delta((0.0, 0.0, 0.0), [{"x": 0.0, "y": 0.0, "yaw": 0.0, "kappa": 0.0, "v": 0.0, "s": 0.0}])
-    assert stop["emergency_stop"]
+    assert not stop["emergency_stop"] and not stop["enable"] and stop["brake"] == 1.0
     for model in (front_ackermann, dual_ackermann):
         front, rear = model(left["desired_curvature_1pm"])
         out = limit_and_smooth(dict(left, front_steering_angle_rad=front, rear_steering_angle_rad=rear))
@@ -234,7 +242,9 @@ def static_source_checks():
     assert "<depend>chassis_interfaces</depend>" in package
     assert "create_publisher<chassis_interfaces::msg::ScuControlCommand>" in node
     assert "/yunle_chassis/control/scu_control_command" in node
-    assert "desired_curvature_1pm" in node and "steering_from_curvature(raw.desired_curvature_1pm" in node
+    assert "desired_curvature_1pm" in node and re.search(
+        r"steering_from_curvature\s*\(\s*raw\.desired_curvature_1pm", node
+    )
     assert "p_next00" in lqr and "lqr_tracking" in lqr and "lqr_experimental" not in lqr
     assert "scu_shift_level_request" in mapper and "internal gear is unknown" in mapper
 

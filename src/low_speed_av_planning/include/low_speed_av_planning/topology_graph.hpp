@@ -13,6 +13,7 @@ public:
   explicit TopologyGraph(const RoadnetPackage & package);
   const TopologyNode * node(const std::string & id) const;
   const TopologyEdge * edge(const std::string & id) const;
+  const std::map<std::string, TopologyEdge> & edges() const;
   const std::vector<TopologyEdge> & outgoing(const std::string & node_id) const;
   double heuristic_distance(const std::string & from, const std::string & to) const;
 

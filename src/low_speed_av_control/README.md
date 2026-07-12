@@ -118,6 +118,17 @@ ros2 topic echo /yunle_chassis/control/scu_control_command
 
 ## Production-linked tests
 
-`test_controllers`、`test_vehicle_command_pipeline` 和 `test_control_safety_state_machine` 直接链接 `low_speed_av_control` production library，分别覆盖四种控制器、车型/限幅/平滑/SCU 映射以及 Phase 13 安全状态机。
+`test_controllers`、`test_vehicle_command_pipeline`、`test_safety_state_machine` 和 `test_control_runtime_helpers` 直接链接 `low_speed_av_control` production library，分别覆盖四种控制器、车型/限幅/平滑/SCU 映射、安全状态机、参数校验、progress 和 cadence。
 
 当前 Windows 环境没有 ROS2/C++ 工具链，因此测试源码为 `GENERATED_NOT_EXECUTED`，不能表述为已经通过。Planning -> Control -> SCU 的 launch test 同样需要 ROS2 Humble 环境执行。
+
+## Phase 16 参数、平滑和发布周期合同
+
+- 启动时统一验证 controller/model/output/status allowlist、rate/timeout、车辆几何与限值、LQR/MPC、smoother、SCU 和硬件合同参数；非法值抛出异常并使节点启动失败。当前 status allowlist 只接受规范正常值 `ok`，不能通过配置把 failure/emergency/invalid 状态变成可跟踪输入。
+- `command_smoother` 使用 steady-clock 实际周期，分别限制 accel、decel、jerk、前轮转角 rate 和后轮转角 rate；异常 dt 限制在 `min_dt_s..max_dt_s` 并进入诊断。
+- emergency、brake 或 `enable=false` 立即旁路 normal smoothing，固定输出零速、零转角、制动和 disable。
+- 新 trajectory identity、controller/model switch、重新进入 tracking 和 estop clear 均 reset progress/smoother；算法切换后先经过一个 `READY` 周期。
+- Tracking progress 只在有限窗口内结合 heading/gear 搜索，并保持单调。当前四个 controller 不具备经过验证的倒车误差模型，因此 reverse trajectory 明确返回 `unsupported_reverse_tracking` 停车。
+- 默认 50 Hz 对应 20 ms。`control.publish_deadline_warning_s=0.1`，远小于项目方声明的硬件 timeout 0.5 s。状态消息报告 input age、publish age、interval max/p95、missed cycles、deadline misses 和 saturation。
+
+硬件 watchdog 状态默认是 `DECLARED_NOT_HIL_VERIFIED`。Control 存活且输入异常时持续主动发布 stop，不等待 500 ms；只有 0x121 完全消失时才由底盘硬件合同接管。本阶段没有修改 Chassis，也没有完成 HIL。

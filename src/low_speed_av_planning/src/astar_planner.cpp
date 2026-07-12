@@ -1,8 +1,11 @@
 #include "low_speed_av_planning/astar_planner.hpp"
 
 #include <algorithm>
+#include <cmath>
+#include <limits>
 #include <map>
 #include <queue>
+#include <tuple>
 
 namespace low_speed_av_planning {
 
@@ -12,8 +15,38 @@ PlanResult AstarPlanner::plan(
   const std::string & goal_node_id,
   const GlobalPlannerOptions & options) const
 {
+  PlanResult result;
+  result.planner_algorithm = name();
+  if (!graph.node(start_node_id) || !graph.node(goal_node_id)) {
+    result.message = "start or goal node is not in topology";
+    return result;
+  }
+  if (!std::isfinite(options.heuristic_weight) || options.heuristic_weight < 0.0) {
+    result.message = "heuristic_weight must be finite and non-negative";
+    return result;
+  }
+  double minimum_cost_per_meter = std::numeric_limits<double>::infinity();
+  for (const auto & item : graph.edges()) {
+    const auto & edge = item.second;
+    if (!std::isfinite(edge.cost) || edge.cost < 0.0) {
+      result.message = "graph contains invalid negative/non-finite edge cost: " + item.first;
+      return result;
+    }
+    const double distance = graph.heuristic_distance(edge.from_node_id, edge.to_node_id);
+    if (distance > 1e-12) {
+      minimum_cost_per_meter = std::min(minimum_cost_per_meter, edge.cost / distance);
+    }
+  }
+  if (!std::isfinite(minimum_cost_per_meter)) {
+    minimum_cost_per_meter = 0.0;
+  }
   struct Item { double f; double g; std::string node; };
-  struct Greater { bool operator()(const Item & a, const Item & b) const { return a.f > b.f; } };
+  struct Greater {
+    bool operator()(const Item & a, const Item & b) const
+    {
+      return std::tie(a.f, a.g, a.node) > std::tie(b.f, b.g, b.node);
+    }
+  };
   std::priority_queue<Item, std::vector<Item>, Greater> open;
   std::map<std::string, double> best_g;
   std::map<std::string, std::string> parent_node;
@@ -38,17 +71,21 @@ PlanResult AstarPlanner::plan(
         continue;
       }
       const double g = current.g + edge.cost;
-      if (!best_g.count(edge.to_node_id) || g < best_g[edge.to_node_id]) {
+      const bool better = !best_g.count(edge.to_node_id) || g < best_g[edge.to_node_id] - 1e-12;
+      const bool equal_but_stable = best_g.count(edge.to_node_id) &&
+        std::fabs(g - best_g[edge.to_node_id]) <= 1e-12 &&
+        std::tie(current.node, edge.id) <
+        std::tie(parent_node[edge.to_node_id], parent_edge[edge.to_node_id]);
+      if (better || equal_but_stable) {
         best_g[edge.to_node_id] = g;
         parent_node[edge.to_node_id] = current.node;
         parent_edge[edge.to_node_id] = edge.id;
-        const double h = options.heuristic_weight * graph.heuristic_distance(edge.to_node_id, goal_node_id);
+        const double h = options.heuristic_weight * minimum_cost_per_meter *
+          graph.heuristic_distance(edge.to_node_id, goal_node_id);
         open.push({g + h, g, edge.to_node_id});
       }
     }
   }
-  PlanResult result;
-  result.planner_algorithm = name();
   if (!best_g.count(goal_node_id)) {
     result.message = "no valid global route";
     return result;
@@ -70,7 +107,7 @@ PlanResult AstarPlanner::plan(
     }
   }
   result.success = true;
-  result.message = "ok";
+  result.message = options.heuristic_weight > 1.0 ? "ok_weighted_astar_non_optimal" : "ok";
   return result;
 }
 

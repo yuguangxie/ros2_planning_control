@@ -89,3 +89,7 @@ python scripts\offline_scu_lqr_smoke.py
 ```
 
 真实 ROS2 环境还需要运行 `colcon build/test` 和 topic/service 集成验证。无 ROS2 环境中这些命令必须记录为 `SKIPPED_ROS2_UNAVAILABLE`。
+
+## Phase 16 输入与周期边界
+
+LQR 的 `control_dt_s` 由 Control steady-clock 实际周期提供，并受 smoother 的 dt 安全边界约束。所有状态、pose、trajectory 和参数在进入 Riccati 计算前必须有限且合法。当前未实现 reverse 专用误差模型，reverse trajectory 明确输出 `unsupported_reverse_tracking` 停车，不复用前进 LQR 假装支持倒车。

@@ -78,3 +78,7 @@ ros2 service call /low_speed_av_planning/plan_mission \
 
 - `PlanRoute.srv` 没有 `goal_charging_point_id` 字段，因此 charging 目标通过新增 `PlanMission.srv` 使用。
 - parking/charging 成功路径需要带相应语义点的 AD Package 或离线 fixture 验证；当前正式包 parking/charging 为空。
+
+## Phase 15 production helper
+
+Semantic 解析已迁入 production `planning_helpers`。空字符串、`null`、`"null"`、`none` 均不作为 node ID；有效 `linked_node_id` 优先，未知或空 node 可由合法 `linked_edge_id` fallback。Task、parking、charging 共用 resolver，terminal segment、final stop 和诊断使用同一生产实现。

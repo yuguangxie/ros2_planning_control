@@ -37,6 +37,7 @@ def main() -> int:
         Check("simulation", ("scripts/offline_simulation_smoke.py", "roadnet_ad_package_20260610T012525Z_2")),
         Check("trajectory_continuity", ("scripts/offline_trajectory_continuity_smoke.py",)),
         Check("phase13_safety_contract", ("scripts/offline_phase13_safety_smoke.py",)),
+        Check("control_config_contract", ("scripts/check_control_config_contract.py",)),
         Check("template_consistency", ("scripts/check_template_consistency.py",)),
         Check("repository_hygiene", ("scripts/offline_repository_hygiene.py",)),
     ]

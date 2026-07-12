@@ -152,6 +152,61 @@ void require_finite(double value, const std::string & label)
   }
 }
 
+fs::path canonical_root(const fs::path & root)
+{
+  std::error_code ec;
+  const auto canonical = fs::weakly_canonical(root, ec);
+  if (ec || !fs::exists(canonical) || !fs::is_directory(canonical)) {
+    throw std::runtime_error("invalid AD package root: " + root.string());
+  }
+  return canonical;
+}
+
+bool is_within_root(const fs::path & root, const fs::path & target)
+{
+  auto root_it = root.begin();
+  auto target_it = target.begin();
+  for (; root_it != root.end(); ++root_it, ++target_it) {
+    if (target_it == target.end() || *root_it != *target_it) {
+      return false;
+    }
+  }
+  return true;
+}
+
+fs::path resolve_contained_path(
+  const fs::path & root, const std::string & untrusted_path, const std::string & label)
+{
+  if (untrusted_path.empty()) {
+    throw std::runtime_error(label + " path is empty");
+  }
+  std::string portable = untrusted_path;
+  std::replace(portable.begin(), portable.end(), '\\', '/');
+  const bool windows_drive_prefix = portable.size() >= 2U &&
+    std::isalpha(static_cast<unsigned char>(portable[0])) && portable[1] == ':';
+  const bool windows_unc_absolute = portable.rfind("//", 0U) == 0U;
+  const fs::path relative(portable);
+  if (windows_drive_prefix || windows_unc_absolute || relative.is_absolute() ||
+    relative.has_root_name() || relative.has_root_directory())
+  {
+    throw std::runtime_error(label + " uses an absolute path: " + untrusted_path);
+  }
+  for (const auto & component : relative) {
+    if (component == "..") {
+      throw std::runtime_error(label + " escapes the AD package root: " + untrusted_path);
+    }
+  }
+  std::error_code ec;
+  const auto resolved = fs::weakly_canonical(root / relative, ec);
+  if (ec) {
+    throw std::runtime_error(label + " cannot be canonicalized: " + untrusted_path);
+  }
+  if (!is_within_root(root, resolved)) {
+    throw std::runtime_error(label + " resolves outside the AD package root: " + untrusted_path);
+  }
+  return resolved;
+}
+
 bool point_in_polygon(const Pose2d & point, const std::vector<Pose2d> & polygon)
 {
   if (polygon.size() < 3U) {
@@ -230,7 +285,13 @@ void load_semantic_points(
   for (const auto & item : doc[array_key]) {
     auto point = parse_semantic_point(item, fallback_type);
     if (!point.id.empty()) {
-      out[point.id] = point;
+      require_finite(point.pose.x_m, array_key + "." + point.id + ".pose.x");
+      require_finite(point.pose.y_m, array_key + "." + point.id + ".pose.y");
+      require_finite(point.pose.yaw_rad, array_key + "." + point.id + ".pose.yaw");
+      require_finite(point.linked_s_m, array_key + "." + point.id + ".linked_s_m");
+      if (!out.emplace(point.id, point).second) {
+        throw std::runtime_error("duplicate semantic ID in " + array_key + ": " + point.id);
+      }
     }
   }
 }
@@ -240,9 +301,10 @@ void load_semantic_points(
 RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options & options) const
 {
   RoadnetPackage package;
-  package.root_path = package_root.string();
+  const auto root = canonical_root(package_root);
+  package.root_path = root.string();
 
-  const auto manifest_path = package_root / "project_manifest.json";
+  const auto manifest_path = resolve_contained_path(root, "project_manifest.json", "manifest");
   if (!fs::exists(manifest_path)) {
     throw std::runtime_error("missing canonical project_manifest.json");
   }
@@ -272,6 +334,18 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
   if (manifest["hashes"]) {
     for (const auto & item : manifest["hashes"]) {
       package.manifest_hashes[item.first.as<std::string>()] = item.second.as<std::string>();
+    }
+  }
+  for (const auto & item : package.files) {
+    const auto referenced = resolve_contained_path(root, item.second, "manifest.files[" + item.first + "]");
+    if (!fs::exists(referenced) || !fs::is_regular_file(referenced)) {
+      throw std::runtime_error("manifest.files[" + item.first + "] references missing file: " + item.second);
+    }
+  }
+  for (const auto & item : package.manifest_hashes) {
+    const auto referenced = resolve_contained_path(root, item.first, "manifest.hashes[" + item.first + "]");
+    if (!fs::exists(referenced) || !fs::is_regular_file(referenced)) {
+      throw std::runtime_error("manifest.hashes references missing file: " + item.first);
     }
   }
   if (manifest["units"]) {
@@ -325,7 +399,9 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
     require_finite(node.pose.x_m, "node.pose.x");
     require_finite(node.pose.y_m, "node.pose.y");
     require_finite(node.pose.yaw_rad, "node.pose.yaw");
-    node_ids.insert(node.id);
+    if (!node_ids.insert(node.id).second) {
+      throw std::runtime_error("duplicate topology node ID: " + node.id);
+    }
     package.nodes.push_back(node);
   }
   std::set<std::string> edge_ids;
@@ -347,23 +423,39 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
     require_finite(edge.length_m, "edge.length_m");
     require_finite(edge.cost, "edge.cost");
     require_finite(edge.speed_limit_mps, "edge.speed_limit_mps");
+    if (edge.length_m < 0.0 || edge.cost < 0.0 || edge.speed_limit_mps < 0.0) {
+      throw std::runtime_error("negative edge length/cost/speed for edge: " + edge.id);
+    }
     edge.enabled = !(e["availability"] && e["availability"]["enabled"] && !e["availability"]["enabled"].as<bool>());
     edge.blocked_by_default = e["availability"] &&
       yaml_bool(e["availability"], "blocked_by_default", false);
     edge.allow_reverse = e["constraints"] &&
       yaml_bool(e["constraints"], "allow_reverse", false);
-    edge_ids.insert(edge.id);
+    if (!edge_ids.insert(edge.id).second) {
+      throw std::runtime_error("duplicate topology edge ID: " + edge.id);
+    }
     package.edges.push_back(edge);
   }
 
   const YAML::Node wp_doc = YAML::LoadFile(waypoints_path.string());
   require_node(wp_doc["waypoints"], "waypoints.waypoints");
+  std::set<std::string> waypoint_ids;
+  std::set<std::size_t> waypoint_indices;
   for (const auto & src : wp_doc["waypoints"]) {
     Waypoint wp;
     wp.index = src["global_index"] ? src["global_index"].as<std::size_t>() : package.waypoints.size();
     wp.waypoint_id = yaml_string(src, "waypoint_id");
     wp.edge_id = yaml_string(src, "edge_id");
     wp.path_id = yaml_string(src, "path_id");
+    if (wp.waypoint_id.empty()) {
+      throw std::runtime_error("waypoint_id is required at global_index " + std::to_string(wp.index));
+    }
+    if (!waypoint_ids.insert(wp.waypoint_id).second) {
+      throw std::runtime_error("duplicate waypoint ID: " + wp.waypoint_id);
+    }
+    if (!waypoint_indices.insert(wp.index).second) {
+      throw std::runtime_error("duplicate waypoint global_index: " + std::to_string(wp.index));
+    }
     if (wp.edge_id.empty() || edge_ids.count(wp.edge_id) == 0) {
       throw std::runtime_error("waypoint references unknown edge: " + wp.waypoint_id);
     }
@@ -379,6 +471,9 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
     require_finite(wp.yaw_rad, "waypoint.yaw");
     require_finite(wp.kappa_1pm, "waypoint.kappa");
     require_finite(wp.target_speed_mps, "waypoint.v_mps");
+    if (wp.edge_s_m < 0.0 || wp.target_speed_mps < 0.0) {
+      throw std::runtime_error("negative waypoint s_m/v_mps for waypoint: " + wp.waypoint_id);
+    }
     const auto direction = yaml_string(src, "direction", "forward");
     wp.gear = gear_from_direction(direction);
     wp.behavior = yaml_string(src, "behavior", "follow");
@@ -394,6 +489,16 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
 
   const YAML::Node index = YAML::LoadFile(index_path.string());
   require_node(index["edges"], "waypoint_index.edges");
+  std::set<std::string> path_ids;
+  if (index["paths"]) {
+    for (const auto & item : index["paths"]) {
+      const auto path_id = item.first.as<std::string>();
+      if (path_id.empty() || !path_ids.insert(path_id).second) {
+        throw std::runtime_error("empty or duplicate waypoint path ID: " + path_id);
+      }
+    }
+  }
+  std::vector<bool> covered(package.waypoints.size(), false);
   for (const auto & item : index["edges"]) {
     const auto edge_id = item.first.as<std::string>();
     if (edge_ids.count(edge_id) == 0) {
@@ -412,16 +517,46 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
       range.end_index_exclusive - range.start_index;
     if (range.start_index >= package.waypoints.size() ||
       range.end_index_exclusive > package.waypoints.size() ||
-      range.end_index_exclusive < range.start_index)
+      range.end_index_exclusive <= range.start_index)
     {
       throw std::runtime_error("invalid waypoint range for edge: " + edge_id);
     }
-    package.waypoint_index_by_edge[edge_id] = range;
+    if (range.count != range.end_index_exclusive - range.start_index) {
+      throw std::runtime_error("waypoint index count mismatch for edge: " + edge_id);
+    }
+    if (!package.waypoint_index_by_edge.emplace(edge_id, range).second) {
+      throw std::runtime_error("duplicate waypoint index edge ID: " + edge_id);
+    }
+    double previous_s = -1.0;
+    for (std::size_t i = range.start_index; i < range.end_index_exclusive; ++i) {
+      if (covered[i]) {
+        throw std::runtime_error("overlapping waypoint index range at index " + std::to_string(i));
+      }
+      covered[i] = true;
+      if (package.waypoints[i].edge_id != edge_id) {
+        throw std::runtime_error(
+          "waypoint index edge mismatch: index=" + std::to_string(i) + " expected=" + edge_id +
+          " actual=" + package.waypoints[i].edge_id);
+      }
+      if (package.waypoints[i].edge_s_m + 1e-9 < previous_s) {
+        throw std::runtime_error("waypoint s_m is not monotonic for edge: " + edge_id);
+      }
+      previous_s = package.waypoints[i].edge_s_m;
+    }
+  }
+  if (std::find(covered.begin(), covered.end(), false) != covered.end()) {
+    throw std::runtime_error("waypoint index does not cover every waypoint");
+  }
+  for (const auto & waypoint : package.waypoints) {
+    if (waypoint.path_id.empty() || (!path_ids.empty() && path_ids.count(waypoint.path_id) == 0U)) {
+      throw std::runtime_error("waypoint references unknown path ID: " + waypoint.waypoint_id);
+    }
   }
 
   const auto areas_path = resolve_file(package, "areas", "semantics/areas.json");
   if (fs::exists(areas_path)) {
     const YAML::Node areas_doc = YAML::LoadFile(areas_path.string());
+    std::set<std::string> area_ids;
     for (const auto & item : areas_doc["areas"]) {
       SemanticArea area;
       area.id = yaml_string(item, "id");
@@ -429,6 +564,10 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
       area.speed_limit_mps = yaml_double(item, "speed_limit_mps", 0.0);
       area.allow_planning_through = yaml_bool(item, "allow_planning_through", true);
       area.priority = yaml_int(item, "priority", 0);
+      require_finite(area.speed_limit_mps, "semantic_area." + area.id + ".speed_limit_mps");
+      if (area.speed_limit_mps < 0.0) {
+        throw std::runtime_error("negative semantic area speed limit: " + area.id);
+      }
       if (item["polygon"]) {
         for (const auto & vertex : item["polygon"]) {
           Pose2d p;
@@ -440,6 +579,9 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
         }
       }
       if (!area.id.empty()) {
+        if (!area_ids.insert(area.id).second) {
+          throw std::runtime_error("duplicate semantic area ID: " + area.id);
+        }
         package.areas.push_back(area);
       }
     }
@@ -457,6 +599,24 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
     resolve_file(package, "charging_points", "semantics/charging_points.json"),
     "charging_points", "charging", package.charging_points);
 
+  std::set<std::string> semantic_ids;
+  for (const auto & area : package.areas) {
+    if (!semantic_ids.insert(area.id).second) {
+      throw std::runtime_error("duplicate semantic ID across files: " + area.id);
+    }
+  }
+  const auto register_points = [&semantic_ids](const auto & points) {
+      for (const auto & item : points) {
+        if (!semantic_ids.insert(item.first).second) {
+          throw std::runtime_error("duplicate semantic ID across files: " + item.first);
+        }
+      }
+    };
+  register_points(package.route_points);
+  register_points(package.task_points);
+  register_points(package.parking_points);
+  register_points(package.charging_points);
+
   for (const auto & area : package.areas) {
     if (!is_no_go_area(area)) {
       continue;
@@ -469,7 +629,7 @@ RoadnetPackage RoadnetLoader::load(const fs::path & package_root, const Options 
   }
 
   if (options.verify_checksums) {
-    verify_checksums(package_root, package);
+    verify_checksums(root, package);
   }
   return package;
 }
@@ -478,13 +638,15 @@ fs::path RoadnetLoader::resolve_file(
   const RoadnetPackage & package, const std::string & key, const std::string & canonical_fallback) const
 {
   const auto it = package.files.find(key);
-  return fs::path(package.root_path) / (it == package.files.end() ? canonical_fallback : it->second);
+  const auto & raw = it == package.files.end() ? canonical_fallback : it->second;
+  return resolve_contained_path(fs::path(package.root_path), raw, "manifest.files[" + key + "]");
 }
 
 void RoadnetLoader::verify_checksums(const fs::path & root, RoadnetPackage & package) const
 {
   std::map<std::string, std::string> expected = package.manifest_hashes;
-  const auto checksums_path = root / "checksums.sha256";
+  const auto safe_root = canonical_root(root);
+  const auto checksums_path = resolve_file(package, "checksums", "checksums.sha256");
   if (fs::exists(checksums_path)) {
     std::istringstream lines(read_file(checksums_path));
     std::string line;
@@ -512,11 +674,7 @@ void RoadnetLoader::verify_checksums(const fs::path & root, RoadnetPackage & pac
   }
 
   for (const auto & item : expected) {
-    const auto rel = fs::path(item.first).lexically_normal();
-    if (rel.empty() || rel.is_absolute() || item.first.find("..") != std::string::npos) {
-      throw std::runtime_error("unsafe checksum path: " + item.first);
-    }
-    const auto file_path = root / rel;
+    const auto file_path = resolve_contained_path(safe_root, item.first, "checksum entry");
     if (!fs::exists(file_path)) {
       throw std::runtime_error("checksum references missing file: " + file_path.string());
     }

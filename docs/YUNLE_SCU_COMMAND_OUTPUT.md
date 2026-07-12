@@ -85,7 +85,9 @@ lights = 0
 
 Control 先生成带 reason 的 `/control/command`，再映射 SCU 停车。controlled stop 的 `emergency_stop=false`，hard estop 的 `emergency_stop=true`；当前 SCU 接口只有 `scu_brake_enable` 布尔量，因此两者在 SCU 层都表现为 brake true、target speed 0，无法表达不同制动力曲线。
 
-Control watchdog 只保证 Control 进程存活时对上游输入 fail closed。Yunle Chassis Driver 的独立周期调度/命令超时不在本轮修改范围，当前不能覆盖 Control 到 Driver 之间的命令中断；即使未来实现软件 watchdog，Driver 进程硬崩溃和断电仍需底盘硬件 watchdog。
+Control watchdog 只保证 Control 存活时对上游输入 fail closed，并以默认 50 Hz 同时发布 internal/SCU 输出。100 ms deadline 是软件告警阈值，不是允许的正常 jitter；状态中记录 max/p95 interval、missed cycles 和 publish age。
+
+项目方声明底盘连续 500 ms 未收到 CAN 0x121 时硬件停车。该机制只处理 0x121 完全消失，不能替代 semantic stop，也不能证明制动力、停车距离和恢复行为。本阶段未修改 Yunle Chassis Driver；供应商/bench/HIL 证据缺失，状态为 `DECLARED_NOT_HIL_VERIFIED`，不得写成 HIL PASS。
 
 ## ROS2 验证命令
 以下命令必须在真实 ROS2 环境运行。本 Codex Windows 环境若没有 ROS2，应记录为 `SKIPPED_ROS2_UNAVAILABLE`。

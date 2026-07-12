@@ -181,7 +181,6 @@ Default topics must be configurable:
 ```yaml
 topics:
   localization_pose_topic: "/localization/pose"
-  localization_pose_type: "pose_stamped"
   trajectory_topic: "/planning/trajectory"
   global_route_topic: "/planning/global_route"
   planning_status_topic: "/planning/status"
@@ -199,3 +198,5 @@ Recommended:
 - localization: sensor data or best effort with timeout guard.
 - trajectory/control/status: reliable.
 - status: transient local optional.
+
+Phase 16 明确 Control 当前只接受 `geometry_msgs/msg/PoseStamped`，不再暴露未实现的 `localization_pose_type` 选择器。该清理不改变 topic 或自定义接口字段。

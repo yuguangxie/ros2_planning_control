@@ -5,7 +5,6 @@ low_speed_av_control:
       mode: "both"
     topics:
       localization_pose_topic: "/localization/pose"
-      localization_pose_type: "pose_stamped"
       trajectory_topic: "/planning/trajectory"
       vehicle_state_topic: "/vehicle/state"
       safety_status_topic: "/safety/status"
@@ -19,9 +18,17 @@ low_speed_av_control:
       trajectory_timeout_s: 0.5
       allowed_trajectory_statuses: ["ok"]
       trajectory_s_tolerance_m: 1.0e-4
-      hold_last_command_s: 0.05
+      progress_backward_window_points: 3
+      progress_forward_window_points: 200
+      progress_max_heading_error_rad: 1.57
     control:
       status_publish_rate_hz: 5.0
+      publish_deadline_warning_s: 0.1
+      cadence_window_size: 128
+
+    hardware_watchdog:
+      timeout_s: 0.5
+      contract_status: "DECLARED_NOT_HIL_VERIFIED"
     safety:
       estop_latched: true
       clear_speed_threshold_mps: 0.05
@@ -31,9 +38,6 @@ low_speed_av_control:
     vehicle:
       model: "front_ackermann"
       wheel_base_m: 1.2
-      track_width_m: 0.8
-      vehicle_length_m: 1.8
-      vehicle_width_m: 0.9
       max_speed_mps: 1.2
       max_accel_mps2: 0.5
       max_decel_mps2: 0.8
@@ -64,19 +68,16 @@ low_speed_av_control:
       horizon_steps: 10
       dt_s: 0.1
       curvature_samples: [-0.2, -0.1, 0.0, 0.1, 0.2]
-      sample_count: 5
-      max_curvature_1pm: 0.2
       lateral_error_weight: 1.0
       heading_error_weight: 0.5
       speed_error_weight: 0.2
       steering_effort_weight: 0.05
     command_smoother:
-      max_speed_step_mps: 0.05
       max_accel_mps2: 0.5
       max_decel_mps2: 0.8
-      max_steer_rate_radps: 0.35
-      emergency_decel_mps2: 1.0
-      stop_enable_mode: "disable_after_stop"
+      max_jerk_mps3: 2.0
+      min_dt_s: 0.001
+      max_dt_s: 0.1
     scu:
       max_steering_angle_deg: 27.0
       max_target_speed_kmh: 5.0

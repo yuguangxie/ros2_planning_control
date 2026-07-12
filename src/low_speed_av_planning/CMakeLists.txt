@@ -25,6 +25,7 @@ add_library(${PROJECT_NAME}
   src/constant_speed_planner.cpp
   src/curvature_speed_planner.cpp
   src/obstacle_aware_speed_planner.cpp
+  src/planning_helpers.cpp
   src/planning_node.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -58,6 +59,8 @@ if(BUILD_TESTING)
     LOW_SPEED_AV_TEST_REPO_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/../..")
   ament_add_gtest(test_planning_algorithms test/test_planning_algorithms.cpp)
   target_link_libraries(test_planning_algorithms ${PROJECT_NAME})
+  ament_add_gtest(test_planning_helpers test/test_planning_helpers.cpp)
+  target_link_libraries(test_planning_helpers ${PROJECT_NAME})
   ament_add_pytest_test(
     offline_trajectory_continuity
     test/test_offline_trajectory_continuity.py

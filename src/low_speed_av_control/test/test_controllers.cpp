@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <cmath>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -49,7 +50,7 @@ TEST(ControllersProduction, EmptyTrajectoryFailsClosedForEveryAlgorithm) {
     const auto command = ControllerFactory::create(algorithm)->compute(
         Pose2d{}, VehicleState{}, Trajectory{}, ControllerOptions{});
     EXPECT_FALSE(command.enable);
-    EXPECT_TRUE(command.emergency_stop);
+    EXPECT_TRUE(command.brake > 0.0);
     EXPECT_EQ(command.reason, "empty_trajectory");
   }
 }
@@ -69,7 +70,8 @@ TEST(ControllersProduction, SinglePointAndZeroSpeedInputsRemainBounded) {
   }
 }
 
-TEST(ControllersProduction, ReverseGearIsPreservedByCurrentControllerContract) {
+TEST(ControllersProduction,
+     ReverseGearFailsClosedUntilDedicatedTrackingExists) {
   auto trajectory = nominal_trajectory();
   for (auto &point : trajectory) {
     point.gear = 2;
@@ -78,7 +80,44 @@ TEST(ControllersProduction, ReverseGearIsPreservedByCurrentControllerContract) {
        {"pure_pursuit", "stanley", "lqr", "mpc_sampler"}) {
     const auto command = ControllerFactory::create(algorithm)->compute(
         Pose2d{}, VehicleState{}, trajectory, ControllerOptions{});
-    EXPECT_EQ(command.gear, 2) << algorithm;
+    EXPECT_FALSE(command.enable) << algorithm;
+    EXPECT_EQ(command.reason, "unsupported_reverse_tracking") << algorithm;
+  }
+}
+
+TEST(ControllersProduction, NonFinitePoseStateAndTrajectoryFailClosed) {
+  const auto nan = std::numeric_limits<double>::quiet_NaN();
+  for (const auto &algorithm :
+       {"pure_pursuit", "stanley", "lqr", "mpc_sampler"}) {
+    auto controller = ControllerFactory::create(algorithm);
+    auto command =
+        controller->compute(Pose2d{nan, 0.0, 0.0}, VehicleState{},
+                            nominal_trajectory(), ControllerOptions{});
+    EXPECT_FALSE(command.enable) << algorithm;
+    VehicleState state;
+    state.speed_mps = nan;
+    command = controller->compute(Pose2d{}, state, nominal_trajectory(),
+                                  ControllerOptions{});
+    EXPECT_FALSE(command.enable) << algorithm;
+    auto trajectory = nominal_trajectory();
+    trajectory.front().yaw_rad = nan;
+    command = controller->compute(Pose2d{}, VehicleState{}, trajectory,
+                                  ControllerOptions{});
+    EXPECT_FALSE(command.enable) << algorithm;
+  }
+}
+
+TEST(ControllersProduction, AllZeroSpeedTrajectoryRequestsControlledStop) {
+  auto trajectory = nominal_trajectory();
+  for (auto &point : trajectory) {
+    point.v_mps = 0.0;
+  }
+  for (const auto &algorithm :
+       {"pure_pursuit", "stanley", "lqr", "mpc_sampler"}) {
+    const auto command = ControllerFactory::create(algorithm)->compute(
+        Pose2d{}, VehicleState{}, trajectory, ControllerOptions{});
+    EXPECT_FALSE(command.enable) << algorithm;
+    EXPECT_EQ(command.reason, "stop_trajectory") << algorithm;
   }
 }
 

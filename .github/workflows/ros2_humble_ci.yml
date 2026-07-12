@@ -20,6 +20,9 @@ jobs:
       LOW_SPEED_AV_CHASSIS_TEST_MODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Configure repository ownership for container Git
+        shell: bash
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
       - name: Environment identity
         run: |
           echo "commit=${GITHUB_SHA}"
@@ -43,8 +46,22 @@ jobs:
           clang-format --dry-run --Werror \
             src/low_speed_av_planning/test/test_roadnet_loader.cpp \
             src/low_speed_av_planning/test/test_planning_algorithms.cpp \
+            src/low_speed_av_control/include/low_speed_av_control/control_runtime_helpers.hpp \
+            src/low_speed_av_control/include/low_speed_av_control/command_smoother.hpp \
+            src/low_speed_av_control/src/control_runtime_helpers.cpp \
+            src/low_speed_av_control/src/command_smoother.cpp \
+            src/low_speed_av_control/src/control_node.cpp \
+            src/low_speed_av_control/src/front_ackermann_model.cpp \
+            src/low_speed_av_control/src/dual_ackermann_model.cpp \
+            src/low_speed_av_control/src/pure_pursuit_controller.cpp \
+            src/low_speed_av_control/src/stanley_controller.cpp \
+            src/low_speed_av_control/src/lqr_controller.cpp \
+            src/low_speed_av_control/src/mpc_sampler_controller.cpp \
+            src/low_speed_av_control/src/safety_state_machine.cpp \
             src/low_speed_av_control/test/test_controllers.cpp \
             src/low_speed_av_control/test/test_vehicle_command_pipeline.cpp \
+            src/low_speed_av_control/test/test_safety_state_machine.cpp \
+            src/low_speed_av_control/test/test_control_runtime_helpers.cpp \
             src/yunle_chassis/chassis_driver/include/chassis_driver/scu_control_frame_builder.hpp \
             src/yunle_chassis/chassis_driver/src/scu_control_frame_builder.cpp \
             src/yunle_chassis/chassis_driver/test/test_chassis_core.cpp
@@ -58,6 +75,9 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           source install/setup.bash
+          colcon test --packages-select low_speed_av_control low_speed_av_bringup \
+            --event-handlers console_direct+
+          colcon test-result --verbose
           colcon test --event-handlers console_direct+
           colcon test-result --verbose
       - name: Upload test and build logs
@@ -81,6 +101,9 @@ jobs:
       LOW_SPEED_AV_CHASSIS_TEST_MODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Configure repository ownership for container Git
+        shell: bash
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
       - name: Install dependencies
         shell: bash
         run: |

@@ -19,38 +19,11 @@
 
 #include "low_speed_av_planning/global_planner_base.hpp"
 #include "low_speed_av_planning/motion_planner_base.hpp"
+#include "low_speed_av_planning/planning_helpers.hpp"
 #include "low_speed_av_planning/roadnet_loader.hpp"
 #include "low_speed_av_planning/speed_planner_base.hpp"
 
 namespace low_speed_av_planning {
-
-struct RoadnetAnchor {
-  enum class Type {
-    CurrentPose,
-    Node,
-    EdgePoint,
-    TaskPoint,
-    ParkingPoint,
-    ChargingPoint
-  };
-
-  Type type{Type::Node};
-  std::string point_id;
-  std::string node_id;
-  std::string edge_id;
-  std::string edge_from_node_id;
-  std::string edge_to_node_id;
-  double x_m{0.0};
-  double y_m{0.0};
-  double yaw_rad{0.0};
-  double s_on_edge_m{0.0};
-  double edge_progress{0.0};
-  std::size_t waypoint_index{0};
-  bool has_pose{false};
-  bool has_edge{false};
-  bool has_node{false};
-  bool require_final_stop{false};
-};
 
 struct RouteDecision {
   PlanResult route;
@@ -81,7 +54,7 @@ private:
     const PlanResult & route,
     const RoadnetAnchor & start_anchor,
     const RoadnetAnchor & goal_anchor);
-  Trajectory make_local_trajectory_from_full_reference(const Trajectory & full_reference) const;
+  Trajectory make_local_trajectory_from_full_reference(const Trajectory & full_reference);
   bool trajectory_is_continuous(const Trajectory & trajectory, std::string * diagnostic) const;
   Trajectory make_arrived_stop_trajectory(const RoadnetAnchor & anchor, const std::string & behavior) const;
   Trajectory make_edge_segment_trajectory(
@@ -194,6 +167,7 @@ private:
   low_speed_av_interfaces::msg::Trajectory last_full_reference_path_msg_;
   low_speed_av_interfaces::msg::RoadnetStatus last_roadnet_status_msg_;
   Trajectory last_full_reference_path_;
+  TrajectoryProgressTracker progress_tracker_;
   bool has_last_route_msg_{false};
   bool has_last_trajectory_msg_{false};
   bool has_last_full_reference_path_msg_{false};

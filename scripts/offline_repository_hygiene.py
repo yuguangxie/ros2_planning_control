@@ -95,9 +95,20 @@ def main() -> int:
                 if REAL_DEVICE_IP.search(text):
                     errors.append(f"REAL_DEVICE_IP {path.relative_to(root)}")
 
-    tracked = subprocess.run(
-        ["git", "ls-files"], cwd=root, check=True, capture_output=True, text=True, encoding="utf-8"
-    ).stdout.splitlines()
+    git_result = subprocess.run(
+        ["git", "-c", f"safe.directory={root.as_posix()}", "ls-files"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    if git_result.returncode != 0:
+        stderr = git_result.stderr.strip() or "<empty stderr>"
+        errors.append(f"GIT_LS_FILES exit={git_result.returncode}: {stderr}")
+        tracked: list[str] = []
+    else:
+        tracked = git_result.stdout.splitlines()
     for name in tracked:
         parts = Path(name).parts
         if any(part in {"build", "install", "log", "__pycache__", ".pytest_cache"} for part in parts):

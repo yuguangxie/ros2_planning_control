@@ -62,3 +62,4 @@ reverse local segment selected
 
 默认配置禁止静默倒车，因此常规仿真和 bench 验证不会因为语义点在后方而直接下发 R 档。
 
+Phase 15 不扩大倒车能力。Semantic terminal helper 仅在既有 reverse policy 明确允许时构造 reverse segment；progress window 结合 reference heading，不能被解释为启用新的倒车规划或倒车控制合同。

@@ -28,6 +28,7 @@ add_library(${PROJECT_NAME}
   src/command_limiter.cpp
   src/command_smoother.cpp
   src/tracking_error_estimator.cpp
+  src/control_runtime_helpers.cpp
   src/control_node.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -71,6 +72,8 @@ if(BUILD_TESTING)
   target_link_libraries(test_controllers ${PROJECT_NAME})
   ament_add_gtest(test_vehicle_command_pipeline test/test_vehicle_command_pipeline.cpp)
   target_link_libraries(test_vehicle_command_pipeline ${PROJECT_NAME})
+  ament_add_gtest(test_control_runtime_helpers test/test_control_runtime_helpers.cpp)
+  target_link_libraries(test_control_runtime_helpers ${PROJECT_NAME})
 endif()
 
 ament_package()

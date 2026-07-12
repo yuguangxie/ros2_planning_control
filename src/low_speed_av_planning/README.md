@@ -171,3 +171,13 @@ ros2 launch low_speed_av_planning planning.launch.py params:=/path/to/planning_p
 `test_roadnet_loader` 与 `test_planning_algorithms` 直接链接 `low_speed_av_planning` production library，覆盖当前 loader 合同、图搜索、轨迹拼接和速度规划行为。测试 fixture 使用临时目录，不修改正式 Roadnet 包。
 
 当前 Windows 环境没有 ROS2/C++ 工具链，这些 gtest 已注册但状态为 `GENERATED_NOT_EXECUTED`；Python smoke 只承担数据合同和快速回归，不作为 C++ 行为证明。
+
+## Phase 15 安全与可测试性补充
+
+- `RoadnetLoader` 对 `manifest.files`、`manifest.hashes` 和 checksums 的实际读取路径使用统一 canonical containment；绝对路径、`..`、混合分隔符和 symlink escape 均 fail closed。
+- Loader 拒绝重复 ID、未知引用、负数/非有限 cost、非法 waypoint 数值以及 index count/range/edge 不一致。
+- 默认 A* 使用最小 `edge cost / endpoint distance` 缩放的 admissible heuristic；`heuristic_weight > 1` 明确报告 weighted A* 非最优模式。Dijkstra/A* 使用稳定 ID tie-break。
+- `planning_helpers` 进入 production library，Node 与 `test_planning_helpers` 共用 semantic/current-pose anchor、terminal segment、route summary、连续性、semantic speed 与 progress window。
+- local crop 保存 trajectory identity 与单调 progress，仅在有限窗口内结合 heading 匹配；reload、缓存清空和算法切换会 reset。
+
+Phase 15 注册 `test_roadnet_loader`、`test_planning_algorithms`、`test_planning_helpers` 三个 production-linked gtest target，并注册 Planning-only launch test。当前 Windows 无 ROS2，新增 C++/launch 源码状态仍是 `GENERATED_NOT_EXECUTED` / `SKIPPED_ROS2_UNAVAILABLE`。

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <cmath>
 #include <string>
 #include <vector>
@@ -80,6 +81,68 @@ TEST(PlanningGraphProduction, AstarMatchesDijkstraWithZeroHeuristic) {
   ASSERT_TRUE(astar.success);
   EXPECT_EQ(astar.edge_ids, dijkstra.edge_ids);
   EXPECT_DOUBLE_EQ(astar.length_m, dijkstra.length_m);
+}
+
+TEST(PlanningGraphProduction,
+     AstarDefaultAdmissibleHeuristicMatchesDijkstraCost) {
+  const TopologyGraph graph(graph_fixture());
+  const auto dijkstra =
+      DijkstraPlanner().plan(graph, "A", "C", GlobalPlannerOptions{});
+  const auto astar =
+      AstarPlanner().plan(graph, "A", "C", GlobalPlannerOptions{});
+  ASSERT_TRUE(dijkstra.success);
+  ASSERT_TRUE(astar.success);
+  EXPECT_EQ(astar.edge_ids, dijkstra.edge_ids);
+  EXPECT_DOUBLE_EQ(astar.length_m, dijkstra.length_m);
+}
+
+TEST(PlanningGraphProduction, EqualCostResultIsDeterministicAcrossInputOrder) {
+  auto first = graph_fixture();
+  TopologyEdge ab2 = first.edges.front();
+  ab2.id = "AX";
+  ab2.to_node_id = "D";
+  ab2.cost = 1.0;
+  ab2.length_m = 1.0;
+  TopologyEdge dc = first.edges[1];
+  dc.id = "XC";
+  dc.from_node_id = "D";
+  dc.cost = 1.0;
+  dc.length_m = 1.0;
+  first.edges = {dc, ab2, first.edges[1], first.edges[0]};
+  auto second = first;
+  std::reverse(second.edges.begin(), second.edges.end());
+  const auto route1 = DijkstraPlanner().plan(TopologyGraph(first), "A", "C",
+                                             GlobalPlannerOptions{});
+  const auto route2 = DijkstraPlanner().plan(TopologyGraph(second), "A", "C",
+                                             GlobalPlannerOptions{});
+  ASSERT_TRUE(route1.success);
+  ASSERT_TRUE(route2.success);
+  EXPECT_EQ(route1.edge_ids, route2.edge_ids);
+  EXPECT_EQ(AstarPlanner()
+                .plan(TopologyGraph(first), "A", "C", GlobalPlannerOptions{})
+                .edge_ids,
+            AstarPlanner()
+                .plan(TopologyGraph(second), "A", "C", GlobalPlannerOptions{})
+                .edge_ids);
+}
+
+TEST(PlanningGraphProduction, NegativeCostFailsClosedEvenForManualGraph) {
+  auto package = graph_fixture();
+  package.edges.front().cost = -0.1;
+  const TopologyGraph graph(package);
+  EXPECT_FALSE(
+      DijkstraPlanner().plan(graph, "A", "C", GlobalPlannerOptions{}).success);
+  EXPECT_FALSE(
+      AstarPlanner().plan(graph, "A", "C", GlobalPlannerOptions{}).success);
+}
+
+TEST(PlanningGraphProduction, WeightedAstarIsExplicitlyReported) {
+  GlobalPlannerOptions options;
+  options.heuristic_weight = 1.5;
+  const auto route =
+      AstarPlanner().plan(TopologyGraph(graph_fixture()), "A", "C", options);
+  ASSERT_TRUE(route.success);
+  EXPECT_EQ(route.message, "ok_weighted_astar_non_optimal");
 }
 
 RoadnetPackage trajectory_fixture() {

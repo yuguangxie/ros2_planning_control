@@ -126,3 +126,19 @@ sample AD Package 在 `templates/` 和 bringup 中有 23 个完全相同的文�
 - `CDX-P0-002`：`OPEN / ACCEPTED_PHASE_14_GAP`。本轮 Chassis 测试只覆盖现有 DBC、codec 和 frame 构造路径；缺失的独立 scheduler/watchdog、startup/timeout/shutdown stop 与 diagnostics 未被伪造为已实现或已通过。
 
 测试层级、执行状态和复现方法见 `docs/PHASE14_TEST_MATRIX.md` 与 `reports/phase_14_report.md`。
+
+## Phase 15 Planning 回归补充（2026-07-11）
+
+- Planning production-linked gtest target 从 2 个增至 3 个，source 共 40 cases：Loader 19、graph/motion/speed 13、helper 8。
+- 新增 Planning-only launch source，包含 canonical ready、PlanRoute、task/parking/charging PlanMission、failure emergency、invalid reload、late subscriber/QoS/republish 和 bounded exit；不启动 Control 或 Chassis。
+- 当前 Windows 环境实际执行 `run_offline_checks.py`：17 PASS / 0 FAIL / 0 SKIPPED。C++ 为 `GENERATED_NOT_EXECUTED`，ROS2 launch 为 `SKIPPED_ROS2_UNAVAILABLE`。
+- 基线 GitHub Actions run `29152378189` 为 `EXECUTED_FAIL`：sanitizer job 已执行原 19 个 Planning cases 并通过，full build-test 被 repository hygiene 的 container Git ownership 问题阻塞。Phase 15 修复 safe-directory、stderr 和退出码处理，但当前工作树 CI 仍是 `CONFIGURED_NOT_EXECUTED`。
+- 详细矩阵见 `docs/PHASE15_TEST_MATRIX.md`；Python data-contract PASS 不能替代本次新增 production C++ 与 DDS/launch 行为证明。
+
+## Phase 16 Control 回归补充（2026-07-12）
+
+- Control production-linked gtest target 从 3 个增至 4 个，source 从 18 增至 28 cases；新增参数 fail-fast、fake-clock cadence、progress/identity、真实 dt smoother 和 controller invalid/reverse 矩阵。
+- 新增 Control-only bounded launch source：默认 both/cadence、四 controller switch/reset、VehicleState gates、三类 timeout、estop latch/clear、late subscriber 和 bounded exit；不启动 Chassis Driver。
+- `check_control_config_contract.py` 实际 PASS：production/bringup/template 相同，76 个 YAML leaf 均被 production Node declare/get；旧 silent no-op key 已删除。
+- 当前 Windows 实际执行统一 runner：18 PASS / 0 FAIL / 0 SKIPPED。C++ 为 `GENERATED_NOT_EXECUTED`，ROS2 为 `SKIPPED_ROS2_UNAVAILABLE`。
+- 500 ms 硬件 watchdog 没有供应商、CAN 或 bench/HIL 证据，状态 `DECLARED_NOT_HIL_VERIFIED / HIL_NOT_EXECUTED`。测试矩阵见 `docs/PHASE16_TEST_MATRIX.md`。

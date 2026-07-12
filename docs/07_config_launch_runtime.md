@@ -12,7 +12,6 @@ low_speed_av_planning:
       verify_checksums: true
     topics:
       localization_pose_topic: "/localization/pose"
-      localization_pose_type: "pose_stamped"
       global_route_topic: "/planning/global_route"
       trajectory_topic: "/planning/trajectory"
       planning_status_topic: "/planning/status"
@@ -43,7 +42,6 @@ low_speed_av_control:
       mode: "both"
     topics:
       localization_pose_topic: "/localization/pose"
-      localization_pose_type: "pose_stamped"
       trajectory_topic: "/planning/trajectory"
       vehicle_state_topic: "/vehicle/state"
       safety_status_topic: "/safety/status"
@@ -57,6 +55,16 @@ low_speed_av_control:
       trajectory_timeout_s: 0.5
       allowed_trajectory_statuses: ["ok"]
       trajectory_s_tolerance_m: 1.0e-4
+      progress_backward_window_points: 3
+      progress_forward_window_points: 200
+      progress_max_heading_error_rad: 1.57
+    control:
+      status_publish_rate_hz: 5.0
+      publish_deadline_warning_s: 0.1
+      cadence_window_size: 128
+    hardware_watchdog:
+      timeout_s: 0.5
+      contract_status: "DECLARED_NOT_HIL_VERIFIED"
     vehicle_state:
       required: false
       timeout_s: 0.5
@@ -66,7 +74,6 @@ low_speed_av_control:
     vehicle:
       model: "front_ackermann"
       wheel_base_m: 1.2
-      track_width_m: 0.8
       max_speed_mps: 1.2
       max_accel_mps2: 0.5
       max_decel_mps2: 0.8
@@ -97,11 +104,11 @@ low_speed_av_control:
       dt_s: 0.1
       curvature_samples: [-0.2, -0.1, 0.0, 0.1, 0.2]
     command_smoother:
-      max_speed_step_mps: 0.05
       max_accel_mps2: 0.5
       max_decel_mps2: 0.8
-      max_steer_rate_radps: 0.35
-      emergency_decel_mps2: 1.0
+      max_jerk_mps3: 2.0
+      min_dt_s: 0.001
+      max_dt_s: 0.1
     scu:
       max_steering_angle_deg: 30.0
       max_target_speed_kmh: 5.0
@@ -117,6 +124,8 @@ low_speed_av_control:
         position: 0
         low_beam: 0
 ```
+
+`hardware_watchdog.timeout_s` 是外部硬件合同的诊断上界，不是软件 watchdog 周期；生产校验不允许它大于项目声明的 `0.5 s`。`contract_status` 保持 `DECLARED_NOT_HIL_VERIFIED`，直至供应商资料和台架证据归档后才可变更。
 
 ## Launch Files
 

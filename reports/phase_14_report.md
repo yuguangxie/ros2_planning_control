@@ -193,6 +193,10 @@ SUMMARY total=17 pass=17 fail=0 skipped=0
 
 `CDX-P0-002` 仍意味着 Control/DDS/publisher 消失后，Driver 可能继续保持底盘最近接收的运动状态，软件侧没有周期 stop frame 保证。进程硬崩溃或断电还必须依赖底盘硬件 watchdog。本报告和测试底座不构成实车放行依据。
 
+## Phase 15 复核注记（2026-07-11）
+
+Phase 14 后续远端 run `29152378189` 已实际发生：sanitizer job PASS，full build-test 因 `offline_repository_hygiene.py` 内 `git ls-files` 在 container 返回 128 而 FAIL，因此历史 CI 状态应读作 `EXECUTED_FAIL`，不是 PASS。Phase 15 对该单点阻塞进行了 safe-directory 与 stderr/return-code 修复；修复所在工作区尚未提交执行，状态是 `CONFIGURED_NOT_EXECUTED`。本注记不改写 Phase 14 当时的观察结果。
+
 ## Next phase handoff
 
 先在独立安全修复中实现并审查 Chassis 最新命令缓存、steady-clock age、20–50 Hz scheduler、startup/invalid/timeout/shutdown stop、同步、diagnostic_msgs 状态和硬件 watchdog 合同；随后启用本阶段保留的 watchdog specs，并在 ROS2 Humble CI/HIL 上保存同 commit 证据。不要将该工作混入第三阶段 loader hardening、A* 修正、闭环仿真或高级算法。

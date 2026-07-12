@@ -1,6 +1,8 @@
 #include "low_speed_av_planning/topology_graph.hpp"
 
+#include <algorithm>
 #include <cmath>
+#include <tuple>
 
 namespace low_speed_av_planning {
 
@@ -13,6 +15,16 @@ TopologyGraph::TopologyGraph(const RoadnetPackage & package)
     edges_[edge.id] = edge;
     adjacency_[edge.from_node_id].push_back(edge);
   }
+  for (auto & item : adjacency_) {
+    std::sort(item.second.begin(), item.second.end(), [](const auto & a, const auto & b) {
+      return std::tie(a.to_node_id, a.id) < std::tie(b.to_node_id, b.id);
+    });
+  }
+}
+
+const std::map<std::string, TopologyEdge> & TopologyGraph::edges() const
+{
+  return edges_;
 }
 
 const TopologyNode * TopologyGraph::node(const std::string & id) const

@@ -106,3 +106,31 @@ Vehicle limits、lookahead、timeout、LQR/MPC 权重和 SCU 参数大多直接�
 | CDX-P3-006 | 无 CI、仓库 LICENSE、CONTRIBUTING、SECURITY、CODEOWNERS | 补工程治理文件和 required checks。 |
 | CDX-P3-007 | package 版本均为 0.1.0，maintainer 使用 demo 地址 | 发布前统一版本策略和真实维护信息。 |
 | CDX-P3-008 | PlanningNode 约 1800 行，职责集中 | 拆分 anchor resolver、trajectory builder、mission coordinator 和 ROS adapter。 |
+
+## Phase 15 状态补充（2026-07-11）
+
+| Finding | 当前状态 | 证据与剩余条件 |
+|---|---|---|
+| CDX-P1-005 | PARTIALLY_FIXED / GENERATED_NOT_EXECUTED | 所有 manifest/files/hash/checksum 实际路径共用 canonical containment，绝对、`..`、混合分隔符和 symlink 负例已写入 production-linked gtest；需同提交 ROS2/C++ 执行通过后关闭。 |
+| CDX-P1-006 | PARTIALLY_FIXED | Planning 新增第三个 production-linked helper target，Planning C++ source 增至 40 cases；本机未编译执行。 |
+| CDX-P1-007 | EXECUTED_FAIL | 基线 GitHub run `29152378189` 的 sanitizer PASS、full build-test 因 container `git ls-files` 128 失败；Phase 15 已配置最小修复，但当前工作区未产生同提交 CI PASS。 |
+| CDX-P2-003 | PARTIALLY_FIXED / GENERATED_NOT_EXECUTED | Loader 增加 ID、引用、有限性、非负、index count/range/coverage/edge 与 semantic 唯一性校验；负例源码已注册，未执行。 |
+| CDX-P2-004 | PARTIALLY_FIXED / GENERATED_NOT_EXECUTED | A* admissible scale、weighted 状态、稳定 tie-break、负 cost 双层拒绝已实现；等价路径和 Dijkstra cost equivalence gtest 未执行。 |
+| CDX-P2-005 | PARTIALLY_FIXED / GENERATED_NOT_EXECUTED | GlobalRoute length/time 按 full reference 几何重算，semantic terminal helper 已进入 production；C++/launch 未执行。 |
+| CDX-P2-006 | PARTIALLY_FIXED / GENERATED_NOT_EXECUTED | Planning local crop 使用 identity、单调 progress、有限窗口和 heading；helper gtest 未执行。Control 侧最近点行为不在 Phase 15 范围。 |
+
+`CDX-P0-002` 保持 `OPEN_SOFTWARE / ACCEPTED_HARDWARE_MITIGATION`：项目依赖底盘 500 ms 无 0x121 的硬件停车合同，本阶段未修改 `src/yunle_chassis`，也未宣称软件 watchdog 已实现。
+
+## Phase 16 状态补充（2026-07-12）
+
+| Finding | 当前状态 | 生产与测试证据 |
+|---|---|---|
+| CDX-P0-001 | FIXED_PRODUCTION / REGRESSION_SKIPPED_ROS2_UNAVAILABLE | Control 仍在 controller 前消费 emergency/failure/invalid metadata；既有和新增 launch source 均未在本机执行。 |
+| CDX-P0-002 | OPEN_SOFTWARE / ACCEPTED_HARDWARE_MITIGATION | 未修改 Chassis；500 ms 无 0x121 停车仅为项目方声明，状态 `DECLARED_NOT_HIL_VERIFIED / HIL_NOT_EXECUTED`。 |
+| CDX-P1-004 | PARTIALLY_FIXED / GENERATED_NOT_EXECUTED | 76 个 YAML leaf 全部 declare/get；生产参数 validator、实际 dt accel/decel/jerk、独立前后 rate、reset/bypass 已实现；C++ 未执行。 |
+| CDX-P1-006 | PARTIALLY_FIXED | Control production-linked target 增至 4 个、source 28 cases；Phase 14 旧 18 cases sanitizer PASS，Phase 16 新代码未执行。 |
+| CDX-P1-007 | EXECUTED_FAIL / CURRENT_WORKTREE_CONFIGURED_NOT_EXECUTED | 历史 run `29152378189` 主 job FAIL；当前 workflow 增加定向 Control/Bringup 测试，但无同提交 PASS。 |
+| CDX-P2-006 | PARTIALLY_FIXED / GENERATED_NOT_EXECUTED | Control 增加 identity、heading、gear、有限窗口和单调 progress；四 controller matrix 源码未执行。 |
+| CDX-P2-007 | OPEN_CAPABILITY / FAIL_CLOSED_MITIGATION | Reverse 专用控制未实现；四 controller 统一返回 `unsupported_reverse_tracking` stop，不再假装沿用前进模型。 |
+| CDX-P2-010 | PARTIALLY_FIXED / GENERATED_NOT_EXECUTED | trajectory/controller/model/estop clear/重新使能均 reset smoother/progress，algorithm switch 强制 READY 周期；launch/C++ 未执行。 |
+| CDX-P2-011 | FIXED_PRODUCTION / REGRESSION_GENERATED_NOT_EXECUTED | PARK/unknown 继续映射固定 brake stop，D/R/N 映射保持；当前回归源码未执行。 |

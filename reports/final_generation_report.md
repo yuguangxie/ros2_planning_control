@@ -31,3 +31,27 @@
 - `CDX-P1-006`：`PARTIALLY_FIXED`；`CDX-P1-007`：`CONFIGURED_NOT_EXECUTED`；`CDX-P3-001/002/003`：`FIXED`。
 - `CDX-P0-002`：`OPEN / ACCEPTED_PHASE_14_GAP`。startup/timeout/invalid replay/shutdown/diagnostics watchdog specs 明确跳过，不计为 PASS。
 - 证据：`reports/phase_14_report.md`。
+
+### Phase 15：Planning AD Package 与图搜索加固
+
+- 状态：`IMPLEMENTED_LOCALLY_PENDING_ROS2_CI`。
+- 基线提交/分支：`b1af553b790c22130699258c86920f9586778bad` / `codex/phase-13-control-safety`；日期 2026-07-11；Windows、无 ROS2/colcon/C++ compiler。
+- 已实现：统一 manifest/checksum containment；Loader 结构/数值 fail-closed；admissible A* 与确定性 tie-break；production semantic/current-pose/terminal/progress helper；GlobalRoute/full/local 几何一致性；Planning-only launch source；container Git hygiene 最小修复。
+- 测试源码：Planning 三个 production-linked gtest target、40 cases；Planning-only launch 5 个 runtime + 1 个 post-shutdown case。
+- 实际执行：FreeCAD Python 3.11.14 运行统一 offline runner，17 PASS / 0 FAIL / 0 SKIPPED；`git diff --check` PASS。C++ 为 `GENERATED_NOT_EXECUTED`，ROS2 为 `SKIPPED_ROS2_UNAVAILABLE`。
+- CI：历史 run `29152378189` 是 `EXECUTED_FAIL`（sanitizer PASS、build-test 被 Git ownership 阻塞）；Phase 15 workflow 修复为 `CONFIGURED_NOT_EXECUTED`，没有同提交 PASS 证据。
+- Findings：`CDX-P1-005`、`CDX-P2-003/004/005/006` 均为 `PARTIALLY_FIXED / GENERATED_NOT_EXECUTED`；`CDX-P1-007` 未关闭。
+- Chassis：`src/yunle_chassis` 零 diff；`CDX-P0-002` 保持 `OPEN_SOFTWARE / ACCEPTED_HARDWARE_MITIGATION`，依赖底盘 500 ms 无 0x121 的硬件停车合同。
+- 证据：`reports/phase_15_report.md` 与 `docs/PHASE15_TEST_MATRIX.md`。
+
+### Phase 16：Control 工程化与硬件 Watchdog 协同
+
+- 状态：`IMPLEMENTED_LOCALLY_PENDING_ROS2_CI_AND_HIL`。
+- 生产实现：启动参数 fail-fast；76/76 YAML leaf 映射；steady-clock 实际 dt smoother；accel/decel/jerk 与独立前后轮 rate；safety bypass；progress/identity；switch/reset；cadence max/p95/missed/deadline diagnostics。
+- 默认周期合同：50 Hz/20 ms，软件告警 deadline 100 ms，项目方声明硬件 timeout 500 ms。Control 存活时持续主动发布 stop，不等待硬件 timeout。
+- 测试源码：Control 4 个 production-linked gtest target、28 cases；新增 Control-only launch 6 runtime + 1 post-shutdown case。
+- 实际执行：统一 offline runner 18 PASS / 0 FAIL / 0 SKIPPED；config 76/76 PASS；repository hygiene、template、Python syntax、`git diff --check` PASS。C++/ROS2 未执行。
+- CI：当前工作区 `CONFIGURED_NOT_EXECUTED`；历史 run 仍为 `EXECUTED_FAIL`，没有同提交 full PASS。
+- HIL：`DECLARED_NOT_HIL_VERIFIED / HIL_NOT_EXECUTED`；未发现供应商协议、CAN 抓包或故障注入证据。
+- Chassis：零 diff；`CDX-P0-002` 保持 `OPEN_SOFTWARE / ACCEPTED_HARDWARE_MITIGATION`。
+- 证据：`reports/phase_16_report.md`、`docs/PHASE16_TEST_MATRIX.md`、`docs/HARDWARE_WATCHDOG_500MS_VALIDATION.md`。

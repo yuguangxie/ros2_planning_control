@@ -33,8 +33,6 @@ struct ControllerOptions {
   int mpc_horizon_steps{10};
   double mpc_dt_s{0.1};
   std::vector<double> mpc_curvature_samples{-0.2, -0.1, 0.0, 0.1, 0.2};
-  int mpc_sample_count{5};
-  double mpc_max_curvature_1pm{0.2};
   double mpc_lateral_error_weight{1.0};
   double mpc_heading_error_weight{0.5};
   double mpc_speed_error_weight{0.2};
@@ -47,11 +45,9 @@ public:
   virtual std::string name() const = 0;
   // Compute a raw tracking command from pose, vehicle state and trajectory.
   // Limiting, smoothing and safety overrides are applied outside controllers.
-  virtual ControlCommand compute(
-    const Pose2d & pose,
-    const VehicleState & state,
-    const Trajectory & trajectory,
-    const ControllerOptions & options) const = 0;
+  virtual ControlCommand compute(const Pose2d &pose, const VehicleState &state,
+                                 const Trajectory &trajectory,
+                                 const ControllerOptions &options) const = 0;
 };
 
-}  // namespace low_speed_av_control
+} // namespace low_speed_av_control
