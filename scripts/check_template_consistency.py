@@ -78,6 +78,11 @@ def check_required_tree() -> None:
     required = [
         "src/low_speed_av_interfaces/srv/PlanMission.srv",
         "src/low_speed_av_simulation/src/roadnet_visualization_node.cpp",
+        "src/low_speed_av_simulation/test/test_sim_localization_reset_launch.py",
+        "src/low_speed_av_simulation/test/test_simulation_core.cpp",
+        "src/low_speed_av_simulation/test/test_control_closed_loop_plant_launch.py",
+        "src/low_speed_av_bringup/launch/planning_control_closed_loop_sim.launch.py",
+        "src/low_speed_av_bringup/test/test_planning_control_closed_loop_sil_launch.py",
         "src/yunle_chassis/chassis_driver/src/scu_control_frame_builder.cpp",
         "src/yunle_chassis/chassis_driver/test/test_chassis_core.cpp",
         "src/low_speed_av_bringup/test/test_planning_control_safety_launch.py",
@@ -100,7 +105,7 @@ def main() -> int:
     check_required_tree()
     print(
         "Template consistency OK: runtime validators canonical, configs synchronized, "
-        "sample AD Package hashes equal, Phase 16 tree complete"
+        "sample AD Package hashes equal, Phase 18 tree complete"
     )
     return 0
 

@@ -19,10 +19,17 @@ Visualization Manager:
       Topic:
         Value: /simulation/route_markers
     - Class: rviz_default_plugins/Path
+      Color: 25; 255; 25
       Enabled: true
       Name: Planned Trajectory Path
       Topic:
         Value: /simulation/trajectory_path
+    - Class: rviz_default_plugins/Path
+      Color: 255; 80; 220
+      Enabled: true
+      Name: Actual Closed Loop Pose Path
+      Topic:
+        Value: /simulation/pose_path
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: Vehicle Markers

@@ -10,6 +10,7 @@ import launch
 import launch_ros.actions
 import launch_testing
 import launch_testing.actions
+import launch_testing.asserts
 import pytest
 import rclpy
 from ament_index_python.packages import get_package_share_directory
@@ -289,4 +290,4 @@ class TestControlRuntime(unittest.TestCase):
 @launch_testing.post_shutdown_test()
 class TestControlProcessExit(unittest.TestCase):
     def test_control_exits_with_bounded_wait(self, proc_info, control):
-        proc_info.assertWaitForShutdown(process=control, timeout=10.0)
+        launch_testing.asserts.assertExitCodes(proc_info, process=control)

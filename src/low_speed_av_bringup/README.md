@@ -8,6 +8,7 @@
 - `low_speed_av_planning`
 - `low_speed_av_control`
 - `low_speed_av_interfaces`
+- `low_speed_av_simulation`（仅在仿真 launch 中）
 
 ## 文件结构
 
@@ -17,10 +18,12 @@ low_speed_av_bringup/
   package.xml
   launch/
     planning_control_demo.launch.py
+    planning_control_closed_loop_sim.launch.py
   config/
     planning_params.yaml
     control_params.yaml
     vehicle_params.yaml
+    control_sim_params.yaml
   sample_ad_package/
     project_manifest.json
     checksums.sha256
@@ -107,6 +110,44 @@ launch/planning_control_demo.launch.py
 - `control_params`：控制参数 YAML 路径。
 
 当前 launch 默认参数为空，适合集成系统显式传参。后续可以改为自动定位安装后的 config 和 sample package。
+
+### Control closed-loop SIL
+
+`planning_control_closed_loop_sim.launch.py` 只启动 Planning、Control、Simulation plant、Roadnet visualization 和可选 RViz。它不会启动 `chassis_driver_node`、`keyboard_scu_control_node` 或任何 UDP/CAN 节点。Simulation 专用 Control override 强制 `output.mode=internal`、`vehicle_state.required=true`，不会改变生产 Control 默认的 `output.mode=both`。
+
+```bash
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 launch low_speed_av_bringup \
+  planning_control_closed_loop_sim.launch.py \
+  rviz:=true \
+  controller_algorithm:=lqr \
+  vehicle_model:=front_ackermann
+```
+
+可用参数：`roadnet_package_path`、`planning_params`、`control_params`、`simulation_params`、`controller_algorithm`、`vehicle_model`、`rviz`、`start_paused`。默认 bundled sample 在 `--symlink-install` 下只解析仓库可信 sample 的物理根；用户传入的 AD Package 仍由 Loader strict containment 验证。
+
+请求 sample 路线：
+
+```bash
+ros2 service call /low_speed_av_planning/plan_route \
+  low_speed_av_interfaces/srv/PlanRoute \
+  "{start_node_id: 'N0001', goal_node_id: 'N0003', start_task_point_id: '', goal_task_point_id: '', goal_parking_point_id: ''}"
+```
+
+诊断：
+
+```bash
+ros2 topic hz /control/command
+ros2 topic hz /localization/pose
+ros2 topic echo /control/status
+ros2 topic echo /simulation/status
+ros2 topic echo /simulation/diagnostics
+ros2 topic echo /vehicle/state
+ros2 node list
+```
+
+RViz 中绿色为 Planning trajectory，粉色为 actual pose path；Roadnet、GlobalRoute/goal、vehicle marker 同时显示。SIL 结果不得解释为 HIL 或真实车辆性能。
 
 ## 推荐使用方式
 在真实 ROS2 环境中：

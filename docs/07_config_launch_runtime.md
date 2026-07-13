@@ -161,3 +161,15 @@ use_sim_time
 Control 的 localization/trajectory/VehicleState watchdog 使用本地 steady-clock receive time；不会把零 header stamp 或暂停的仿真时间直接判为消息超时。锁存急停只能通过 `/low_speed_av_control/clear_estop`（`std_srvs/srv/Trigger`）显式清除，并且清除后先进入 `READY`。
 
 运行边界：simulation 只验证软件消息语义；bench 必须断开驱动轮或架车并具备物理急停；vehicle 必须额外验证底盘硬件 watchdog。当前 Yunle Chassis Driver 尚无本阶段要求的独立周期命令 watchdog，不能把 Control 持续发布 stop 当成等价替代。
+# Phase 18 closed-loop SIL runtime
+
+闭环软件仿真入口为：
+
+```bash
+ros2 launch low_speed_av_bringup planning_control_closed_loop_sim.launch.py \
+  rviz:=false controller_algorithm:=lqr vehicle_model:=front_ackermann
+```
+
+数据链为 `Planning trajectory -> Control -> /control/command -> Simulation plant -> /localization/pose + /vehicle/state`。闭环专用 `control_sim_params.yaml` 使用 internal-only output；生产 Control 配置仍为 both。`path_replay` 仍保留用于 Planning 快速检查，但不能作为 controller 闭环证据。
+
+闭环 launch 为了保持稳定 trajectory identity，关闭 Planning 的重复 local crop；Control 的 production progress tracker 仍根据当前 pose 执行有界窗口裁剪。它不启动 Chassis、keyboard、UDP 或 CAN。

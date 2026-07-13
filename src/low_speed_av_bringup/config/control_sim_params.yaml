@@ -1,0 +1,7 @@
+low_speed_av_control:
+  ros__parameters:
+    output:
+      mode: "internal"
+    vehicle_state:
+      required: true
+      timeout_s: 0.5

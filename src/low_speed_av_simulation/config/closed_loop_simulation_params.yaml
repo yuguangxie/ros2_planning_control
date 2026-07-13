@@ -1,0 +1,67 @@
+sim_localization_pose_publisher:
+  ros__parameters:
+    roadnet:
+      package_path: ""
+      reject_failed_validation: true
+      verify_checksums: true
+    simulation:
+      mode: "control_closed_loop"
+      closed_loop:
+        plant_step_rate_hz: 100.0
+        command_timeout_s: 0.2
+        control_command_topic: "/control/command"
+        vehicle_state_topic: "/vehicle/state"
+        diagnostics_topic: "/simulation/diagnostics"
+        monitor_window_size: 256
+        plant:
+          wheel_base_m: 1.2
+          min_dt_s: 0.001
+          max_dt_s: 0.05
+          max_speed_mps: 1.0
+          max_acceleration_mps2: 0.5
+          max_deceleration_mps2: 0.8
+          max_jerk_mps3: 2.0
+          max_front_steering_angle_rad: 0.6
+          max_rear_steering_angle_rad: 0.6
+          max_front_steering_rate_radps: 0.8
+          max_rear_steering_rate_radps: 0.8
+          brake_deceleration_mps2: 1.0
+          emergency_deceleration_mps2: 1.5
+        vehicle_state:
+          autonomous_enabled: true
+          brake_pressed: false
+          fault_code: ""
+      localization:
+        enabled: true
+        pose_topic: "/localization/pose"
+        publish_rate_hz: 20.0
+        frame_id: "map"
+        mode: "path_follow"
+        initial_pose:
+          source: "waypoint"
+          x: 0.0
+          y: 0.0
+          yaw: 0.0
+          waypoint_id: "WP_E_L001_F_000000"
+          task_point_id: ""
+          edge_id: ""
+          edge_progress: 0.0
+        follow:
+          follow_source: "full_reference_path"
+          fallback_to_local_trajectory: true
+          reanchor_on_new_path: true
+          restart_on_new_path: false
+          use_trajectory_speed: true
+          default_speed_mps: 0.6
+          max_speed_mps: 1.0
+          acceleration_limit_mps2: 0.5
+          stop_at_goal: true
+          goal_tolerance_m: 0.3
+          yaw_tolerance_rad: 0.35
+          hold_on_failure_stop: true
+          hold_when_no_path: true
+          ignore_republished_same_path: true
+          full_reference_path_topic: "/planning/full_reference_path"
+          trajectory_topic: "/planning/trajectory"
+    start_paused: false
+    reset_clears_path: true

@@ -36,12 +36,13 @@ jobs:
           apt-get install -y --no-install-recommends python3-pip python3-pytest python3-yaml clang-format
           rosdep update
           rosdep install --from-paths src --ignore-src -r -y
+          rosdep check --from-paths src --ignore-src -r
       - name: Offline data and template checks
         run: python3 scripts/run_offline_checks.py
       - name: Python and formatting checks
         shell: bash
         run: |
-          python3 -m compileall -q scripts src/low_speed_av_bringup/test
+          python3 -m compileall -q scripts src/low_speed_av_bringup/test src/low_speed_av_simulation/test
           git diff --check
           clang-format --dry-run --Werror \
             src/low_speed_av_planning/test/test_roadnet_loader.cpp \
@@ -62,6 +63,12 @@ jobs:
             src/low_speed_av_control/test/test_vehicle_command_pipeline.cpp \
             src/low_speed_av_control/test/test_safety_state_machine.cpp \
             src/low_speed_av_control/test/test_control_runtime_helpers.cpp \
+            src/low_speed_av_simulation/include/low_speed_av_simulation/simulation_types.hpp \
+            src/low_speed_av_simulation/include/low_speed_av_simulation/kinematic_vehicle_plant.hpp \
+            src/low_speed_av_simulation/include/low_speed_av_simulation/simulation_runtime_monitor.hpp \
+            src/low_speed_av_simulation/src/kinematic_vehicle_plant.cpp \
+            src/low_speed_av_simulation/src/simulation_runtime_monitor.cpp \
+            src/low_speed_av_simulation/test/test_simulation_core.cpp \
             src/yunle_chassis/chassis_driver/include/chassis_driver/scu_control_frame_builder.hpp \
             src/yunle_chassis/chassis_driver/src/scu_control_frame_builder.cpp \
             src/yunle_chassis/chassis_driver/test/test_chassis_core.cpp
@@ -75,10 +82,13 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           source install/setup.bash
-          colcon test --packages-select low_speed_av_control low_speed_av_bringup \
-            --event-handlers console_direct+
+          export ROS_LOG_DIR="${GITHUB_WORKSPACE}/sil_ros_log"
+          mkdir -p "${ROS_LOG_DIR}"
+          timeout 10m colcon test --packages-select \
+            low_speed_av_control low_speed_av_simulation low_speed_av_bringup \
+            --executor sequential --event-handlers console_direct+
           colcon test-result --verbose
-          colcon test --event-handlers console_direct+
+          colcon test --executor sequential --event-handlers console_direct+
           colcon test-result --verbose
       - name: Upload test and build logs
         if: always()
@@ -88,6 +98,7 @@ jobs:
           path: |
             build/**/Testing
             log
+            sil_ros_log
           if-no-files-found: warn
 
   sanitizers:
@@ -111,18 +122,21 @@ jobs:
           apt-get install -y --no-install-recommends python3-yaml
           rosdep update
           rosdep install --from-paths src --ignore-src -r -y
+          rosdep check --from-paths src --ignore-src -r
       - name: Build production-linked C++ tests with ASan and UBSan
         shell: bash
         run: |
           source /opt/ros/humble/setup.bash
           colcon build --symlink-install \
-            --packages-up-to low_speed_av_planning low_speed_av_control chassis_driver \
+            --packages-up-to low_speed_av_planning low_speed_av_control low_speed_av_simulation chassis_driver \
             --cmake-args -DCMAKE_BUILD_TYPE=Debug \
               -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
               -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
           source install/setup.bash
           colcon test --packages-select low_speed_av_planning low_speed_av_control chassis_driver \
             --event-handlers console_direct+
+          colcon test --packages-select low_speed_av_simulation \
+            --event-handlers console_direct+ --ctest-args -R test_simulation_core
           colcon test-result --verbose
       - name: Upload sanitizer logs
         if: always()

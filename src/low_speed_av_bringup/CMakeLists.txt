@@ -11,6 +11,7 @@ if(BUILD_TESTING)
   add_launch_test(test/test_planning_control_safety_launch.py TIMEOUT 60)
   add_launch_test(test/test_planning_services_launch.py TIMEOUT 90)
   add_launch_test(test/test_control_runtime_launch.py TIMEOUT 120)
+  add_launch_test(test/test_planning_control_closed_loop_sil_launch.py TIMEOUT 120)
 endif()
 
 ament_package()

@@ -23,6 +23,7 @@ sim_localization_pose_publisher:
       reject_failed_validation: true
       verify_checksums: true
     simulation:
+      mode: "path_replay"
       localization:
         enabled: true
         pose_topic: "/localization/pose"

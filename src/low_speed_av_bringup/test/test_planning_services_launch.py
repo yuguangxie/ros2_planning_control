@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import importlib.util
 import shutil
 import tempfile
 import time
@@ -15,6 +16,7 @@ import launch
 import launch_ros.actions
 import launch_testing
 import launch_testing.actions
+import launch_testing.asserts
 import pytest
 import rclpy
 from ament_index_python.packages import get_package_share_directory
@@ -25,6 +27,7 @@ from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 
 FIXTURE_ROOT: Path | None = None
 INVALID_ROOT: Path | None = None
+BUNDLED_ROOT: Path | None = None
 
 
 def _prepare_fixtures(sample: Path) -> tuple[Path, Path]:
@@ -51,10 +54,13 @@ def _prepare_fixtures(sample: Path) -> tuple[Path, Path]:
     valid_manifest = json.loads(valid_manifest_path.read_text(encoding="utf-8"))
     valid_manifest["hashes"]["semantics/charging_points.json"] = charging_hash
     valid_manifest_path.write_text(json.dumps(valid_manifest, indent=2), encoding="utf-8")
+    manifest_hash = hashlib.sha256(valid_manifest_path.read_bytes()).hexdigest()
     checksums_path = valid / "checksums.sha256"
     checksum_lines = checksums_path.read_text(encoding="utf-8").splitlines()
     checksum_lines = [
-        f"{charging_hash}  semantics/charging_points.json"
+        f"{manifest_hash}  project_manifest.json"
+        if line.endswith("  project_manifest.json")
+        else f"{charging_hash}  semantics/charging_points.json"
         if line.endswith("  semantics/charging_points.json")
         else line
         for line in checksum_lines
@@ -67,12 +73,23 @@ def _prepare_fixtures(sample: Path) -> tuple[Path, Path]:
     return valid, invalid
 
 
+def _resolve_demo_bundled_root(bringup_share: Path) -> Path:
+    launch_path = bringup_share / "launch" / "planning_control_demo.launch.py"
+    spec = importlib.util.spec_from_file_location("phase17_demo_launch", launch_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load demo launch: {launch_path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return Path(module._bundled_sample_physical_root())
+
+
 @pytest.mark.launch_test
 def generate_test_description():
-    global FIXTURE_ROOT, INVALID_ROOT
+    global FIXTURE_ROOT, INVALID_ROOT, BUNDLED_ROOT
     bringup_share = Path(get_package_share_directory("low_speed_av_bringup"))
     planning_share = Path(get_package_share_directory("low_speed_av_planning"))
     FIXTURE_ROOT, INVALID_ROOT = _prepare_fixtures(bringup_share / "sample_ad_package")
+    BUNDLED_ROOT = _resolve_demo_bundled_root(bringup_share)
     planning = launch_ros.actions.Node(
         package="low_speed_av_planning",
         executable="planning_node",
@@ -81,7 +98,7 @@ def generate_test_description():
         parameters=[
             str(planning_share / "config" / "planning_params.yaml"),
             {
-                "roadnet.package_path": str(bringup_share / "sample_ad_package"),
+                "roadnet.package_path": str(FIXTURE_ROOT),
                 "planning.use_current_pose_as_start": False,
             },
         ],
@@ -133,7 +150,7 @@ class TestPlanningServices(unittest.TestCase):
             raise AssertionError(f"service timed out: {name}")
         return future.result()
 
-    def test_01_late_subscriber_receives_ready_transient_status(self):
+    def test_01_ready_status_and_symlink_install_bundled_sample_reload(self):
         received: list[RoadnetStatus] = []
         qos = QoSProfile(depth=1)
         qos.reliability = ReliabilityPolicy.RELIABLE
@@ -146,6 +163,14 @@ class TestPlanningServices(unittest.TestCase):
         self.assertEqual(ready.schema_version, "1.1.0")
         self.assertGreater(ready.waypoints, 0)
         self.node.destroy_subscription(subscription)
+        assert BUNDLED_ROOT is not None
+        self.assertTrue((BUNDLED_ROOT / "project_manifest.json").is_file())
+        reload_request = ReloadRoadnet.Request()
+        reload_request.package_path = str(BUNDLED_ROOT)
+        reload_response = self.call(
+            ReloadRoadnet, "/low_speed_av_planning/reload_roadnet", reload_request
+        )
+        self.assertTrue(reload_response.success, reload_response.message)
 
     def test_02_plan_route_success_and_republish(self):
         self.routes.clear()
@@ -198,8 +223,23 @@ class TestPlanningServices(unittest.TestCase):
         request.goal_node_id = "NO_SUCH_NODE"
         response = self.call(PlanRoute, "/low_speed_av_planning/plan_route", request)
         self.assertFalse(response.success)
+        self.assertTrue(response.message)
+
+        def is_failure_stop(item: Trajectory) -> bool:
+            return (
+                item.emergency_stop
+                and item.trajectory_id == "failure_stop"
+                and bool(item.status)
+                and bool(item.points)
+                and all(point.v_mps == 0.0 for point in item.points)
+                and all(
+                    point.behavior == "planning_failure_stop"
+                    for point in item.points
+                )
+            )
+
         self.spin_until(
-            lambda: any(item.emergency_stop and item.status == "failure" for item in self.trajectories),
+            lambda: any(is_failure_stop(item) for item in self.trajectories),
             10.0,
             "failure emergency trajectory",
         )
@@ -221,4 +261,4 @@ class TestPlanningServices(unittest.TestCase):
 @launch_testing.post_shutdown_test()
 class TestPlanningProcessExit(unittest.TestCase):
     def test_process_exits_with_bounded_wait(self, proc_info, planning):
-        proc_info.assertWaitForShutdown(process=planning, timeout=10.0)
+        launch_testing.asserts.assertExitCodes(proc_info, process=planning)

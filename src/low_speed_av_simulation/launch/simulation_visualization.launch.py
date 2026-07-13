@@ -7,6 +7,17 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
+def _bundled_sample_physical_root() -> str:
+    installed = (
+        Path(get_package_share_directory("low_speed_av_bringup"))
+        / "sample_ad_package"
+    )
+    root = (installed / "project_manifest.json").resolve(strict=True).parent
+    if not (root / "project_manifest.json").is_file():
+        raise RuntimeError("bundled sample project_manifest.json is unavailable")
+    return str(root)
+
+
 def generate_launch_description():
     roadnet_package_path = LaunchConfiguration("roadnet_package_path")
     use_sim_pose = LaunchConfiguration("use_sim_pose")
@@ -40,10 +51,7 @@ def generate_launch_description():
         "launch",
         "planning_control_demo.launch.py",
     ])
-    default_roadnet_package = PathJoinSubstitution([
-        FindPackageShare("low_speed_av_bringup"),
-        "sample_ad_package",
-    ])
+    default_roadnet_package = _bundled_sample_physical_root()
 
     return LaunchDescription([
         DeclareLaunchArgument("roadnet_package_path", default_value=default_roadnet_package),
@@ -116,3 +124,6 @@ def generate_launch_description():
             condition=IfCondition(rviz),
         ),
     ])
+from pathlib import Path
+
+from ament_index_python.packages import get_package_share_directory

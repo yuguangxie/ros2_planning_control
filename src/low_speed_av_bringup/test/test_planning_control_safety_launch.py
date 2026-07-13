@@ -3,13 +3,17 @@
 
 from __future__ import annotations
 
+import shutil
+import tempfile
 import time
 import unittest
+from pathlib import Path
 
 import launch
 import launch_ros.actions
 import launch_testing
 import launch_testing.actions
+import launch_testing.asserts
 import pytest
 import rclpy
 from ament_index_python.packages import get_package_share_directory
@@ -20,11 +24,23 @@ from low_speed_av_interfaces.msg import ControlCommand, Trajectory, VehicleState
 from low_speed_av_interfaces.srv import PlanRoute
 
 
+FIXTURE_ROOT: Path | None = None
+
+
+def _materialize_sample(sample: Path) -> Path:
+    root = Path(tempfile.mkdtemp(prefix="phase17_safety_fixture_"))
+    valid = root / "valid"
+    shutil.copytree(sample, valid)
+    return valid
+
+
 @pytest.mark.launch_test
 def generate_test_description():
+    global FIXTURE_ROOT
     bringup_share = get_package_share_directory("low_speed_av_bringup")
     planning_share = get_package_share_directory("low_speed_av_planning")
     control_share = get_package_share_directory("low_speed_av_control")
+    FIXTURE_ROOT = _materialize_sample(Path(bringup_share) / "sample_ad_package")
     planning = launch_ros.actions.Node(
         package="low_speed_av_planning",
         executable="planning_node",
@@ -32,7 +48,7 @@ def generate_test_description():
         output="screen",
         parameters=[
             f"{planning_share}/config/planning_params.yaml",
-            {"roadnet.package_path": f"{bringup_share}/sample_ad_package"},
+            {"roadnet.package_path": str(FIXTURE_ROOT)},
         ],
     )
     control = launch_ros.actions.Node(
@@ -77,6 +93,8 @@ class TestPlanningControlSafety(unittest.TestCase):
     def tearDownClass(cls):
         cls.node.destroy_node()
         rclpy.shutdown()
+        if FIXTURE_ROOT is not None:
+            shutil.rmtree(FIXTURE_ROOT.parent, ignore_errors=True)
 
     @classmethod
     def spin_until(cls, predicate, timeout_s: float, label: str):
@@ -141,5 +159,5 @@ class TestPlanningControlSafety(unittest.TestCase):
 @launch_testing.post_shutdown_test()
 class TestProcessExit(unittest.TestCase):
     def test_processes_exit_cleanly(self, proc_info, planning, control):
-        proc_info.assertWaitForShutdown(process=planning, timeout=10.0)
-        proc_info.assertWaitForShutdown(process=control, timeout=10.0)
+        launch_testing.asserts.assertExitCodes(proc_info, process=planning)
+        launch_testing.asserts.assertExitCodes(proc_info, process=control)

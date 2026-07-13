@@ -121,6 +121,19 @@ Vehicle limits、lookahead、timeout、LQR/MPC 权重和 SCU 参数大多直接�
 
 `CDX-P0-002` 保持 `OPEN_SOFTWARE / ACCEPTED_HARDWARE_MITIGATION`：项目依赖底盘 500 ms 无 0x121 的硬件停车合同，本阶段未修改 `src/yunle_chassis`，也未宣称软件 watchdog 已实现。
 
+## Phase 18 Simulation 状态补充（2026-07-13）
+
+| Finding | 当前状态 | 生产与测试证据 |
+|---|---|---|
+| `CDX-P2-008` | `FIXED_LOCAL_SIL / CI_PENDING` | `/control/command` 驱动 ROS-independent production plant；pose 不再由 Planning path 直接更新。25 个 production-linked C++ cases 和 bounded node/full SIL launch 本地 PASS。 |
+| `CDX-P2-009` | `FIXED_LOCAL_SIL / CI_PENDING` | production plant 的 `goal_reached()` 同时使用 position/yaw tolerance；完整 SIL 到达后速度 `<0.05 m/s`。 |
+| `CDX-P2-012` | `PARTIALLY_FIXED_SIM_ENTRY` | 新增完整 headless/RViz sim launch，internal-only Control，不启 Chassis/keyboard/UDP/CAN；bench/vehicle 入口仍不在本阶段。 |
+| `CDX-P2-007` | `OPEN_CAPABILITY / FAIL_CLOSED_MITIGATION` | reverse command 在 plant 和 controller 均停车，不实现 reverse motion。 |
+| `CDX-P0-002` | `OPEN_SOFTWARE / ACCEPTED_HARDWARE_MITIGATION` | Simulation command timeout 只验证 SIL plant；不能验证 Chassis 软件或 500 ms 硬件 watchdog。 |
+| HIL | `HIL_NOT_EXECUTED` | 没有真实 UDP/CAN、底盘命令或硬件故障注入。 |
+
+Phase 17 变更仍未形成独立新 commit；基线 SHA `6b07d6c` 的 GitHub Actions 仍为 `EXECUTED_FAIL`。因此以上状态不得写成同 SHA CI 已通过。
+
 ## Phase 16 状态补充（2026-07-12）
 
 | Finding | 当前状态 | 生产与测试证据 |

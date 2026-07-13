@@ -55,3 +55,26 @@
 - HIL：`DECLARED_NOT_HIL_VERIFIED / HIL_NOT_EXECUTED`；未发现供应商协议、CAN 抓包或故障注入证据。
 - Chassis：零 diff；`CDX-P0-002` 保持 `OPEN_SOFTWARE / ACCEPTED_HARDWARE_MITIGATION`。
 - 证据：`reports/phase_16_report.md`、`docs/PHASE16_TEST_MATRIX.md`、`docs/HARDWARE_WATCHDOG_500MS_VALIDATION.md`。
+
+### Phase 17：Ubuntu/Humble 确定性阻断修复
+
+- 状态：`LOCAL_FULL_VALIDATION_PASS / SAME_SHA_CI_PENDING_PUSH_AUTHORIZATION`。
+- 基线：`codex/dev`，`6b07d6cd5ad3ee62f1fdd83dd2fabd6a6ae28da9`。
+- 已修复：标准 `python3-pytest` rosdep metadata；symlink-install integration fixture 与 bundled demo；Humble `assertExitCodes`；Simulation `nav_msgs::msg::Path` reset。
+- 本地证据：offline 18/18；7/7 full build；full test/result RC=0；Planning 40/40、Control 28/28、Chassis 7 active + 4 known-gap skip；Bringup 15 active + 1 watchdog skip；Simulation reset 2/2；ASan/UBSan 75 active + 4 known-gap skip。
+- Containment：Planning Loader 生产代码零修改；absolute、`..`、mixed separator 和 malicious symlink escape tests 继续 PASS；用户 AD Package override 不受 trusted bundled-default 解析影响。
+- rosdep：仅标准 `20-default.list` 时 update/install/check 全 PASS，不依赖 `/etc/ros/rosdep` local mapping。
+- CI：`CONFIGURED_NOT_EXECUTED`；未获明确 push 授权，`CDX-P1-007` 仍开放。
+- HIL：`HIL_NOT_EXECUTED`；`CDX-P0-002` 保持 `OPEN_SOFTWARE / ACCEPTED_HARDWARE_MITIGATION`。
+- 证据：`reports/phase_17_report.md` 与 `reports/ubuntu_humble_full_validation_report.md` 第 21 节。
+
+### Phase 18：Control closed-loop kinematic SIL
+
+- 状态：`LOCAL_IMPLEMENTATION_AND_FULL_VALIDATION_PASS / SAME_SHA_CI_NOT_EXECUTED`。
+- 新增 ROS-independent `low_speed_av_simulation_core`，中点积分前/双 Ackermann，有限 accel/decel/jerk/steering rate 与 fail-closed timeout/invalid/reverse。
+- 新增完整 Planning→Control→`/control/command`→plant→pose/VehicleState launch；Control 为 internal-only，不启动 Chassis/keyboard/UDP/CAN。
+- 本地证据：Simulation C++ 25/25；四 controller×两车型 SIL、goal stop、Planning failure stop、node/process isolation PASS；7/7 full build；aggregate 147 tests、0 failure/error、1 known-gap launch skip；ASan/UBSan 100 active production C++ PASS、4 Chassis known-gap SKIP。
+- SIL metrics：Control max 0.0206 s、localization max 0.0501 s、lateral RMS/max 0.2745/0.4056 m、goal position/yaw 0.2855 m/0.0322 rad、stopped speed 0.0250 m/s、non-finite 0。
+- CI：workflow 已加入 headless SIL、metrics/log artifact 与 Simulation sanitizer，但工作区未 commit/push，状态 `CONFIGURED_NOT_EXECUTED`；baseline SHA 的 run 仍失败。
+- HIL：`HIL_NOT_EXECUTED`；`CDX-P0-002` 保持 `OPEN_SOFTWARE / ACCEPTED_HARDWARE_MITIGATION`。
+- 证据：`reports/phase_18_report.md` 与 `docs/PHASE18_TEST_MATRIX.md`。

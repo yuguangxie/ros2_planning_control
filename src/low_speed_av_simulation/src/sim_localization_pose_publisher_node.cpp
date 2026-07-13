@@ -9,14 +9,21 @@
 #include <string>
 #include <vector>
 
+#include <diagnostic_msgs/msg/diagnostic_array.hpp>
+#include <diagnostic_msgs/msg/diagnostic_status.hpp>
+#include <diagnostic_msgs/msg/key_value.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <nav_msgs/msg/path.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <std_srvs/srv/trigger.hpp>
 
+#include <low_speed_av_interfaces/msg/control_command.hpp>
 #include <low_speed_av_interfaces/msg/module_status.hpp>
 #include <low_speed_av_interfaces/msg/trajectory.hpp>
+#include <low_speed_av_interfaces/msg/vehicle_state.hpp>
 
+#include "low_speed_av_simulation/kinematic_vehicle_plant.hpp"
+#include "low_speed_av_simulation/simulation_runtime_monitor.hpp"
 #include "low_speed_av_planning/roadnet_loader.hpp"
 
 namespace low_speed_av_simulation {
@@ -116,11 +123,16 @@ public:
     declare_parameters();
     read_parameters();
     load_roadnet_package();
+    plant_ = std::make_unique<KinematicVehiclePlant>(plant_options_);
     reset_to_initial_pose();
 
     pose_pub_ = create_publisher<geometry_msgs::msg::PoseStamped>(pose_topic_, 10);
     status_pub_ = create_publisher<low_speed_av_interfaces::msg::ModuleStatus>("/simulation/status", 10);
     pose_path_pub_ = create_publisher<nav_msgs::msg::Path>("/simulation/pose_path", 10);
+    vehicle_state_pub_ = create_publisher<low_speed_av_interfaces::msg::VehicleState>(
+      vehicle_state_topic_, 10);
+    diagnostics_pub_ = create_publisher<diagnostic_msgs::msg::DiagnosticArray>(
+      diagnostics_topic_, 10);
 
     full_reference_sub_ = create_subscription<low_speed_av_interfaces::msg::Trajectory>(
       full_reference_path_topic_, 10,
@@ -131,6 +143,11 @@ public:
       trajectory_topic_, 10,
       [this](low_speed_av_interfaces::msg::Trajectory::SharedPtr msg) {
         on_path(*msg, "trajectory");
+      });
+    control_command_sub_ = create_subscription<low_speed_av_interfaces::msg::ControlCommand>(
+      control_command_topic_, 20,
+      [this](low_speed_av_interfaces::msg::ControlCommand::SharedPtr msg) {
+        on_control_command(*msg);
       });
 
     start_srv_ = create_service<std_srvs::srv::Trigger>(
@@ -178,12 +195,17 @@ public:
         publish_status("active", response->message);
       });
 
-    last_tick_time_ = now();
-    const double hz = std::max(1.0, publish_rate_hz_);
-    timer_ = create_wall_timer(
-      std::chrono::duration<double>(1.0 / hz),
+    last_step_steady_ = std::chrono::steady_clock::now();
+    last_publish_steady_ = last_step_steady_;
+    step_timer_ = create_wall_timer(
+      std::chrono::duration<double>(1.0 / std::max(1.0, plant_step_rate_hz_)),
       [this]() {
-        on_timer();
+        on_step_timer();
+      });
+    publish_timer_ = create_wall_timer(
+      std::chrono::duration<double>(1.0 / std::max(1.0, publish_rate_hz_)),
+      [this]() {
+        on_publish_timer();
       });
   }
 
@@ -193,6 +215,30 @@ private:
     declare_parameter<std::string>("roadnet.package_path", "");
     declare_parameter<bool>("roadnet.reject_failed_validation", true);
     declare_parameter<bool>("roadnet.verify_checksums", true);
+
+    declare_parameter<std::string>("simulation.mode", "path_replay");
+    declare_parameter<double>("simulation.closed_loop.plant_step_rate_hz", 100.0);
+    declare_parameter<double>("simulation.closed_loop.command_timeout_s", 0.2);
+    declare_parameter<std::string>("simulation.closed_loop.control_command_topic", "/control/command");
+    declare_parameter<std::string>("simulation.closed_loop.vehicle_state_topic", "/vehicle/state");
+    declare_parameter<std::string>("simulation.closed_loop.diagnostics_topic", "/simulation/diagnostics");
+    declare_parameter<int64_t>("simulation.closed_loop.monitor_window_size", 256);
+    declare_parameter<double>("simulation.closed_loop.plant.wheel_base_m", 1.2);
+    declare_parameter<double>("simulation.closed_loop.plant.min_dt_s", 0.001);
+    declare_parameter<double>("simulation.closed_loop.plant.max_dt_s", 0.05);
+    declare_parameter<double>("simulation.closed_loop.plant.max_speed_mps", 1.0);
+    declare_parameter<double>("simulation.closed_loop.plant.max_acceleration_mps2", 0.5);
+    declare_parameter<double>("simulation.closed_loop.plant.max_deceleration_mps2", 0.8);
+    declare_parameter<double>("simulation.closed_loop.plant.max_jerk_mps3", 2.0);
+    declare_parameter<double>("simulation.closed_loop.plant.max_front_steering_angle_rad", 0.6);
+    declare_parameter<double>("simulation.closed_loop.plant.max_rear_steering_angle_rad", 0.6);
+    declare_parameter<double>("simulation.closed_loop.plant.max_front_steering_rate_radps", 0.8);
+    declare_parameter<double>("simulation.closed_loop.plant.max_rear_steering_rate_radps", 0.8);
+    declare_parameter<double>("simulation.closed_loop.plant.brake_deceleration_mps2", 1.0);
+    declare_parameter<double>("simulation.closed_loop.plant.emergency_deceleration_mps2", 1.5);
+    declare_parameter<bool>("simulation.closed_loop.vehicle_state.autonomous_enabled", true);
+    declare_parameter<bool>("simulation.closed_loop.vehicle_state.brake_pressed", false);
+    declare_parameter<std::string>("simulation.closed_loop.vehicle_state.fault_code", "");
 
     declare_parameter<bool>("simulation.localization.enabled", true);
     declare_parameter<std::string>("simulation.localization.pose_topic", "/localization/pose");
@@ -247,6 +293,11 @@ private:
 
   void read_parameters()
   {
+    simulation_mode_ = get_parameter("simulation.mode").as_string();
+    if (simulation_mode_ != "path_replay" && simulation_mode_ != "control_closed_loop") {
+      throw std::invalid_argument(
+              "simulation.mode must be path_replay or control_closed_loop");
+    }
     enabled_ = get_parameter("simulation.localization.enabled").as_bool();
     mode_ = prefer_string("simulation.localization.mode", "mode", "path_follow");
     frame_id_ = prefer_string("simulation.localization.frame_id", "frame_id", "map");
@@ -295,6 +346,63 @@ private:
     loop_ = get_parameter("loop").as_bool();
     paused_ = get_parameter("start_paused").as_bool();
     reset_clears_path_ = get_parameter("reset_clears_path").as_bool();
+    if (mode_ == "control_closed_loop") {
+      simulation_mode_ = "control_closed_loop";
+      mode_ = "path_follow";
+    }
+    plant_step_rate_hz_ = get_parameter(
+      "simulation.closed_loop.plant_step_rate_hz").as_double();
+    command_timeout_s_ = get_parameter(
+      "simulation.closed_loop.command_timeout_s").as_double();
+    control_command_topic_ = get_parameter(
+      "simulation.closed_loop.control_command_topic").as_string();
+    vehicle_state_topic_ = get_parameter(
+      "simulation.closed_loop.vehicle_state_topic").as_string();
+    diagnostics_topic_ = get_parameter(
+      "simulation.closed_loop.diagnostics_topic").as_string();
+    const auto monitor_window = get_parameter(
+      "simulation.closed_loop.monitor_window_size").as_int();
+    if (!std::isfinite(plant_step_rate_hz_) || plant_step_rate_hz_ <= 0.0 ||
+      !std::isfinite(command_timeout_s_) || command_timeout_s_ <= 0.0 ||
+      monitor_window <= 0)
+    {
+      throw std::invalid_argument("invalid closed-loop rate, timeout, or monitor window");
+    }
+    monitor_ = SimulationRuntimeMonitor(static_cast<std::size_t>(monitor_window));
+    plant_options_.wheel_base_m = get_parameter(
+      "simulation.closed_loop.plant.wheel_base_m").as_double();
+    plant_options_.min_dt_s = get_parameter(
+      "simulation.closed_loop.plant.min_dt_s").as_double();
+    plant_options_.max_dt_s = get_parameter(
+      "simulation.closed_loop.plant.max_dt_s").as_double();
+    plant_options_.max_speed_mps = get_parameter(
+      "simulation.closed_loop.plant.max_speed_mps").as_double();
+    plant_options_.max_acceleration_mps2 = get_parameter(
+      "simulation.closed_loop.plant.max_acceleration_mps2").as_double();
+    plant_options_.max_deceleration_mps2 = get_parameter(
+      "simulation.closed_loop.plant.max_deceleration_mps2").as_double();
+    plant_options_.max_jerk_mps3 = get_parameter(
+      "simulation.closed_loop.plant.max_jerk_mps3").as_double();
+    plant_options_.max_front_steering_angle_rad = get_parameter(
+      "simulation.closed_loop.plant.max_front_steering_angle_rad").as_double();
+    plant_options_.max_rear_steering_angle_rad = get_parameter(
+      "simulation.closed_loop.plant.max_rear_steering_angle_rad").as_double();
+    plant_options_.max_front_steering_rate_radps = get_parameter(
+      "simulation.closed_loop.plant.max_front_steering_rate_radps").as_double();
+    plant_options_.max_rear_steering_rate_radps = get_parameter(
+      "simulation.closed_loop.plant.max_rear_steering_rate_radps").as_double();
+    plant_options_.brake_deceleration_mps2 = get_parameter(
+      "simulation.closed_loop.plant.brake_deceleration_mps2").as_double();
+    plant_options_.emergency_deceleration_mps2 = get_parameter(
+      "simulation.closed_loop.plant.emergency_deceleration_mps2").as_double();
+    plant_options_.goal_tolerance_m = goal_tolerance_m_;
+    plant_options_.yaw_tolerance_rad = yaw_tolerance_rad_;
+    vehicle_autonomous_enabled_ = get_parameter(
+      "simulation.closed_loop.vehicle_state.autonomous_enabled").as_bool();
+    vehicle_brake_pressed_ = get_parameter(
+      "simulation.closed_loop.vehicle_state.brake_pressed").as_bool();
+    vehicle_fault_code_ = get_parameter(
+      "simulation.closed_loop.vehicle_state.fault_code").as_string();
   }
 
   std::string prefer_string(
@@ -358,7 +466,25 @@ private:
     path_progress_m_ = 0.0;
     current_speed_mps_ = 0.0;
     active_path_.arrived = false;
-    pose_history_.clear();
+    pose_history_ = nav_msgs::msg::Path{};
+    PlantState initial_state;
+    initial_state.x_m = current_pose_.x;
+    initial_state.y_m = current_pose_.y;
+    initial_state.yaw_rad = current_pose_.yaw;
+    initial_state.gear = 1;
+    if (plant_) {
+      plant_->reset(initial_state);
+    }
+    latest_control_command_.reset();
+    has_command_receive_time_ = false;
+    has_previous_command_receive_time_ = false;
+    command_timeout_episode_ = false;
+    stop_response_start_steady_.reset();
+    stop_response_time_s_ = 0.0;
+    last_command_age_s_ = std::numeric_limits<double>::infinity();
+    last_target_speed_mps_ = 0.0;
+    stop_reason_ = "reset";
+    monitor_.reset();
     append_pose_history(current_pose_, now());
   }
 
@@ -541,24 +667,173 @@ private:
     return oss.str();
   }
 
-  void on_timer()
+  void on_control_command(const low_speed_av_interfaces::msg::ControlCommand & msg)
   {
-    const auto current_time = now();
-    const double dt = std::max(0.0, (current_time - last_tick_time_).seconds());
-    last_tick_time_ = current_time;
+    const auto receive_time = std::chrono::steady_clock::now();
+    if (has_previous_command_receive_time_) {
+      monitor_.observe_control_interval(
+        std::chrono::duration<double>(receive_time - previous_command_receive_steady_).count());
+    }
+    previous_command_receive_steady_ = receive_time;
+    has_previous_command_receive_time_ = true;
+    last_command_receive_steady_ = receive_time;
+    has_command_receive_time_ = true;
+    command_timeout_episode_ = false;
+
+    PlantCommand command;
+    command.target_speed_mps = msg.speed_mps;
+    command.target_acceleration_mps2 = msg.acceleration_mps2;
+    command.front_steering_angle_rad = msg.front_steering_angle_rad;
+    command.rear_steering_angle_rad = msg.rear_steering_angle_rad;
+    command.brake = msg.brake;
+    command.gear = msg.gear;
+    command.enable = msg.enable;
+    command.emergency_stop = msg.emergency_stop;
+    latest_control_command_ = command;
+    last_target_speed_mps_ = command.target_speed_mps;
+  }
+
+  void on_step_timer()
+  {
+    const auto steady_now = std::chrono::steady_clock::now();
+    const double dt = std::chrono::duration<double>(steady_now - last_step_steady_).count();
+    last_step_steady_ = steady_now;
+    monitor_.observe_step_interval(dt);
+
+    if (!enabled_) {
+      return;
+    }
+
+    if (!paused_) {
+      if (simulation_mode_ == "control_closed_loop") {
+        advance_closed_loop(dt, steady_now);
+      } else {
+        advance_pose(dt);
+      }
+    }
+  }
+
+  void on_publish_timer()
+  {
+    const auto steady_now = std::chrono::steady_clock::now();
+    monitor_.observe_localization_interval(
+      std::chrono::duration<double>(steady_now - last_publish_steady_).count());
+    last_publish_steady_ = steady_now;
 
     if (!enabled_) {
       publish_status("disabled", "simulated localization disabled");
       return;
     }
-
-    if (!paused_) {
-      advance_pose(dt);
-    }
-
+    const auto current_time = now();
     publish_pose(current_time);
     publish_pose_path(current_time);
+    if (simulation_mode_ == "control_closed_loop") {
+      publish_vehicle_state(current_time);
+      publish_diagnostics(current_time);
+    }
     publish_periodic_status();
+  }
+
+  void advance_closed_loop(
+    double dt, const std::chrono::steady_clock::time_point & steady_now)
+  {
+    PlantCommand command;
+    if (latest_control_command_) {
+      command = *latest_control_command_;
+    }
+
+    if (has_command_receive_time_) {
+      last_command_age_s_ =
+        std::chrono::duration<double>(steady_now - last_command_receive_steady_).count();
+    } else {
+      last_command_age_s_ = std::numeric_limits<double>::infinity();
+    }
+    const bool timed_out = !has_command_receive_time_ || last_command_age_s_ > command_timeout_s_;
+    if (timed_out) {
+      command.command_timed_out = true;
+      command.enable = false;
+      command.target_speed_mps = 0.0;
+      if (!command_timeout_episode_) {
+        monitor_.record_timeout();
+        command_timeout_episode_ = true;
+      }
+    }
+    if (holding_failure_stop_ || (active_path_.arrived && stop_at_goal_)) {
+      command.enable = false;
+      command.target_speed_mps = 0.0;
+      command.brake = 1.0;
+    }
+
+    const bool stop_requested = timed_out || holding_failure_stop_ ||
+      (active_path_.arrived && stop_at_goal_) || !command.enable ||
+      command.emergency_stop || command.brake > 0.0 || command.gear != 1;
+    if (stop_requested && !stop_response_start_steady_) {
+      stop_response_start_steady_ = steady_now;
+    } else if (!stop_requested) {
+      stop_response_start_steady_.reset();
+    }
+
+    const auto result = plant_->step(command, dt);
+    stop_reason_ = result.stop_reason;
+    if (!result.command_valid) {
+      monitor_.record_non_finite();
+    }
+    const auto & state = plant_->state();
+    current_pose_.x = state.x_m;
+    current_pose_.y = state.y_m;
+    current_pose_.yaw = state.yaw_rad;
+    current_pose_.speed_mps = state.speed_mps;
+    current_pose_.gear = state.gear;
+    current_speed_mps_ = state.speed_mps;
+    if (stop_requested && stop_response_start_steady_ && state.speed_mps < 0.05) {
+      stop_response_time_s_ = std::chrono::duration<double>(
+        steady_now - *stop_response_start_steady_).count();
+    }
+
+    update_tracking_metrics();
+    if (stop_at_goal_ && active_path_.valid && !active_path_.points.empty()) {
+      const auto & goal = active_path_.points.back();
+      if (plant_->goal_reached(goal.x, goal.y, goal.yaw)) {
+        active_path_.arrived = true;
+        stop_reason_ = "goal_reached";
+      }
+    }
+    append_pose_history(current_pose_, now());
+  }
+
+  void update_tracking_metrics()
+  {
+    if (!active_path_.valid || active_path_.points.empty()) {
+      return;
+    }
+    double lateral_error = distance(current_pose_, active_path_.points.front());
+    double reference_yaw = active_path_.points.front().yaw;
+    for (std::size_t i = 1U; i < active_path_.points.size(); ++i) {
+      const auto & a = active_path_.points[i - 1U];
+      const auto & b = active_path_.points[i];
+      const double dx = b.x - a.x;
+      const double dy = b.y - a.y;
+      const double length_squared = dx * dx + dy * dy;
+      const double ratio = length_squared > 1e-12 ?
+        std::clamp(
+        ((current_pose_.x - a.x) * dx + (current_pose_.y - a.y) * dy) /
+        length_squared, 0.0, 1.0) : 0.0;
+      const double projected_x = a.x + ratio * dx;
+      const double projected_y = a.y + ratio * dy;
+      const double candidate = std::hypot(
+        current_pose_.x - projected_x, current_pose_.y - projected_y);
+      if (candidate < lateral_error) {
+        lateral_error = candidate;
+        reference_yaw = normalize_angle(
+          a.yaw + ratio * normalize_angle(b.yaw - a.yaw));
+      }
+    }
+    const auto & goal = active_path_.points.back();
+    const double heading_error = std::fabs(
+      normalize_angle(current_pose_.yaw - reference_yaw));
+    const double goal_distance = distance(current_pose_, goal);
+    const double goal_yaw_error = std::fabs(normalize_angle(current_pose_.yaw - goal.yaw));
+    monitor_.observe_tracking(lateral_error, heading_error, goal_distance, goal_yaw_error);
   }
 
   void advance_pose(double dt)
@@ -776,6 +1051,81 @@ private:
     pose_path_pub_->publish(pose_history_);
   }
 
+  void publish_vehicle_state(const rclcpp::Time & stamp)
+  {
+    const auto & state = plant_->state();
+    low_speed_av_interfaces::msg::VehicleState msg;
+    msg.header.stamp = stamp;
+    msg.header.frame_id = frame_id_;
+    msg.speed_mps = state.speed_mps;
+    msg.acceleration_mps2 = state.acceleration_mps2;
+    msg.steering_angle_rad = state.front_steering_angle_rad;
+    msg.front_steering_angle_rad = state.front_steering_angle_rad;
+    msg.rear_steering_angle_rad = state.rear_steering_angle_rad;
+    msg.gear = static_cast<int8_t>(state.gear);
+    msg.autonomous_enabled = vehicle_autonomous_enabled_;
+    msg.brake_pressed = vehicle_brake_pressed_;
+    msg.fault_code = vehicle_fault_code_;
+    vehicle_state_pub_->publish(msg);
+  }
+
+  static diagnostic_msgs::msg::KeyValue diagnostic_value(
+    const std::string & key, const std::string & value)
+  {
+    diagnostic_msgs::msg::KeyValue item;
+    item.key = key;
+    item.value = value;
+    return item;
+  }
+
+  void publish_diagnostics(const rclcpp::Time & stamp)
+  {
+    const auto metrics = monitor_.metrics();
+    const auto & state = plant_->state();
+    diagnostic_msgs::msg::DiagnosticArray array;
+    array.header.stamp = stamp;
+    diagnostic_msgs::msg::DiagnosticStatus status;
+    status.name = "low_speed_av_simulation/closed_loop_plant";
+    status.hardware_id = "software_in_the_loop";
+    status.level = metrics.non_finite_count > 0U ?
+      diagnostic_msgs::msg::DiagnosticStatus::ERROR :
+      diagnostic_msgs::msg::DiagnosticStatus::OK;
+    status.message = active_path_.arrived ? "arrived" : stop_reason_;
+    status.values = {
+      diagnostic_value("mode", simulation_mode_),
+      diagnostic_value("current_speed_mps", compact_double(state.speed_mps)),
+      diagnostic_value("target_speed_mps", compact_double(last_target_speed_mps_)),
+      diagnostic_value("front_steering_angle_rad", compact_double(state.front_steering_angle_rad)),
+      diagnostic_value("rear_steering_angle_rad", compact_double(state.rear_steering_angle_rad)),
+      diagnostic_value(
+        "command_age_s", std::isfinite(last_command_age_s_) ?
+        compact_double(last_command_age_s_) : "inf"),
+      diagnostic_value("timeout_count", std::to_string(metrics.timeout_count)),
+      diagnostic_value("non_finite_count", std::to_string(metrics.non_finite_count)),
+      diagnostic_value("lateral_error_max_m", compact_double(metrics.lateral_error_max_m)),
+      diagnostic_value("lateral_error_rms_m", compact_double(metrics.lateral_error_rms_m)),
+      diagnostic_value("lateral_error_p95_m", compact_double(metrics.lateral_error_p95_m)),
+      diagnostic_value("heading_error_max_rad", compact_double(metrics.heading_error_max_rad)),
+      diagnostic_value("heading_error_rms_rad", compact_double(metrics.heading_error_rms_rad)),
+      diagnostic_value("heading_error_p95_rad", compact_double(metrics.heading_error_p95_rad)),
+      diagnostic_value("goal_distance_m", compact_double(metrics.goal_distance_m)),
+      diagnostic_value("goal_yaw_error_rad", compact_double(metrics.goal_yaw_error_rad)),
+      diagnostic_value("stopped_speed_mps", compact_double(state.speed_mps)),
+      diagnostic_value("stop_response_time_s", compact_double(stop_response_time_s_)),
+      diagnostic_value("step_interval_max_s", compact_double(metrics.step_interval_max_s)),
+      diagnostic_value("step_interval_p95_s", compact_double(metrics.step_interval_p95_s)),
+      diagnostic_value(
+        "localization_interval_max_s", compact_double(metrics.localization_interval_max_s)),
+      diagnostic_value(
+        "localization_interval_p95_s", compact_double(metrics.localization_interval_p95_s)),
+      diagnostic_value("control_interval_max_s", compact_double(metrics.control_interval_max_s)),
+      diagnostic_value("control_interval_p95_s", compact_double(metrics.control_interval_p95_s)),
+      diagnostic_value("arrived", active_path_.arrived ? "true" : "false"),
+      diagnostic_value("stop_reason", stop_reason_)};
+    array.status.push_back(std::move(status));
+    diagnostics_pub_->publish(array);
+  }
+
   void publish_periodic_status()
   {
     if (paused_) {
@@ -784,6 +1134,18 @@ private:
     }
     if (holding_failure_stop_) {
       publish_status("holding_failure_stop", "holding current pose due to failure_stop");
+      return;
+    }
+    if (simulation_mode_ == "control_closed_loop") {
+      if (!has_command_receive_time_) {
+        publish_status("waiting_for_command", "closed-loop plant is stopped while waiting for /control/command");
+      } else if (active_path_.arrived && stop_at_goal_) {
+        publish_status("arrived", status_detail("closed-loop goal tolerance satisfied"));
+      } else if (last_command_age_s_ > command_timeout_s_) {
+        publish_status("command_timeout", "closed-loop plant is stopping on stale control command");
+      } else {
+        publish_status("active", status_detail("control command drives closed-loop plant"));
+      }
       return;
     }
     if (active_path_.arrived && stop_at_goal_) {
@@ -828,6 +1190,11 @@ private:
 
   low_speed_av_planning::RoadnetLoader loader_;
   std::optional<low_speed_av_planning::RoadnetPackage> roadnet_package_;
+  std::string simulation_mode_{"path_replay"};
+  PlantOptions plant_options_;
+  std::unique_ptr<KinematicVehiclePlant> plant_;
+  SimulationRuntimeMonitor monitor_{256U};
+  std::optional<PlantCommand> latest_control_command_;
   bool enabled_{true};
   std::string mode_{"path_follow"};
   std::string frame_id_{"map"};
@@ -844,6 +1211,10 @@ private:
   double initial_y_{1.473};
   double initial_yaw_{-0.9178};
   double publish_rate_hz_{20.0};
+  double plant_step_rate_hz_{100.0};
+  double command_timeout_s_{0.2};
+  double last_command_age_s_{std::numeric_limits<double>::infinity()};
+  double last_target_speed_mps_{0.0};
   double default_speed_mps_{1.0};
   double max_speed_mps_{1.0};
   double acceleration_limit_mps2_{0.5};
@@ -862,23 +1233,42 @@ private:
   bool paused_{false};
   bool holding_failure_stop_{false};
   bool reset_clears_path_{true};
+  bool vehicle_autonomous_enabled_{true};
+  bool vehicle_brake_pressed_{false};
+  bool has_command_receive_time_{false};
+  bool has_previous_command_receive_time_{false};
+  bool command_timeout_episode_{false};
+  std::string vehicle_fault_code_;
+  std::string control_command_topic_{"/control/command"};
+  std::string vehicle_state_topic_{"/vehicle/state"};
+  std::string diagnostics_topic_{"/simulation/diagnostics"};
+  std::string stop_reason_{"none"};
   double path_progress_m_{0.0};
   double current_speed_mps_{0.0};
   ReplayPose current_pose_;
   PathState active_path_;
   nav_msgs::msg::Path pose_history_;
-  rclcpp::Time last_tick_time_;
+  std::chrono::steady_clock::time_point last_step_steady_;
+  std::chrono::steady_clock::time_point last_publish_steady_;
+  std::chrono::steady_clock::time_point last_command_receive_steady_;
+  std::chrono::steady_clock::time_point previous_command_receive_steady_;
+  std::optional<std::chrono::steady_clock::time_point> stop_response_start_steady_;
+  double stop_response_time_s_{0.0};
   std::vector<ReplayPose> roadnet_waypoints_;
   rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr pose_pub_;
   rclcpp::Publisher<low_speed_av_interfaces::msg::ModuleStatus>::SharedPtr status_pub_;
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr pose_path_pub_;
+  rclcpp::Publisher<low_speed_av_interfaces::msg::VehicleState>::SharedPtr vehicle_state_pub_;
+  rclcpp::Publisher<diagnostic_msgs::msg::DiagnosticArray>::SharedPtr diagnostics_pub_;
   rclcpp::Subscription<low_speed_av_interfaces::msg::Trajectory>::SharedPtr full_reference_sub_;
   rclcpp::Subscription<low_speed_av_interfaces::msg::Trajectory>::SharedPtr trajectory_sub_;
+  rclcpp::Subscription<low_speed_av_interfaces::msg::ControlCommand>::SharedPtr control_command_sub_;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr start_srv_;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr pause_srv_;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr reset_srv_;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr rewind_srv_;
-  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::TimerBase::SharedPtr step_timer_;
+  rclcpp::TimerBase::SharedPtr publish_timer_;
 };
 
 }  // namespace low_speed_av_simulation
